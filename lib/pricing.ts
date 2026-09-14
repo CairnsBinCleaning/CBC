@@ -8,7 +8,7 @@ export const calloutZones = [
       "Parramatta Park","Earlville","Manoora","Manunda","Aeroglen",
       "Freshwater","Stratford","Edge Hill","Whitfield","Brinsmead"
     ],
-    fee: null as number | null,
+    fee: 50 as number | null,
   },
   {
     name: "Northern Beaches",
@@ -17,7 +17,7 @@ export const calloutZones = [
       "Kamerunga","Smithfield","Trinity Park","Trinity Beach",
       "Kewarra Beach","Clifton Beach","Palm Cove","Ellis Beach"
     ],
-    fee: null as number | null,
+    fee: 50 as number | null,
   },
   {
     name: "Southside",
@@ -25,7 +25,7 @@ export const calloutZones = [
       "Bayview Heights","Mooroobool","Kanimbla","Woree","White Rock",
       "Mount Sheridan","Bentley Park","Edmonton","Gordonvale"
     ],
-    fee: null as number | null,
+    fee: 50 as number | null,
   },
 ];
 

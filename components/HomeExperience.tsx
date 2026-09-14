@@ -4,8 +4,8 @@ export default function HomeExperience(){const [active,setActive]=useState(0);co
  <section className="heroScene">
   <video className="heroVideo" autoPlay muted loop playsInline poster="/media/IMG_3027.jpg"><source src="/media/pressure-hero.mp4" type="video/mp4"/></video>
   <div className="heroWash"/><div className="ambientOrb"/><AtmosphereCanvas/>
-  <header className="nav"><Link href="/" className="brand"><span>CAIRNS</span><small>BIN CLEANING</small></Link><nav><Link href="#services">Services</Link><Link href="/prices">Prices</Link><Link href="/commercial-cleaning">Commercial</Link><a href="tel:+61434052755">0434 052 755</a></nav></header>
-  <div className="heroCopy"><p className="eyebrow">CAIRNS · HOMES · BUSINESSES · STRATA</p><h1>What needs<br/>cleaning?</h1><p className="lead">Driveway gone black? Roof getting green? Bins starting to smell? Pick the job. We’ll show you what it costs and what happens next.</p><div className="heroActions"><a href="#services" className="primary">Choose the job</a><Link href="/prices" className="ghost">Just show me prices</Link></div></div>
+  <header className="nav"><Link href="/" className="brand"><span>CAIRNS</span><small>BIN CLEANING</small></Link><nav><Link href="#services">Services</Link><Link href="/prices">Prices</Link><Link href="/commercial-cleaning">Commercial</Link><a href="tel:+61434052755">0434 052 755</a><a href="tel:+61434052755" className="nav-book-btn">Book now</a></nav></header>
+  <div className="heroCopy"><p className="eyebrow">CAIRNS · HOMES · BUSINESSES · STRATA</p><h1>What needs<br/>cleaning?</h1><p className="lead">Driveway gone black? Roof getting green? Bins starting to smell? Pick the job. We’ll show you what it costs and what happens next.</p><div className="heroActions"><a href="tel:+61434052755" className="primary">Book now</a><a href="#services" className="ghost">Choose the job</a><Link href="/prices" className="ghost">Just show me prices</Link></div></div>
   <div className="weatherNote"><span className="pulse"/> BUILT FOR CAIRNS CONDITIONS</div><div className="scrollCue">SCROLL <i/></div>
  </section>
  <section id="services" className="serviceStage">

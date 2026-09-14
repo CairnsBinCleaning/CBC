@@ -21,6 +21,8 @@ import { findCallout, SOLAR_RATE } from "../lib/pricing";
 import {
   bookBinCleaning,
   type BookBinCleaningResult,
+  bookSolarCleaning,
+  type BookSolarCleaningResult,
 } from "../lib/jobber/actions";
 
 type Point = {
@@ -65,6 +67,19 @@ export default function ServicePageClient({
 
           <a href="tel:+61434052755">
             0434 052 755
+          </a>
+
+          <a
+            href={
+              service.slug === "bin-cleaning"
+                ? "#bin-booking"
+                : service.slug === "solar-panel-cleaning"
+                  ? "#solar-booking"
+                  : "tel:+61434052755"
+            }
+            className="nav-book-btn"
+          >
+            BOOK NOW
           </a>
         </nav>
       </header>
@@ -1007,6 +1022,11 @@ function SolarExperience() {
   const total =
     match?.fee != null ? subtotal + match.fee : null;
 
+  const [result, formAction, pending] = useActionState<
+    BookSolarCleaningResult | null,
+    FormData
+  >(bookSolarCleaning, null);
+
   return (
     <section className="prototype-interaction">
       <div className="interaction-heading">
@@ -1025,20 +1045,29 @@ function SolarExperience() {
         </p>
       </div>
 
-      <div className="solar-calculator">
+      <form
+        id="solar-booking"
+        action={formAction}
+        className="solar-calculator"
+      >
+        <input type="hidden" name="panels" value={panels} />
+
         <label className="solar-suburb">
           SUBURB
           <input
+            name="suburb"
             value={suburb}
             onChange={(event) =>
               setSuburb(event.target.value)
             }
             placeholder="e.g. Trinity Beach"
+            required
           />
         </label>
 
         <div className="panel-count">
           <button
+            type="button"
             onClick={() =>
               setPanels(
                 Math.max(
@@ -1062,6 +1091,7 @@ function SolarExperience() {
           </div>
 
           <button
+            type="button"
             onClick={() =>
               setPanels(
                 panels + 1
@@ -1109,12 +1139,64 @@ function SolarExperience() {
 
           <p>
             The panel rate is confirmed.
-            Call-out fees are still being
-            loaded suburb by suburb —
-            we won't guess one.
+            Call-out fees are a flat $50
+            for now until they're set per
+            suburb.
           </p>
         </div>
-      </div>
+
+        <div className="bin-booking-fields">
+          <input
+            name="firstName"
+            placeholder="FIRST NAME"
+            required
+          />
+
+          <input
+            name="lastName"
+            placeholder="LAST NAME"
+          />
+
+          <input
+            name="phone"
+            type="tel"
+            placeholder="PHONE"
+            required
+          />
+
+          <input
+            name="email"
+            type="email"
+            placeholder="EMAIL (OPTIONAL)"
+          />
+
+          <input
+            name="street"
+            placeholder="STREET ADDRESS"
+          />
+        </div>
+
+        <button
+          type="submit"
+          disabled={pending}
+        >
+          {pending
+            ? "SENDING…"
+            : "LOCK IN MY SOLAR CLEAN →"}
+        </button>
+
+        {result && (
+          <p
+            className={
+              result.ok
+                ? "bin-booking-status bin-booking-ok"
+                : "bin-booking-status bin-booking-error"
+            }
+          >
+            {result.message}
+          </p>
+        )}
+      </form>
     </section>
   );
 }

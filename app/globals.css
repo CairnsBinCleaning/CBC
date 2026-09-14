@@ -17,6 +17,8 @@
 .main-header .brand strong{font-size:16px;font-style:normal}
 .main-header .brand span{font-size:8px;color:#4f7d18;margin-top:4px}
 .main-header nav{display:flex;gap:28px;align-items:center;font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:#333}
+.nav-book-btn{display:inline-flex;align-items:center;padding:10px 18px;border-radius:999px;background:#79c51d;color:#0d1410!important;font-weight:900;letter-spacing:.1em;font-size:10px;text-transform:uppercase}
+.nav-book-btn:hover{background:#8fdc3a}
 
 .service-hero{display:grid;grid-template-columns:1.1fr .9fr;gap:5vw;align-items:center;padding:64px 5vw 90px;background:#f4f2eb}
 .service-hero-copy .back-home{display:inline-block;font-size:10px;letter-spacing:.16em;font-weight:900;color:#4f7d18;margin-bottom:22px}
