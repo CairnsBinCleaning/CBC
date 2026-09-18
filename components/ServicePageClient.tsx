@@ -25,9 +25,21 @@ import {
   type BookSolarCleaningResult,
 } from "../lib/jobber/actions";
 
-type Point = {
-  x: number;
-  y: number;
+import QuoteMeasure from "./QuoteMeasure";
+import ServiceGallery from "./ServiceGallery";
+import { useLeadEvent } from "./Analytics";
+
+/* Which service pages get the satellite measure-and-quote tool, and which
+   quote service it opens on.
+   Only services that are genuinely priced by area are here. Window cleaning
+   is priced per pane and gutter cleaning per linear metre — putting a square
+   metre tool on those pages would produce a confident wrong number, which is
+   worse than no number. */
+const MEASURABLE_SERVICES: Record<string, string> = {
+  "pressure-cleaning": "driveway",
+  "roof-cleaning": "roof",
+  "house-washing": "house",
+  "commercial-cleaning": "carpark",
 };
 
 export default function ServicePageClient({
@@ -75,11 +87,13 @@ export default function ServicePageClient({
                 ? "#bin-booking"
                 : service.slug === "solar-panel-cleaning"
                   ? "#solar-booking"
-                  : "tel:+61434052755"
+                  : MEASURABLE_SERVICES[service.slug]
+                    ? "#instant-quote"
+                    : "tel:+61434052755"
             }
             className="nav-book-btn"
           >
-            BOOK NOW
+            {MEASURABLE_SERVICES[service.slug] ? "INSTANT QUOTE" : "BOOK NOW"}
           </a>
         </nav>
       </header>
@@ -145,9 +159,9 @@ export default function ServicePageClient({
         </span>
 
         <h2>
-          WHO ARE WE
+          Who are we
           <br />
-          LOOKING AFTER?
+          looking after?
         </h2>
 
         <p>
@@ -217,6 +231,18 @@ export default function ServicePageClient({
                 CONTINUE ONLINE →
               </a>
             )}
+
+            {audience === "STRATA" && (
+              <Link href="/strata" className="secondary-action">
+                STRATA &amp; BODY CORPORATE →
+              </Link>
+            )}
+
+            {audience === "GOVERNMENT" && (
+              <Link href="/government" className="secondary-action">
+                GOVERNMENT &amp; PROCUREMENT →
+              </Link>
+            )}
           </div>
         </div>
       </section>
@@ -247,7 +273,7 @@ export default function ServicePageClient({
           </small>
 
           <strong>
-            Know what you're
+            Know what you’re
             paying for.
           </strong>
 
@@ -266,13 +292,13 @@ export default function ServicePageClient({
           </small>
 
           <strong>
-            We'd rather be
+            We’d rather be
             your next call too.
           </strong>
 
           <p>
-            The goal isn't one clean.
-            It's becoming the company
+            The goal isn’t one clean.
+            It’s becoming the company
             you trust to look after
             the boring stuff.
           </p>
@@ -297,13 +323,16 @@ export default function ServicePageClient({
         )}
       </section>
 
+
+      <ServiceGallery service={service} />
+
       <section className="related-section">
         <span className="eyebrow">
           OFTEN MAKES SENSE TOGETHER
         </span>
 
         <h2>
-          WHILE WE'RE THERE...
+          While we’re there…
         </h2>
 
         <div className="related-grid">
@@ -331,6 +360,9 @@ export default function ServicePageClient({
       <footer className="service-footer">
         <span>CAIRNS BIN CLEANING</span>
         <nav>
+          <Link href="/service-areas">Areas</Link>
+          <Link href="/faq">FAQ</Link>
+          <Link href="/about">About</Link>
           <Link href="/prices">Prices</Link>
           <Link href="/privacy">Privacy</Link>
           <Link href="/terms">Terms</Link>
@@ -364,7 +396,7 @@ function CalloutLookup() {
             ? match.fee != null
               ? `Call-out for ${match.suburb}: $${match.fee.toFixed(2)}`
               : `${match.suburb} is in our ${match.zone} zone — call-out fee still being confirmed.`
-            : "Not in our loaded suburb list yet — we'll confirm it when you call."}
+            : "Not in our loaded suburb list yet — we’ll confirm it when you call."}
         </p>
       )}
     </div>
@@ -376,240 +408,81 @@ function ServiceInteraction({
 }: {
   slug: string;
 }) {
-  if (slug === "window-cleaning") {
-    return <WindowExperience />;
-  }
+  const quoteService = MEASURABLE_SERVICES[slug];
 
-  if (slug === "bin-cleaning") {
-    return <BinExperience />;
-  }
-
-  if (slug === "pressure-cleaning") {
-    return <PressureExperience />;
-  }
-
-  if (
-    slug ===
-    "solar-panel-cleaning"
-  ) {
-    return <SolarExperience />;
-  }
-
-  if (
-    slug ===
-    "commercial-cleaning"
-  ) {
-    return <CommercialExperience />;
-  }
-
-  return (
-    <section className="prototype-interaction">
-      <span className="eyebrow">
-        SIGNATURE INTERACTION
-      </span>
-
-      <h2>
-        THIS ONE STILL NEEDS
-        ITS OWN IDEA.
-      </h2>
-
-      <p>
-        We won't reuse another
-        service's gimmick just because
-        it already exists.
-      </p>
-    </section>
-  );
-}
-
-/* WINDOWS */
-
-function WindowExperience() {
-  const [points, setPoints] =
-    useState<Point[]>([]);
-
-  const [dragging, setDragging] =
-    useState(false);
-
-  function addPoint(
-    event: PointerEvent<HTMLDivElement>
-  ) {
-    const rect =
-      event.currentTarget.getBoundingClientRect();
-
-    const x =
-      ((event.clientX - rect.left) /
-        rect.width) *
-      100;
-
-    const y =
-      ((event.clientY - rect.top) /
-        rect.height) *
-      100;
-
-    setPoints((current) => [
-      ...current.slice(-150),
-      { x, y },
-    ]);
-  }
-
-  const progress = Math.min(
-    100,
-    Math.round(points.length * 1.4)
-  );
-
-  return (
-    <section className="prototype-interaction">
-      <div className="interaction-heading">
+  const signature =
+    slug === "bin-cleaning" ? (
+      <BinExperience />
+    ) : slug === "pressure-cleaning" ? (
+      <PressureExperience />
+    ) : slug === "solar-panel-cleaning" ? (
+      <SolarExperience />
+    ) : slug === "commercial-cleaning" ? (
+      <CommercialExperience />
+    ) : quoteService ? null : (
+      <section className="prototype-interaction">
         <span className="eyebrow">
-          TRY IT
+          SIGNATURE INTERACTION
         </span>
 
         <h2>
-          CLEAN THE PAGE.
+          This one still needs
+          its own idea.
         </h2>
 
         <p>
-          Mouse or finger.
-          Wipe the grime away.
+          We won’t reuse another
+          service’s gimmick just because
+          it already exists.
         </p>
-      </div>
+      </section>
+    );
 
-      <div
-        className="window-demo"
-        onPointerDown={(event) => {
-          setDragging(true);
+  /* The measure-and-quote tool IS the signature interaction for the
+     area-priced services — a real price from a real measurement, which is
+     the whole "precision, not spectacle" idea made literal. */
+  return (
+    <>
+      {signature}
 
-          event.currentTarget.setPointerCapture(
-            event.pointerId
-          );
-
-          addPoint(event);
-        }}
-        onPointerMove={(event) => {
-          if (dragging) {
-            addPoint(event);
+      {quoteService && (
+        <QuoteMeasure
+          defaultService={quoteService}
+          heading={QUOTE_HEADINGS[slug]?.heading ?? "Measure it yourself. Get the price now."}
+          intro={
+            QUOTE_HEADINGS[slug]?.intro ??
+            "Find your place on the satellite map, tap the corners of what needs cleaning, and the price appears."
           }
-        }}
-        onPointerUp={() =>
-          setDragging(false)
-        }
-        onPointerCancel={() =>
-          setDragging(false)
-        }
-      >
-        <div className="window-behind">
-          <span>
-            CLEAN GLASS
-          </span>
-
-          <strong>
-            PRICING.
-            REVIEWS.
-            BOOKING.
-          </strong>
-
-          <p>
-            The real finished page
-            lives underneath the dirt.
-          </p>
-
-          <a href="tel:+61434052755" className="window-behind-cta">
-            BOOK WINDOW CLEANING →
-          </a>
-        </div>
-
-        <svg
-          className="window-grime"
-          viewBox="0 0 100 100"
-          preserveAspectRatio="none"
-        >
-          <defs>
-            <pattern
-              id="grime-pattern"
-              width="12"
-              height="12"
-              patternUnits="userSpaceOnUse"
-            >
-              <circle
-                cx="2"
-                cy="3"
-                r="1.3"
-                fill="#aba488"
-                opacity="0.45"
-              />
-
-              <circle
-                cx="8"
-                cy="8"
-                r="2"
-                fill="#5f6459"
-                opacity="0.35"
-              />
-
-              <path
-                d="M0 10 Q4 4 12 7"
-                stroke="#d5cfb7"
-                strokeWidth="1"
-                fill="none"
-                opacity="0.25"
-              />
-            </pattern>
-
-            <mask id="wipe-mask">
-              <rect
-                width="100"
-                height="100"
-                fill="white"
-              />
-
-              {points.map(
-                (point, index) => (
-                  <circle
-                    key={index}
-                    cx={point.x}
-                    cy={point.y}
-                    r="8"
-                    fill="black"
-                  />
-                )
-              )}
-            </mask>
-          </defs>
-
-          <rect
-            width="100"
-            height="100"
-            fill="#7f8679"
-            opacity="0.55"
-            mask="url(#wipe-mask)"
-          />
-
-          <rect
-            width="100"
-            height="100"
-            fill="url(#grime-pattern)"
-            mask="url(#wipe-mask)"
-          />
-        </svg>
-      </div>
-
-      <div className="interaction-status">
-        <span>
-          {progress}% REVEALED
-        </span>
-
-        <button
-          onClick={() =>
-            setPoints([])
-          }
-        >
-          DIRTY IT AGAIN
-        </button>
-      </div>
-    </section>
+        />
+      )}
+    </>
   );
 }
+
+/* Per-service framing for the quote tool. Same instrument, different job —
+   a homeowner and a facilities manager are not reading for the same thing. */
+const QUOTE_HEADINGS: Record<string, { heading: string; intro: string }> = {
+  "pressure-cleaning": {
+    heading: "Measure your driveway. Get the price now.",
+    intro:
+      "Find your place on the satellite map, tap the corners of the concrete, and the price appears. No waiting on a call back, no one in your driveway with a tape measure.",
+  },
+  "roof-cleaning": {
+    heading: "Measure your roof from above.",
+    intro:
+      "Trace the roof outline on satellite imagery and tell us how steep it is — we add the slope back, because a satellite only ever sees the footprint. Price appears as you draw.",
+  },
+  "house-washing": {
+    heading: "Measure the house. See the wall price.",
+    intro:
+      "Trace around the building and pick the number of storeys. House washing is priced on wall area, not floor area, so that's exactly what this measures.",
+  },
+  "commercial-cleaning": {
+    heading: "Scope your site before you call us.",
+    intro:
+      "Trace the car park, loading bays or hardstand on satellite imagery for an indicative figure you can put in front of a budget holder. Larger sites still get a proper site visit — this gets the conversation started with a real number.",
+  },
+};
 
 /* PRESSURE */
 
@@ -644,12 +517,12 @@ function PressureExperience() {
         </span>
 
         <h2>
-          YOU DO ONE PASS.
+          You do one pass.
         </h2>
 
         <p>
           Drag the surface cleaner.
-          We'll do the actual driveway.
+          We’ll do the actual driveway.
         </p>
       </div>
 
@@ -695,8 +568,8 @@ function PressureExperience() {
       </div>
 
       <p className="interaction-caption">
-        Satisfying, isn't it?
-        Even better when you didn't
+        Satisfying, isn’t it?
+        Even better when you didn’t
         have to do it.
       </p>
     </section>
@@ -725,8 +598,8 @@ function BinExperience() {
         </span>
 
         <h2>
-          THIS ONE GETS
-          SPECIAL TREATMENT.
+          This one gets
+          special treatment.
         </h2>
 
         <p>
@@ -854,6 +727,8 @@ function BinBookingForm() {
     FormData
   >(bookBinCleaning, null);
 
+  useLeadEvent(result, "bin-cleaning");
+
   return (
     <form
       id="bin-booking"
@@ -866,7 +741,7 @@ function BinBookingForm() {
         </span>
 
         <h2>
-          PICK HOW OFTEN.
+          Pick how often.
         </h2>
 
         <p>
@@ -938,9 +813,9 @@ function BinBookingForm() {
       <label className="bin-upsell">
         <input type="checkbox" name="addOnDriveway" value="yes" />
         <span>
-          <strong>While we're on site — freshen up the driveway too?</strong>
+          <strong>While we’re on site — freshen up the driveway too?</strong>
           <small>
-            No extra call-out for this visit. We'll price it and confirm
+            No extra call-out for this visit. We’ll price it and confirm
             when we call to lock in your bin day.
           </small>
         </span>
@@ -1027,6 +902,8 @@ function SolarExperience() {
     FormData
   >(bookSolarCleaning, null);
 
+  useLeadEvent(result, "solar-panel-cleaning", total ?? undefined);
+
   return (
     <section className="prototype-interaction">
       <div className="interaction-heading">
@@ -1035,12 +912,12 @@ function SolarExperience() {
         </span>
 
         <h2>
-          COUNT YOUR PANELS.
+          Count your panels.
         </h2>
 
         <p>
           $14.50 a panel, flat rate.
-          Add your suburb and we'll
+          Add your suburb and we’ll
           add the local call-out too.
         </p>
       </div>
@@ -1122,7 +999,7 @@ function SolarExperience() {
                 ? match.fee != null
                   ? `$${match.fee.toFixed(2)} (${match.zone})`
                   : `To be confirmed (${match.zone})`
-                : "Outside our loaded list — we'll check it"}
+                : "Outside our loaded list — we’ll check it"}
           </strong>
 
           {total != null && (
@@ -1140,7 +1017,7 @@ function SolarExperience() {
           <p>
             The panel rate is confirmed.
             Call-out fees are a flat $50
-            for now until they're set per
+            for now until they’re set per
             suburb.
           </p>
         </div>
@@ -1221,8 +1098,8 @@ function CommercialExperience() {
         </span>
 
         <h2>
-          EVERYTHING YOU NEED.
-          WITHOUT CHASING US.
+          Everything you need.
+          Without chasing us.
         </h2>
 
         <p>

@@ -1,0 +1,780 @@
+<title>Morning Wash-Up</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&display=swap">
+<style>
+:root{
+  --page:#f2f5f1; --surface:#fdfdfc; --sunk:#eef1ec;
+  --ink:#10140f; --ink2:#4d544b; --muted:#838a7e; --hair:#dfe3db; --rule:#c6ccc1;
+  --accent:#0d6b4d; --accent-soft:#e2f0ea;
+  --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --s4:#eda100;
+  --good:#0ca30c; --warn:#fab219; --bad:#d03b3b; --serious:#ec835a;
+  --up:#00630a; --down:#b23636;
+  --shadow:0 1px 2px rgba(16,20,15,.05), 0 1px 1px rgba(16,20,15,.04);
+}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){
+  --page:#0c0e0c; --surface:#171a16; --sunk:#12150f;
+  --ink:#f3f6f1; --ink2:#b7beb2; --muted:#868d81; --hair:#292d27; --rule:#3a3f37;
+  --accent:#3bb78a; --accent-soft:#16291f;
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500;
+  --up:#0ca30c; --down:#e26a6a;
+  --shadow:none;
+}}
+:root[data-theme="dark"]{
+  --page:#0c0e0c; --surface:#171a16; --sunk:#12150f;
+  --ink:#f3f6f1; --ink2:#b7beb2; --muted:#868d81; --hair:#292d27; --rule:#3a3f37;
+  --accent:#3bb78a; --accent-soft:#16291f;
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500;
+  --up:#0ca30c; --down:#e26a6a;
+  --shadow:none;
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--page); color:var(--ink);
+  font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1140px; margin:0 auto; padding-block:28px 64px; padding-left:20px; padding-right:20px}
+h1,h2,h3,.eyebrow{font-family:Archivo,system-ui,sans-serif}
+.num{font-variant-numeric:tabular-nums}
+
+/* ---------- header ---------- */
+header.top{display:flex; flex-wrap:wrap; gap:18px; align-items:flex-end; justify-content:space-between; margin-bottom:22px}
+.masthead h1{margin:0; font-size:clamp(26px,4.4vw,36px); font-weight:700; letter-spacing:-.02em; line-height:1.05}
+.masthead .sub{margin-top:6px; color:var(--ink2); font-size:14px}
+.masthead .sub b{color:var(--ink); font-weight:600}
+.pipes{display:flex; flex-wrap:wrap; gap:6px; align-items:center}
+.pipe{display:inline-flex; align-items:center; gap:6px; font-size:12px; padding:5px 9px; border-radius:999px;
+  background:var(--surface); border:1px solid var(--hair); color:var(--ink2); white-space:nowrap}
+.dot{width:7px;height:7px;border-radius:50%;flex:none}
+.dot.ok{background:var(--good)} .dot.off{background:var(--rule)} .dot.err{background:var(--bad)}
+
+.samplebar{display:flex; gap:10px; align-items:flex-start; background:var(--accent-soft); border:1px solid var(--accent);
+  border-left-width:4px; border-radius:6px; padding:12px 14px; margin-bottom:22px; font-size:14px; color:var(--ink)}
+
+/* ---------- context strip ---------- */
+.strip{display:flex; flex-wrap:wrap; gap:1px; background:var(--hair); border:1px solid var(--hair);
+  border-radius:8px; overflow:hidden; margin-bottom:22px}
+.strip .cell{background:var(--surface); padding:11px 15px; flex:1 1 170px; min-width:0}
+.strip .cl{font-size:10.5px; text-transform:uppercase; letter-spacing:.09em; color:var(--muted); font-weight:600}
+.strip .cv{font-size:14.5px; margin-top:3px; font-weight:500}
+.strip .cv small{font-weight:400; color:var(--ink2); font-size:13px}
+.strip .cv.bad{color:var(--bad)} .strip .cv.good{color:var(--up)}
+.stars{letter-spacing:1px}
+
+/* ---------- section scaffolding ---------- */
+section{margin-top:34px}
+.eyebrow{font-size:11px; text-transform:uppercase; letter-spacing:.11em; color:var(--muted); font-weight:600; margin-bottom:12px;
+  display:flex; align-items:center; gap:10px}
+.eyebrow::after{content:""; flex:1; height:1px; background:var(--hair)}
+
+/* ---------- kpi tiles ---------- */
+.kpis{display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--hair);
+  border:1px solid var(--hair); border-radius:8px; overflow:hidden}
+@media (max-width:820px){.kpis{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:460px){.kpis{grid-template-columns:1fr}}
+.capcard{border-bottom-left-radius:0; border-bottom-right-radius:0; border-bottom:none; margin-bottom:0}
+.capcard + .tablewrap{border-top-left-radius:0; border-top-right-radius:0}
+.kpi{background:var(--surface); padding:16px 18px 15px}
+.kpi .k{font-size:11px; text-transform:uppercase; letter-spacing:.09em; color:var(--muted); font-weight:600}
+.kpi .v{font-size:32px; font-weight:600; letter-spacing:-.025em; margin-top:7px; line-height:1}
+.kpi .v.na{color:var(--muted); font-size:22px; font-weight:500}
+.kpi .d{margin-top:9px; font-size:12.5px; color:var(--ink2); display:flex; flex-direction:column; gap:3px}
+.delta{font-weight:600}
+.delta.up{color:var(--up)} .delta.down{color:var(--down)} .delta.flat{color:var(--muted)}
+
+/* ---------- attention list ---------- */
+.flags{display:flex; flex-direction:column; gap:1px; background:var(--hair); border:1px solid var(--hair); border-radius:8px; overflow:hidden}
+.flag{background:var(--surface); padding:13px 16px; display:flex; gap:12px; align-items:flex-start}
+.flag .sev{width:3px; align-self:stretch; border-radius:2px; flex:none; margin:-13px 0 -13px -16px; margin-right:9px}
+.flag.bad .sev{background:var(--bad)} .flag.warn .sev{background:var(--warn)}
+.flag.good .sev{background:var(--good)} .flag.info .sev{background:var(--rule)}
+.flag .tag{font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:.07em; padding:3px 7px; border-radius:4px; flex:none; margin-top:1px}
+.flag.bad .tag{background:rgba(208,59,59,.13); color:var(--bad)}
+.flag.warn .tag{background:rgba(250,178,25,.18); color:#8a6100}
+.flag.good .tag{background:rgba(12,163,12,.13); color:var(--up)}
+.flag.info .tag{background:var(--sunk); color:var(--muted)}
+.flag .txt{font-size:14px}
+.flag .txt b{font-weight:600}
+.flag .txt .why{display:block; color:var(--ink2); font-size:13px; margin-top:2px}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .flag.warn .tag{color:var(--warn)}}
+:root[data-theme="dark"] .flag.warn .tag{color:var(--warn)}
+
+/* ---------- charts ---------- */
+.charts{display:grid; grid-template-columns:repeat(auto-fit,minmax(290px,1fr)); gap:14px; align-items:start}
+.card{background:var(--surface); border:1px solid var(--hair); border-radius:8px; padding:15px 16px 12px; box-shadow:var(--shadow)}
+.card h3{margin:0 0 2px; font-size:14px; font-weight:600; letter-spacing:-.01em}
+.card .cap{font-size:12px; color:var(--muted); margin-bottom:10px}
+.legend{display:flex; gap:14px; flex-wrap:wrap; margin-top:8px; font-size:12px; color:var(--ink2)}
+.legend span{display:inline-flex; align-items:center; gap:6px}
+.swatch{width:9px;height:9px;border-radius:2px;flex:none}
+svg.chart{display:block; width:100%; height:auto; overflow:visible}
+.tip{position:fixed; z-index:50; pointer-events:none; background:var(--ink); color:var(--page); font-size:12px;
+  padding:7px 9px; border-radius:5px; line-height:1.45; white-space:nowrap; opacity:0; transition:opacity .09s}
+.tip.on{opacity:1}
+.tip .tn{font-variant-numeric:tabular-nums}
+
+/* ---------- tables ---------- */
+.tablewrap{overflow-x:auto; background:var(--surface); border:1px solid var(--hair); border-radius:8px}
+table{border-collapse:collapse; width:100%; font-size:13.5px}
+th,td{text-align:right; padding:10px 12px; white-space:nowrap; border-bottom:1px solid var(--hair)}
+th:first-child,td:first-child{text-align:left; white-space:normal; min-width:180px}
+thead th{font-size:10.5px; text-transform:uppercase; letter-spacing:.07em; color:var(--muted); font-weight:600;
+  border-bottom:1px solid var(--rule); background:var(--surface); position:sticky; top:0}
+tbody tr:last-child td{border-bottom:none}
+tbody tr.total td{font-weight:600; border-top:1px solid var(--rule); background:var(--sunk)}
+td.n{font-variant-numeric:tabular-nums}
+.barcell{display:flex; align-items:center; gap:8px; justify-content:flex-end}
+.bar{height:7px; border-radius:0 3px 3px 0; flex:none; min-width:2px}
+.chip{display:inline-block; font-size:10.5px; font-weight:600; padding:2px 6px; border-radius:4px; margin-left:7px; vertical-align:1px}
+.chip.bad{background:rgba(208,59,59,.13); color:var(--bad)}
+.chip.good{background:rgba(12,163,12,.13); color:var(--up)}
+.chip.warn{background:rgba(250,178,25,.2); color:#8a6100}
+.chip.mute{background:var(--sunk); color:var(--muted)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .chip.warn{color:var(--warn)}}
+:root[data-theme="dark"] .chip.warn{color:var(--warn)}
+.sub{color:var(--muted); font-size:12px; display:block; font-weight:400}
+
+.two{display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:14px}
+.list{list-style:none; margin:0; padding:0}
+.list li{display:flex; justify-content:space-between; gap:12px; padding:8px 0; border-bottom:1px solid var(--hair); font-size:13.5px}
+.list li:last-child{border-bottom:none}
+.list .r{font-variant-numeric:tabular-nums; color:var(--ink2); flex:none}
+.meter{height:6px; background:var(--sunk); border-radius:3px; overflow:hidden; margin-top:5px}
+.meter i{display:block; height:100%; border-radius:3px}
+
+.empty{background:var(--surface); border:1px dashed var(--rule); border-radius:8px; padding:18px; color:var(--ink2); font-size:14px}
+.empty b{color:var(--ink)}
+footer{margin-top:44px; padding-top:16px; border-top:1px solid var(--hair); color:var(--muted); font-size:12.5px; line-height:1.7}
+@media (max-width:560px){
+  th:first-child,td:first-child{min-width:140px}
+  .kpi .v{font-size:27px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="masthead">
+      <h1>Morning Wash-Up</h1>
+      <div class="sub" id="subline"></div>
+    </div>
+    <div class="pipes" id="pipes"></div>
+  </header>
+
+  <div id="samplebar"></div>
+  <div id="strip"></div>
+
+  <section style="margin-top:0">
+    <div class="eyebrow">The numbers</div>
+    <div class="kpis" id="kpis"></div>
+  </section>
+
+  <section>
+    <div class="eyebrow">What needs you today</div>
+    <div class="flags" id="flags"></div>
+  </section>
+
+  <section>
+    <div class="eyebrow">Last 14 days</div>
+    <div class="charts" id="charts"></div>
+  </section>
+
+  <section id="sec-gbp">
+    <div class="eyebrow">Google Business Profile</div>
+    <div id="gbp"></div>
+  </section>
+
+  <section id="sec-gads">
+    <div class="eyebrow">Google Ads</div>
+    <div id="gads"></div>
+  </section>
+
+  <section id="sec-meta">
+    <div class="eyebrow">Meta Ads</div>
+    <div id="meta"></div>
+  </section>
+
+  <section id="sec-web">
+    <div class="eyebrow">Website</div>
+    <div id="web"></div>
+  </section>
+
+  <section id="sec-gsc">
+    <div class="eyebrow">Google search</div>
+    <div id="gsc"></div>
+  </section>
+
+  <section id="sec-job">
+    <div class="eyebrow">What turned into work</div>
+    <div id="job"></div>
+  </section>
+
+  <section id="sec-money">
+    <div class="eyebrow">Money in</div>
+    <div id="money"></div>
+  </section>
+
+  <section id="sec-history">
+    <div class="eyebrow">The longer view</div>
+    <div id="history"></div>
+  </section>
+
+  <footer id="foot"></footer>
+</div>
+
+<div class="tip" id="tip"></div>
+
+<script id="report-data" type="application/json">__DATA__</script>
+<script>
+(function(){
+"use strict";
+const D = JSON.parse(document.getElementById("report-data").textContent);
+const S = D.sources, W = D.window, SUM = D.summary;
+const $ = s => document.querySelector(s);
+const el = (t,c,h)=>{const e=document.createElement(t); if(c)e.className=c; if(h!=null)e.innerHTML=h; return e;};
+const esc = s => String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const money = n => "$" + Number(n||0).toLocaleString("en-AU",{minimumFractionDigits:2,maximumFractionDigits:2});
+const money0 = n => "$" + Math.round(Number(n||0)).toLocaleString("en-AU");
+const int = n => Math.round(Number(n||0)).toLocaleString("en-AU");
+const pct = n => Number(n||0).toFixed(1) + "%";
+const ok = k => S[k] && S[k].status === "ok" && S[k].data;
+const dat = k => ok(k) ? S[k].data : null;
+
+const ga = dat("ga4"), gads = dat("google_ads"), meta = dat("meta_ads"), job = dat("jobber"), gsc = dat("gsc");
+const gbp = dat("gbp"), rev = dat("reviews"), xero = dat("xero"), wx = dat("weather"), health = dat("site_health");
+const HIST = D.history || null, ALERTS = D.alerts || [];
+
+/* ---------------- header ---------------- */
+$("#subline").innerHTML = "Everything that happened on <b>" + esc(W.day_label) + "</b> · built " +
+  esc(new Date(W.generated_at).toLocaleString("en-AU",{hour:"numeric",minute:"2-digit",day:"numeric",month:"short"}));
+
+const pipeNames = {ga4:"Website",gsc:"Search",google_ads:"Google Ads",meta_ads:"Meta Ads",jobber:"Jobber",
+  gbp:"Business Profile",reviews:"Reviews",xero:"Xero",weather:"Weather",site_health:"Uptime"};
+$("#pipes").innerHTML = Object.keys(pipeNames).map(k=>{
+  const st = S[k] ? S[k].status : "not_configured";
+  const cls = st==="ok"?"ok":st==="error"?"err":"off";
+  const note = st==="ok"?"":st==="error"?" — error":" — not connected";
+  return '<span class="pipe" title="'+esc((S[k]&&S[k].message)||"")+'"><i class="dot '+cls+'"></i>'+pipeNames[k]+note+'</span>';
+}).join("");
+
+if (D.sample) {
+  $("#samplebar").innerHTML = '<div class="samplebar"><div><b>This is a worked example, not your real numbers.</b> ' +
+    'Every figure below is made up to show you the shape of the report. Once the accounts are connected, ' +
+    'this bar disappears and everything on the page is live.</div></div>';
+}
+
+/* ---------------- context strip ---------------- */
+(function(){
+  const cells = [];
+  if (health) {
+    const okv = health.ok;
+    cells.push({l:"Website", v:(okv
+      ? '<span class="cv good">Up <small>· '+health.seconds+'s to load</small></span>'
+      : '<span class="cv bad">Down <small>· '+esc(String(health.status||health.error||"no response"))+'</small></span>')});
+  }
+  if (wx && wx.day) {
+    const ahead = wx.rain_ahead_mm;
+    cells.push({l:"Cairns weather", v:'<span class="cv">'+wx.day.rain_mm+'mm rain, '+wx.day.max_c+'°C'+
+      (ahead >= 20 ? ' <small>· '+Math.round(ahead)+'mm forecast — exterior work will slide</small>'
+                   : ' <small>· '+Math.round(ahead)+'mm forecast</small>')+'</span>'});
+  }
+  if (rev) {
+    const full = Math.round(rev.average);
+    cells.push({l:"Google reviews", v:'<span class="cv"><span class="stars">'+"★".repeat(full)+"☆".repeat(5-full)+'</span> '+
+      rev.average.toFixed(1)+' <small>· '+int(rev.total)+' reviews'+
+      (rev.unanswered_count ? ' · '+rev.unanswered_count+' unanswered' : '')+'</small></span>'});
+  }
+  if (HIST) {
+    cells.push({l:"History", v:'<span class="cv">'+int(HIST.days_recorded)+' days recorded <small>· comparisons get sharper daily</small></span>'});
+  }
+  if (cells.length) $("#strip").innerHTML = '<div class="strip">' +
+    cells.map(c=>'<div class="cell"><div class="cl">'+c.l+'</div>'+c.v+'</div>').join("") + '</div>';
+})();
+
+/* ---------------- KPI tiles ---------------- */
+function deltaEl(cur, base, label, higherIsBetter){
+  if (base == null || base === 0) return '<span class="delta flat">—</span> <span style="color:var(--muted)">'+label+'</span>';
+  const p = ((cur - base) / base) * 100;
+  const cls = (higherIsBetter === null || Math.abs(p) < 2) ? "flat" : (p > 0) === !!higherIsBetter ? "up" : "down";
+  const arrow = Math.abs(p) < 2 ? "→" : p > 0 ? "▲" : "▼";
+  return '<span class="delta '+cls+'">'+arrow+' '+Math.abs(p).toFixed(0)+'%</span> <span style="color:var(--muted)">'+label+'</span>';
+}
+
+const spendPrev = (gads && gads.daily && gads.daily.length>1 ? gads.daily[gads.daily.length-2].spend : 0) +
+                  (meta && meta.daily && meta.daily.length>1 ? meta.daily[meta.daily.length-2].spend : 0);
+const dailyAll = [];
+const gd = (gads&&gads.daily)||[], md = (meta&&meta.daily)||[];
+const allDates = Array.from(new Set([...gd.map(r=>r.date.replace(/-/g,"")), ...md.map(r=>r.date.replace(/-/g,""))])).sort();
+allDates.forEach(d=>{
+  const g = gd.find(r=>r.date.replace(/-/g,"")===d) || {spend:0,clicks:0,conversions:0};
+  const m = md.find(r=>r.date.replace(/-/g,"")===d) || {spend:0,clicks:0,leads:0};
+  dailyAll.push({date:d, g:g.spend, m:m.spend, leads:(g.conversions||0)+(m.leads||0)});
+});
+const spendTrail = dailyAll.slice(-8,-1);
+const spendTrailAvg = spendTrail.length ? spendTrail.reduce((a,r)=>a+r.g+r.m,0)/spendTrail.length : null;
+const leadTrailAvg = spendTrail.length ? spendTrail.reduce((a,r)=>a+r.leads,0)/spendTrail.length : null;
+const cplTrail = (spendTrailAvg!=null && leadTrailAvg) ? spendTrailAvg/leadTrailAvg : null;
+
+const anyAds = ok("google_ads") || ok("meta_ads");
+const tiles = [
+  {k:"Ad spend", v: anyAds ? money(SUM.spend) : null,
+   d: anyAds ? [deltaEl(SUM.spend, spendPrev, "vs day before", null),
+                deltaEl(SUM.spend, spendTrailAvg, "vs 7-day average", null)] : []},
+  {k:"Leads", v: SUM.leads != null ? int(SUM.leads) : null,
+   d: SUM.leads != null ? ['<span style="color:var(--muted)">from '+esc(SUM.leads_source)+'</span>',
+                           deltaEl(SUM.leads, leadTrailAvg, "vs 7-day average", true)] : []},
+  {k:"Cost per lead", v: SUM.cost_per_lead != null ? money(SUM.cost_per_lead) : (anyAds && SUM.spend>0 ? "no leads" : null),
+   d: SUM.cost_per_lead != null ? [deltaEl(SUM.cost_per_lead, cplTrail, "vs 7-day average", false),
+        '<span style="color:var(--muted)">'+money(SUM.spend)+' ÷ '+int(SUM.leads)+' leads</span>'] : []},
+  {k:"Website visits", v: ok("ga4") ? int(SUM.sessions) : null,
+   d: ok("ga4") ? [deltaEl(SUM.sessions, SUM.sessions_prev, "vs day before", true),
+                   deltaEl(SUM.sessions, SUM.sessions_trail_avg, "vs 7-day average", true)] : []},
+  {k:"Invoiced", v: xero ? money0(SUM.revenue) : null,
+   d: xero ? [deltaEl(SUM.revenue, xero.trail_avg, "vs 7-day average", true),
+              '<span style="color:var(--muted)">'+int(xero.count_today)+' invoice'+(xero.count_today===1?"":"s")+' raised</span>'] : []},
+  {k:"Return on ad spend", v: SUM.roas != null ? SUM.roas.toFixed(2)+"×" : (xero||anyAds ? "—" : null),
+   d: SUM.roas != null ? ['<span style="color:var(--muted)">'+money0(SUM.revenue)+' invoiced per '+money0(SUM.spend)+' spent</span>',
+        '<span style="color:var(--muted)">same-day only; recurring work pays back later</span>'] : []},
+  {k:"Seen on Google", v: gbp ? int(SUM.gbp_views) : null,
+   d: gbp ? [deltaEl(SUM.gbp_views, gbp.trail_avg.views, "vs 7-day average", true),
+             '<span style="color:var(--muted)">'+int(gbp.totals.search_views)+' in Search · '+int(gbp.totals.maps_views)+' in Maps</span>'] : []},
+  {k:"Calls off the listing", v: gbp ? int(SUM.gbp_calls) : null,
+   d: gbp ? [deltaEl(SUM.gbp_calls, gbp.trail_avg.calls, "vs 7-day average", true),
+             '<span style="color:var(--muted)">tapped call on your Google listing</span>'] : []},
+  {k:"Quotes raised", v: job ? money0(SUM.quote_value) : null,
+   d: job ? ['<span style="color:var(--muted)">'+int(SUM.quote_count)+' quote'+(SUM.quote_count===1?"":"s")+' sent</span>'] : []},
+];
+$("#kpis").innerHTML = tiles.map(t =>
+  '<div class="kpi"><div class="k">'+t.k+'</div>' +
+  (t.v==null ? '<div class="v na num">not connected</div>' : '<div class="v num">'+t.v+'</div>') +
+  (t.d.length ? '<div class="d">'+t.d.map(x=>'<span>'+x+'</span>').join("")+'</div>' : '') +
+  '</div>').join("");
+
+/* ---------------- attention rules ---------------- */
+/* Two engines feed this list. The collector raises anything that needs the
+   stored history to see (spend spikes, repeat dry days, new reviews); the
+   rules below catch what only needs yesterday. */
+const flags = [];
+const add = (sev, tag, txt, why) => flags.push({sev, tag, txt, why});
+const SEVMAP = {critical:"bad", warning:"warn", info:"info", good:"good"};
+const SEVTAG = {critical:"Act today", warning:"Watch", info:"Heads up", good:"Good news"};
+ALERTS.forEach(a => add(SEVMAP[a.severity]||"info", SEVTAG[a.severity]||"Note", "<b>"+esc(a.title)+"</b>", esc(a.detail)));
+
+if (anyAds && SUM.spend > 0 && !SUM.leads) {
+  add("bad","No return", "Spent <b>"+money(SUM.spend)+"</b> on ads and got nothing back.",
+      "Not automatically a crisis on one quiet day — but two in a row means something is broken between the click and the booking form.");
+}
+if (SUM.cost_per_lead != null && cplTrail && SUM.cost_per_lead > cplTrail*1.3) {
+  add("warn","Costs up","Each lead cost <b>"+money(SUM.cost_per_lead)+"</b>, against a 7-day average of "+money(cplTrail)+".",
+      "Leads got "+Math.round((SUM.cost_per_lead/cplTrail-1)*100)+"% dearer. Usually one campaign dragging the rest down — check the table below.");
+}
+if (gads) {
+  gads.campaigns.forEach(c=>{
+    if (c.spend >= 10 && c.conversions === 0)
+      add("bad","Burning","<b>"+esc(c.name)+"</b> spent "+money(c.spend)+" for zero conversions.",
+          c.clicks+" clicks, no one enquired. Either the keywords are pulling the wrong people or the landing page isn't closing.");
+    if (c.conversions > 0 && c.impression_share && c.impression_share < 55)
+      add("info","Room to grow","<b>"+esc(c.name)+"</b> converts, but only shows on "+pct(c.impression_share)+" of matching searches.",
+          "You're invisible for roughly "+Math.round(100-c.impression_share)+"% of the searches you already win work from. Budget or bid is the cap.");
+  });
+  const waste = gads.search_terms.filter(t=>t.spend>=3 && t.conversions===0).sort((a,b)=>b.spend-a.spend);
+  if (waste.length) {
+    const total = waste.reduce((a,t)=>a+t.spend,0);
+    add("warn","Check these searches", money(total)+" went on "+waste.length+" search terms that produced nothing — worst was <b>“"+esc(waste[0].term)+"”</b>.",
+        "Scan the search-terms table. Anything that isn't a real customer intent should be a negative keyword.");
+  }
+}
+if (meta && meta.ads.length > 1) {
+  const paid = meta.ads.filter(a=>a.spend>=5);
+  const best = paid.filter(a=>a.cost_per_lead!=null).sort((a,b)=>a.cost_per_lead-b.cost_per_lead)[0];
+  const worst = paid.filter(a=>a.cost_per_lead!=null).sort((a,b)=>b.cost_per_lead-a.cost_per_lead)[0];
+  if (best && worst && best!==worst && worst.cost_per_lead > best.cost_per_lead*1.6)
+    add("warn","Creative gap","<b>"+esc(best.name)+"</b> brings leads at "+money(best.cost_per_lead)+"; <b>"+esc(worst.name)+"</b> costs "+money(worst.cost_per_lead)+".",
+        "Same money, "+(worst.cost_per_lead/best.cost_per_lead).toFixed(1)+"× the price. Shift budget to the cheaper one and make more like it.");
+  const dead = paid.filter(a=>!a.leads && a.spend>=8);
+  dead.forEach(a=>add("bad","Burning","Meta ad <b>"+esc(a.name)+"</b> spent "+money(a.spend)+" with no leads.",
+        a.clicks+" clicks, nothing landed. Pause it or send the traffic somewhere that converts."));
+}
+if (ga) {
+  if (SUM.sessions_trail_avg && SUM.sessions < SUM.sessions_trail_avg*0.75)
+    add("warn","Traffic dip","Website visits fell to "+int(SUM.sessions)+", against a 7-day average of "+SUM.sessions_trail_avg+".",
+        "Check the ads are still running and the site is up before blaming the weather.");
+  const mob = ga.devices.find(d=>d.name==="mobile");
+  const tot = ga.devices.reduce((a,d)=>a+d.sessions,0);
+  if (mob && tot && mob.sessions/tot > 0.65 && ga.totals.averageSessionDuration < 45)
+    add("info","Mobile speed","<b>"+Math.round(mob.sessions/tot*100)+"%</b> of visits are on a phone, and the average visit lasts "+Math.round(ga.totals.averageSessionDuration)+" seconds.",
+        "Short visits on mobile usually mean the page is slow or the price isn't visible fast enough.");
+  const price = ga.pages.find(p=>/price/i.test(p.path));
+  if (price) add("good","Buying signal","<b>"+int(price.views)+"</b> people opened the price list and stayed "+Math.round(price.avg_seconds)+" seconds on average.",
+        "Price-page visitors are the closest thing to a warm lead the website produces.");
+}
+if (gads) {
+  const best = gads.campaigns.filter(c=>c.conversions>0).sort((a,b)=>a.cost_per_conversion-b.cost_per_conversion)[0];
+  if (best) add("good","Working","<b>"+esc(best.name)+"</b> brought "+best.conversions+" conversion"+(best.conversions===1?"":"s")+" at "+money(best.cost_per_conversion)+" each.",
+        "Cheapest work you bought yesterday. If you're adding budget anywhere, add it here first.");
+}
+if (!flags.length) {
+  add("info","All quiet","Nothing crossed a threshold worth interrupting you for.",
+      "Spend, leads and traffic all sat inside their normal range for the last week.");
+}
+const order = {bad:0, warn:1, info:2, good:3};
+flags.sort((a,b)=>order[a.sev]-order[b.sev]);
+$("#flags").innerHTML = flags.map(f =>
+  '<div class="flag '+f.sev+'"><i class="sev"></i><span class="tag">'+esc(f.tag)+'</span>' +
+  '<span class="txt">'+f.txt+'<span class="why">'+f.why+'</span></span></div>').join("");
+
+/* ---------------- charts ---------------- */
+const tip = $("#tip");
+function showTip(e, html){ tip.innerHTML = html; tip.classList.add("on");
+  const x = Math.min(e.clientX+14, innerWidth - tip.offsetWidth - 10);
+  tip.style.left = x+"px"; tip.style.top = (e.clientY - tip.offsetHeight - 12)+"px"; }
+function hideTip(){ tip.classList.remove("on"); }
+
+const fmtDay = d => { const s=String(d).replace(/-/g,""); return s.slice(6,8)+"/"+s.slice(4,6); };
+
+function stackedBars(host, rows, series, fmt, caption, title){
+  const W0=560, H0=150, padL=6, padB=20, padT=8;
+  const max = Math.max(1, ...rows.map(r=>series.reduce((a,s)=>a+(r[s.key]||0),0)));
+  const n = rows.length, bw = (W0-padL*2)/n, inner = Math.min(bw*0.62, 26);
+  let bars = "", ticks = "";
+  rows.forEach((r,i)=>{
+    const cx = padL + bw*i + bw/2;
+    let y = H0-padB;
+    const tot = series.reduce((a,s)=>a+(r[s.key]||0),0);
+    series.forEach((s,si)=>{
+      const v = r[s.key]||0; if(!v) return;
+      const h = (v/max)*(H0-padB-padT);
+      y -= h;
+      const top = si===series.length-1 || series.slice(si+1).every(x=>!(r[x.key]));
+      bars += '<rect x="'+(cx-inner/2).toFixed(1)+'" y="'+(y+ (si? 1:0)).toFixed(1)+'" width="'+inner.toFixed(1)+
+        '" height="'+Math.max(1,h-(si?1:0)).toFixed(1)+'" rx="'+(top?3:0)+'" fill="'+s.color+'"></rect>';
+    });
+    bars += '<rect class="hit" data-i="'+i+'" x="'+(cx-bw/2).toFixed(1)+'" y="'+padT+'" width="'+bw.toFixed(1)+
+      '" height="'+(H0-padB-padT)+'" fill="transparent"></rect>';
+    if (i===0 || i===n-1 || i===Math.floor(n/2))
+      ticks += '<text x="'+cx.toFixed(1)+'" y="'+(H0-6)+'" text-anchor="middle" font-size="10" fill="var(--muted)">'+fmtDay(r.date)+'</text>';
+  });
+  const grid = '<line x1="'+padL+'" y1="'+(H0-padB)+'" x2="'+(W0-padL)+'" y2="'+(H0-padB)+'" stroke="var(--rule)" stroke-width="1"></line>';
+  const card = el("div","card",
+    '<h3>'+title+'</h3><div class="cap">'+caption+'</div>' +
+    '<svg class="chart" viewBox="0 0 '+W0+' '+H0+'" role="img">'+grid+bars+ticks+'</svg>' +
+    (series.length>1 ? '<div class="legend">'+series.map(s=>'<span><i class="swatch" style="background:'+s.color+'"></i>'+s.label+'</span>').join("")+'</div>' : ''));
+  card.querySelectorAll(".hit").forEach(h=>{
+    h.addEventListener("mousemove", e=>{
+      const r = rows[+h.dataset.i];
+      showTip(e, '<b>'+fmtDay(r.date)+'</b><br>' + series.map(s=>s.label+': <span class="tn">'+fmt(r[s.key]||0)+'</span>').join("<br>") +
+        (series.length>1 ? '<br>Total: <span class="tn">'+fmt(series.reduce((a,s)=>a+(r[s.key]||0),0))+'</span>' : ''));
+    });
+    h.addEventListener("mouseleave", hideTip);
+  });
+  host.appendChild(card);
+}
+
+function lineChart(host, rows, key, fmt, caption, title, color){
+  const W0=560, H0=150, padL=6, padB=20, padT=10;
+  const max = Math.max(1, ...rows.map(r=>r[key]||0));
+  const n = rows.length;
+  const X = i => padL + (i/(n-1||1))*(W0-padL*2);
+  const Y = v => H0-padB - (v/max)*(H0-padB-padT);
+  const pts = rows.map((r,i)=>[X(i), Y(r[key]||0)]);
+  const path = pts.map((p,i)=>(i?"L":"M")+p[0].toFixed(1)+" "+p[1].toFixed(1)).join(" ");
+  const area = path + " L"+pts[pts.length-1][0].toFixed(1)+" "+(H0-padB)+" L"+pts[0][0].toFixed(1)+" "+(H0-padB)+" Z";
+  const last = pts[pts.length-1];
+  let ticks = "";
+  rows.forEach((r,i)=>{ if(i===0||i===n-1||i===Math.floor(n/2))
+    ticks += '<text x="'+X(i).toFixed(1)+'" y="'+(H0-6)+'" text-anchor="middle" font-size="10" fill="var(--muted)">'+fmtDay(r.date)+'</text>'; });
+  const hits = rows.map((r,i)=>'<rect class="hit" data-i="'+i+'" x="'+(X(i)-(W0/n/2)).toFixed(1)+'" y="'+padT+
+    '" width="'+(W0/n).toFixed(1)+'" height="'+(H0-padB-padT)+'" fill="transparent"></rect>').join("");
+  const card = el("div","card",
+    '<h3>'+title+'</h3><div class="cap">'+caption+'</div>' +
+    '<svg class="chart" viewBox="0 0 '+W0+' '+H0+'" role="img">' +
+    '<line x1="'+padL+'" y1="'+(H0-padB)+'" x2="'+(W0-padL)+'" y2="'+(H0-padB)+'" stroke="var(--rule)"></line>' +
+    '<path d="'+area+'" fill="'+color+'" opacity=".12"></path>' +
+    '<path d="'+path+'" fill="none" stroke="'+color+'" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"></path>' +
+    '<circle cx="'+last[0].toFixed(1)+'" cy="'+last[1].toFixed(1)+'" r="4.5" fill="'+color+'" stroke="var(--surface)" stroke-width="2"></circle>' +
+    ticks + hits + '</svg>');
+  card.querySelectorAll(".hit").forEach(h=>{
+    h.addEventListener("mousemove", e=>{ const r=rows[+h.dataset.i];
+      showTip(e, '<b>'+fmtDay(r.date)+'</b><br>'+title.replace(/,.*/,"")+': <span class="tn">'+fmt(r[key]||0)+'</span>'); });
+    h.addEventListener("mouseleave", hideTip);
+  });
+  host.appendChild(card);
+}
+
+const chartHost = $("#charts");
+if (dailyAll.length) {
+  const series = [];
+  if (gd.length) series.push({key:"g", label:"Google Ads", color:"var(--s1)"});
+  if (md.length) series.push({key:"m", label:"Meta Ads", color:"var(--s2)"});
+  stackedBars(chartHost, dailyAll, series, money0, "What you paid the platforms each day", "Ad spend");
+  stackedBars(chartHost, dailyAll.map(r=>({date:r.date, leads:r.leads})), [{key:"leads",label:"Leads",color:"var(--s3)"}],
+    int, "Conversions the ad platforms recorded", "Leads from ads");
+}
+if (ga && ga.trend && ga.trend.length) {
+  lineChart(chartHost, ga.trend, "sessions", int, "People landing on the site, all sources", "Website visits", "var(--accent)");
+}
+if (!chartHost.children.length) {
+  chartHost.innerHTML = '<div class="empty">Trend charts appear once an ad account or the website analytics is connected — they need a few days of history to be worth drawing.</div>';
+}
+
+/* ---------------- tables ---------------- */
+function notConnected(key, what){
+  const s = S[key] || {status:"not_configured", message:"Not set up"};
+  const msg = s.status === "error"
+    ? '<b>'+esc(pipeNames[key])+' returned an error.</b><br>'+esc(s.message)
+    : '<b>'+what+'</b><br><span style="color:var(--muted)">'+esc(s.message||"Not connected yet")+'</span>';
+  return '<div class="empty">'+msg+'</div>';
+}
+
+function table(cols, rows, totalRow){
+  return '<div class="tablewrap"><table><thead><tr>' +
+    cols.map(c=>'<th'+(c.w?' style="width:'+c.w+'"':'')+'>'+c.h+'</th>').join("") +
+    '</tr></thead><tbody>' + rows.join("") +
+    (totalRow ? '<tr class="total">'+totalRow+'</tr>' : '') + '</tbody></table></div>';
+}
+
+/* Business Profile */
+if (gbp) {
+  const t = gbp.totals;
+  const actionRows = [
+    {k:"Called you", v:t.calls, c:"var(--s1)"},
+    {k:"Tapped through to the site", v:t.website_clicks, c:"var(--s3)"},
+    {k:"Asked for directions", v:t.directions, c:"var(--s4)"},
+    {k:"Messaged you", v:t.messages, c:"var(--s2)"},
+  ];
+  const maxA = Math.max(1, ...actionRows.map(r=>r.v));
+  const acts = '<div class="card"><h3>What people did after seeing you</h3>' +
+    '<div class="cap">'+int(t.actions)+' actions from '+int(t.views)+' views — a '+t.action_rate+'% action rate</div><ul class="list">' +
+    actionRows.map(r=>'<li><span style="flex:1">'+r.k+
+      '<div class="meter"><i style="width:'+(r.v/maxA*100).toFixed(1)+'%;background:'+r.c+'"></i></div></span>' +
+      '<span class="r">'+int(r.v)+'</span></li>').join("") + '</ul></div>';
+
+  const seen = '<div class="card"><h3>Where they saw you</h3><div class="cap">Search vs Maps, yesterday</div><ul class="list">' +
+    '<li><span style="flex:1">Google Search<div class="meter"><i style="width:'+
+      (t.views?t.search_views/t.views*100:0).toFixed(1)+'%;background:var(--s1)"></i></div></span><span class="r">'+int(t.search_views)+'</span></li>' +
+    '<li><span style="flex:1">Google Maps<div class="meter"><i style="width:'+
+      (t.views?t.maps_views/t.views*100:0).toFixed(1)+'%;background:var(--s3)"></i></div></span><span class="r">'+int(t.maps_views)+'</span></li>' +
+    '</ul><div class="cap" style="margin-top:12px">Maps views are people looking for a service nearby right now — the closest thing to intent Google gives you for free.</div></div>';
+
+  let reviews = "";
+  if (rev) {
+    const rows = (rev.new_today.length ? rev.new_today : rev.unanswered).slice(0,5);
+    reviews = '<div class="card"><h3>' + (rev.new_today.length ? 'New reviews' : 'Waiting on a reply') + '</h3>' +
+      '<div class="cap">'+rev.average.toFixed(1)+' average across '+int(rev.total)+' reviews</div><ul class="list">' +
+      (rows.length ? rows.map(r=>'<li><span>'+esc(r.author)+
+        '<span class="sub">'+"★".repeat(r.stars)+"☆".repeat(5-r.stars)+(r.comment?' — '+esc(r.comment.slice(0,90)):"")+'</span></span>' +
+        '<span class="r">'+(r.replied?'<span class="chip mute">replied</span>':'<span class="chip warn">reply</span>')+'</span></li>').join("")
+        : '<li><span style="color:var(--muted)">Nothing new, nothing waiting.</span></li>') + '</ul></div>';
+  }
+  $("#gbp").innerHTML = '<div class="charts">'+acts+seen+(reviews||"")+'</div>';
+} else {
+  $("#gbp").innerHTML = notConnected("gbp","Your Google Business Profile isn't reporting yet.");
+}
+
+/* Google Ads */
+if (gads) {
+  const maxSpend = Math.max(1, ...gads.campaigns.map(c=>c.spend));
+  const rows = gads.campaigns.sort((a,b)=>b.spend-a.spend).map(c=>{
+    const flagChip = c.conversions===0 && c.spend>=10 ? '<span class="chip bad">no return</span>'
+      : c.conversions>0 ? '<span class="chip good">'+c.conversions+' conv</span>' : '';
+    return '<tr><td>'+esc(c.name)+flagChip+'<span class="sub">'+esc(c.channel.toLowerCase())+'</span></td>' +
+      '<td class="n"><span class="barcell"><i class="bar" style="width:'+(c.spend/maxSpend*56+4).toFixed(0)+'px;background:var(--s1)"></i>'+money(c.spend)+'</span></td>' +
+      '<td class="n">'+int(c.impressions)+'</td><td class="n">'+int(c.clicks)+'</td><td class="n">'+pct(c.ctr)+'</td>' +
+      '<td class="n">'+money(c.cpc)+'</td><td class="n">'+(c.conversions||0)+'</td>' +
+      '<td class="n">'+(c.conversions?money(c.cost_per_conversion):"—")+'</td>' +
+      '<td class="n">'+(c.impression_share?pct(c.impression_share):"—")+'</td></tr>';
+  });
+  const t = gads.totals;
+  const totalRow = '<td>All campaigns</td><td class="n">'+money(t.spend)+'</td><td class="n">'+int(t.impressions)+
+    '</td><td class="n">'+int(t.clicks)+'</td><td class="n">'+(t.impressions?pct(t.clicks/t.impressions*100):"—")+
+    '</td><td class="n">'+(t.clicks?money(t.spend/t.clicks):"—")+'</td><td class="n">'+t.conversions+
+    '</td><td class="n">'+(t.conversions?money(t.spend/t.conversions):"—")+'</td><td class="n">—</td>';
+  let html = table([{h:"Campaign"},{h:"Spend"},{h:"Shown"},{h:"Clicks"},{h:"CTR"},{h:"Cost/click"},{h:"Conv."},{h:"Cost/conv."},{h:"Impr. share"}], rows, totalRow);
+
+  if (gads.search_terms.length) {
+    const st = gads.search_terms.slice(0,15).map(s=>{
+      const bad = s.spend>=3 && s.conversions===0;
+      return '<tr><td>“'+esc(s.term)+'”'+(bad?'<span class="chip warn">no return</span>':'')+
+        '<span class="sub">'+esc(s.campaign)+'</span></td><td class="n">'+money(s.spend)+
+        '</td><td class="n">'+int(s.impressions)+'</td><td class="n">'+int(s.clicks)+'</td><td class="n">'+(s.conversions||0)+'</td></tr>';
+    });
+    html += '<div class="card capcard" style="margin-top:14px"><h3>What people actually typed</h3>' +
+      '<div class="cap">The real searches your ads answered. Anything flagged cost money and brought nothing — those are your negative keywords.</div></div>' +
+      table([{h:"Search term"},{h:"Spend"},{h:"Shown"},{h:"Clicks"},{h:"Conv."}], st);
+  }
+  $("#gads").innerHTML = html;
+} else {
+  $("#gads").innerHTML = notConnected("google_ads","Google Ads isn't reporting yet.");
+}
+
+/* Meta */
+if (meta) {
+  const maxS = Math.max(1, ...meta.campaigns.map(c=>c.spend));
+  const rows = meta.campaigns.sort((a,b)=>b.spend-a.spend).map(c=>
+    '<tr><td>'+esc(c.name)+(c.leads?'<span class="chip good">'+c.leads+' lead'+(c.leads===1?'':'s')+'</span>':'<span class="chip bad">no leads</span>')+'</td>' +
+    '<td class="n"><span class="barcell"><i class="bar" style="width:'+(c.spend/maxS*56+4).toFixed(0)+'px;background:var(--s2)"></i>'+money(c.spend)+'</span></td>' +
+    '<td class="n">'+int(c.impressions)+'</td><td class="n">'+int(c.reach)+'</td><td class="n">'+int(c.clicks)+'</td>' +
+    '<td class="n">'+pct(c.ctr)+'</td><td class="n">'+money(c.cpc)+'</td>' +
+    '<td class="n">'+(c.cost_per_lead!=null?money(c.cost_per_lead):"—")+'</td></tr>');
+  const t = meta.totals;
+  let html = table([{h:"Campaign"},{h:"Spend"},{h:"Shown"},{h:"People reached"},{h:"Clicks"},{h:"CTR"},{h:"Cost/click"},{h:"Cost/lead"}], rows,
+    '<td>All campaigns</td><td class="n">'+money(t.spend)+'</td><td class="n">'+int(t.impressions)+'</td><td class="n">'+int(t.reach)+
+    '</td><td class="n">'+int(t.clicks)+'</td><td class="n">'+(t.impressions?pct(t.clicks/t.impressions*100):"—")+
+    '</td><td class="n">'+(t.clicks?money(t.spend/t.clicks):"—")+'</td><td class="n">'+(t.leads?money(t.spend/t.leads):"—")+'</td>');
+
+  if (meta.ads.length) {
+    const ads = meta.ads.slice(0,12).map(a=>
+      '<tr><td>'+esc(a.name)+'<span class="sub">'+esc(a.campaign)+'</span></td><td class="n">'+money(a.spend)+
+      '</td><td class="n">'+int(a.impressions)+'</td><td class="n">'+int(a.clicks)+'</td><td class="n">'+pct(a.ctr)+
+      '</td><td class="n">'+(a.leads||0)+'</td><td class="n">'+(a.cost_per_lead!=null?money(a.cost_per_lead):"—")+'</td></tr>');
+    html += '<div class="card capcard" style="margin-top:14px"><h3>Ad by ad</h3><div class="cap">Which creative is doing the work. The cheapest cost-per-lead is the one to make more of.</div></div>' +
+      table([{h:"Ad"},{h:"Spend"},{h:"Shown"},{h:"Clicks"},{h:"CTR"},{h:"Leads"},{h:"Cost/lead"}], ads);
+  }
+  $("#meta").innerHTML = html;
+} else {
+  $("#meta").innerHTML = notConnected("meta_ads","Meta Ads isn't reporting yet.");
+}
+
+/* Website */
+if (ga) {
+  const t = ga.totals;
+  const chTot = ga.channels.reduce((a,c)=>a+c.sessions,0) || 1;
+  const chCol = {"Paid Search":"var(--s1)","Paid Social":"var(--s2)","Organic Search":"var(--s3)","Direct":"var(--s4)"};
+  const channels = '<div class="card"><h3>Where visits came from</h3><div class="cap">Paid vs earned, yesterday</div><ul class="list">' +
+    ga.channels.map(c=>'<li><span style="flex:1">'+esc(c.name)+
+      '<div class="meter"><i style="width:'+(c.sessions/chTot*100).toFixed(1)+'%;background:'+(chCol[c.name]||"var(--rule)")+'"></i></div></span>' +
+      '<span class="r">'+int(c.sessions)+'</span></li>').join("") + '</ul></div>';
+
+  const dTot = ga.devices.reduce((a,d)=>a+d.sessions,0) || 1;
+  const suburbs = '<div class="card"><h3>Where they were</h3><div class="cap">Visits by town — anything outside FNQ is wasted reach</div><ul class="list">' +
+    ga.cities.slice(0,8).map(c=>'<li><span>'+esc(c.name)+'</span><span class="r">'+int(c.sessions)+'</span></li>').join("") +
+    '</ul><div class="cap" style="margin:12px 0 4px">Device</div><ul class="list">' +
+    ga.devices.map(d=>'<li><span style="flex:1">'+esc(d.name)+
+      '<div class="meter"><i style="width:'+(d.sessions/dTot*100).toFixed(1)+'%;background:var(--accent)"></i></div></span>' +
+      '<span class="r">'+Math.round(d.sessions/dTot*100)+'%</span></li>').join("") + '</ul></div>';
+
+  const pages = table([{h:"Page"},{h:"Views"},{h:"Visits"},{h:"Avg. time"}],
+    ga.pages.slice(0,12).map(p=>'<tr><td>'+esc(p.path)+'</td><td class="n">'+int(p.views)+'</td><td class="n">'+int(p.sessions)+
+      '</td><td class="n">'+Math.floor(p.avg_seconds/60)+"m "+Math.round(p.avg_seconds%60)+"s"+'</td></tr>'));
+
+  $("#web").innerHTML =
+    '<div class="two" style="margin-bottom:14px">'+channels+suburbs+'</div>' +
+    '<div class="card capcard">' +
+    '<h3>Most-read pages</h3><div class="cap">'+int(t.screenPageViews)+' page views across '+int(t.sessions)+' visits · ' +
+    int(t.newUsers)+' first-timers · '+Math.round(t.bounceRate*100)+'% left without doing anything</div></div>' + pages;
+} else {
+  $("#web").innerHTML = notConnected("ga4","Website analytics isn't reporting yet.");
+}
+
+/* Search Console */
+if (gsc) {
+  const q = gsc.queries.slice(0,15).map(r=>{
+    const pos = r.position <= 3 ? '<span class="chip good">top 3</span>' : r.position > 10 ? '<span class="chip mute">page 2+</span>' : '';
+    return '<tr><td>“'+esc(r.query)+'”'+pos+'</td><td class="n">'+int(r.clicks)+'</td><td class="n">'+int(r.impressions)+
+      '</td><td class="n">'+r.ctr.toFixed(1)+'%</td><td class="n">'+r.position.toFixed(1)+'</td></tr>';
+  });
+  const l = gsc.latest_day, p = gsc.prior_day;
+  const head = '<div class="card capcard">' +
+    '<h3>What people searched to find you</h3><div class="cap">Free Google listings, ' + esc(gsc.window.start) + ' to ' + esc(gsc.window.end) +
+    ' — Google publishes this a couple of days behind' +
+    (l ? '. Latest day: <b>'+int(l.clicks)+'</b> clicks from <b>'+int(l.impressions)+'</b> appearances' +
+      (p ? ' ('+(l.clicks>=p.clicks?"up":"down")+' from '+int(p.clicks)+')' : '') : '') + '</div></div>';
+  $("#gsc").innerHTML = head + table([{h:"Search term"},{h:"Clicks"},{h:"Times shown"},{h:"Click rate"},{h:"Avg. position"}], q);
+} else {
+  $("#gsc").innerHTML = notConnected("gsc","Google Search Console isn't reporting yet.");
+}
+
+/* Jobber */
+if (job) {
+  const reqs = '<div class="card"><h3>New enquiries</h3><div class="cap">'+int(job.requests.count)+' came in</div><ul class="list">' +
+    (job.requests.items.length ? job.requests.items.map(r=>'<li><span>'+esc(r.title||"Request")+
+      '<span class="sub">'+esc(r.client||"")+'</span></span><span class="r">'+esc(r.source||"")+'</span></li>').join("")
+      : '<li><span style="color:var(--muted)">None yesterday</span></li>') + '</ul></div>';
+  const quotes = '<div class="card"><h3>Quotes sent</h3><div class="cap">'+money0(job.quotes.value)+' across '+int(job.quotes.count)+'</div><ul class="list">' +
+    (job.quotes.items.length ? job.quotes.items.map(q=>'<li><span>'+esc(q.client||("Quote #"+q.number))+
+      '<span class="sub">'+esc(String(q.status||"").toLowerCase().replace(/_/g," "))+'</span></span><span class="r">'+money(q.total)+'</span></li>').join("")
+      : '<li><span style="color:var(--muted)">None yesterday</span></li>') + '</ul></div>';
+  const jobs = '<div class="card"><h3>Work booked</h3><div class="cap">'+money0(job.jobs.value)+' across '+int(job.jobs.count)+'</div><ul class="list">' +
+    (job.jobs.items.length ? job.jobs.items.map(j=>'<li><span>'+esc(j.client||("Job #"+j.number))+'</span><span class="r">'+money(j.total)+'</span></li>').join("")
+      : '<li><span style="color:var(--muted)">None yesterday</span></li>') + '</ul></div>';
+  $("#job").innerHTML = '<div class="charts">'+reqs+quotes+jobs+'</div>';
+} else {
+  $("#job").innerHTML = notConnected("jobber","Jobber isn't reporting yet.");
+}
+
+/* Money in */
+if (xero) {
+  const rows = xero.items.map(i=>'<tr><td>'+esc(i.contact||"—")+'<span class="sub">'+esc(i.number||"")+'</span></td>' +
+    '<td class="n">'+esc(String(i.status||"").toLowerCase())+'</td><td class="n">'+money(i.total)+'</td></tr>');
+  const head = '<div class="card capcard"><h3>Invoiced yesterday</h3><div class="cap">' +
+    money(xero.invoiced_today)+' across '+int(xero.count_today)+' invoice'+(xero.count_today===1?"":"s")+
+    ' · 7-day average '+money(xero.trail_avg)+
+    (SUM.roas!=null ? ' · '+SUM.roas.toFixed(2)+'× what you spent on ads that day' : '')+
+    '</div></div>';
+  $("#money").innerHTML = head + table([{h:"Customer"},{h:"Status"},{h:"Amount"}],
+    rows.length?rows:['<tr><td colspan="3" style="color:var(--muted)">Nothing invoiced yesterday.</td></tr>']);
+} else {
+  $("#money").innerHTML = notConnected("xero","Xero isn't reporting yet.");
+}
+
+/* The longer view */
+if (HIST && HIST.days_recorded > 3) {
+  const a = HIST.last30, b = HIST.prior30;
+  const rows = [
+    {k:"Enquiries a day", a:a.leads, b:b.leads, fmt:v=>v==null?"—":v.toFixed(1), up:true},
+    {k:"Ad spend a day", a:a.spend, b:b.spend, fmt:v=>v==null?"—":money(v), up:null},
+    {k:"Website visits a day", a:a.sessions, b:b.sessions, fmt:v=>v==null?"—":Math.round(v), up:true},
+    {k:"Calls off the listing", a:a.gbp_calls, b:b.gbp_calls, fmt:v=>v==null?"—":v.toFixed(1), up:true},
+    {k:"Invoiced a day", a:a.revenue, b:b.revenue, fmt:v=>v==null?"—":money(v), up:true},
+  ].filter(r=>r.a!=null || r.b!=null);
+
+  const compare = table([{h:"Per day"},{h:"Last 30 days"},{h:"30 days before"},{h:"Change"}],
+    rows.map(r=>{
+      let d = '<span class="delta flat">—</span>';
+      if (r.a!=null && r.b) {
+        const p = (r.a-r.b)/r.b*100;
+        const cls = (r.up===null||Math.abs(p)<2) ? "flat" : (p>0)===r.up ? "up" : "down";
+        d = '<span class="delta '+cls+'">'+(Math.abs(p)<2?"→":p>0?"▲":"▼")+' '+Math.abs(p).toFixed(0)+'%</span>';
+      }
+      return '<tr><td>'+r.k+'</td><td class="n">'+r.fmt(r.a)+'</td><td class="n">'+r.fmt(r.b)+'</td><td class="n">'+d+'</td></tr>';
+    }));
+
+  let syl = "";
+  if (HIST.same_week_last_year && HIST.same_week_last_year.leads != null) {
+    syl = '<div class="card" style="margin-top:14px"><h3>This week last year</h3><div class="cap">' +
+      HIST.same_week_last_year.leads.toFixed(1)+' enquiries a day, '+Math.round(HIST.same_week_last_year.sessions)+
+      ' visits a day. Seasonal work looks broken until you compare it to the same week, not last month.</div></div>';
+  }
+
+  const hostWrap = el("div", null,
+    '<div class="card capcard"><h3>Month on month</h3><div class="cap">Built from ' +
+    int(HIST.days_recorded)+' days this report has stored. Nothing here comes from an API — it is your own record.</div></div>' +
+    compare + syl);
+  $("#history").appendChild(hostWrap);
+
+  const ser = HIST.series.filter(r=>r.leads!=null);
+  if (ser.length > 14) {
+    const host = el("div","charts"); host.style.marginTop = "14px";
+    lineChart(host, ser.map(r=>({date:r.date.replace(/-/g,""), leads:r.leads})), "leads", int,
+      "Every day this report has recorded", "Enquiries", "var(--s3)");
+    if (ser.some(r=>r.rain_mm)) {
+      stackedBars(host, ser.map(r=>({date:r.date.replace(/-/g,""), rain:r.rain_mm||0})),
+        [{key:"rain",label:"Rain",color:"var(--s1)"}], v=>v.toFixed(1)+"mm",
+        "Put this beside the enquiry line before blaming the ads", "Rainfall");
+    }
+    $("#history").appendChild(host);
+  }
+} else {
+  $("#history").innerHTML = '<div class="empty"><b>Building history.</b><br>' +
+    '<span style="color:var(--muted)">Each run stores one row. After a fortnight this section starts answering ' +
+    '“is this normal”, and after a year it can compare against the same week last season.</span></div>';
+}
+
+/* Footer */
+const waiting = Object.keys(pipeNames).filter(k=>S[k] && S[k].status!=="ok");
+$("#foot").innerHTML =
+  'Reporting on ' + esc(W.day_label) + ', the last complete day (Brisbane time). Ad platforms keep adjusting the previous day for several hours, so late-evening conversions can land after this was built.' +
+  (waiting.length ? '<br>Still to connect: <b>' + waiting.map(k=>esc(pipeNames[k])).join(", ") + '</b>.' : '') +
+  '<br>' + (HIST ? 'Month-on-month figures come from this report&rsquo;s own stored history (' + int(HIST.days_recorded) + ' days), not from any platform. ' : '') + 'Built by Claude for Cairns Bin Cleaning · regenerates every morning.';
+})();
+</script>

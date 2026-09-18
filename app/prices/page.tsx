@@ -41,13 +41,16 @@ export default function Prices() {
       </section>
       <p className="priceNote">
         Solar is $14.50 per panel plus a local service call-out — the
-        call-out fee depends on your suburb, so give us a call and we'll
+        call-out fee depends on your suburb, so give us a call and we’ll
         confirm the exact total before we book anything in.
       </p>
 
       <footer className="service-footer">
         <span>CAIRNS BIN CLEANING</span>
         <nav>
+          <Link href="/service-areas">Areas</Link>
+          <Link href="/faq">FAQ</Link>
+          <Link href="/about">About</Link>
           <Link href="/privacy">Privacy</Link>
           <Link href="/terms">Terms</Link>
         </nav>

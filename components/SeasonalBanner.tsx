@@ -53,7 +53,7 @@ function computeBanner(now: Date): BannerContent {
   if (month === 11 && date >= 15 && date <= 25) {
     return {
       key: "christmas",
-      text: "Book before the 25th — we'll fit you in before the family arrives.",
+      text: "Book before the 25th — we’ll fit you in before the family arrives.",
       tint: "rgba(121,197,29,.14)",
     };
   }
@@ -69,7 +69,7 @@ function computeBanner(now: Date): BannerContent {
   if (month === 0 && date === 26) {
     return {
       key: "australia-day",
-      text: "Australia Day long weekend — we're still on the road.",
+      text: "Australia Day long weekend — we’re still on the road.",
       tint: "rgba(166,240,82,.16)",
     };
   }
@@ -85,7 +85,7 @@ function computeBanner(now: Date): BannerContent {
   if (isSameDate(now, firstMondayOf(year, 4))) {
     return {
       key: "labour-day",
-      text: "Labour Day long weekend — we're still on the road.",
+      text: "Labour Day long weekend — we’re still on the road.",
       tint: "rgba(166,240,82,.16)",
     };
   }
@@ -93,7 +93,7 @@ function computeBanner(now: Date): BannerContent {
   if (isSameDate(now, firstMondayOf(year, 9))) {
     return {
       key: "kings-birthday",
-      text: "King's Birthday long weekend — we're still on the road.",
+      text: "King’s Birthday long weekend — we’re still on the road.",
       tint: "rgba(166,240,82,.16)",
     };
   }
@@ -102,7 +102,7 @@ function computeBanner(now: Date): BannerContent {
   if (month >= 10 || month <= 3) {
     return {
       key: "wet-season",
-      text: "Wet season grime doesn't wait. Neither should your driveway.",
+      text: "Wet season grime doesn’t wait. Neither should your driveway.",
       tint: "rgba(47,127,176,.10)",
     };
   }

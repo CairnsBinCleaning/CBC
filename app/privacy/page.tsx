@@ -38,12 +38,12 @@ export default function Privacy() {
         <p>
           When you fill in a booking or enquiry form, we collect what you
           type in: your name, phone number, email address (if you give one),
-          street address and suburb, and the service or plan you've chosen.
-          That's it — we don't ask for anything beyond what's needed to
+          street address and suburb, and the service or plan you’ve chosen.
+          That’s it — we don’t ask for anything beyond what’s needed to
           quote and book the job.
         </p>
 
-        <h2>What we don't collect (yet)</h2>
+        <h2>What we don’t collect (yet)</h2>
         <p>
           This site does not currently run analytics tracking. If that
           changes, this page will say so, and it will only ever be
@@ -55,15 +55,15 @@ export default function Privacy() {
         <p>
           Your details go into Jobber, the scheduling and invoicing software
           we run the business on, so we can quote you accurately, get the
-          right crew to the right address, and send an invoice. We don't use
-          your information for anything else, and we don't sell, rent or
+          right crew to the right address, and send an invoice. We don’t use
+          your information for anything else, and we don’t sell, rent or
           trade it to anyone.
         </p>
 
         <h2>Who we share it with</h2>
         <p>
           Jobber Technologies Inc. processes your booking details on our
-          behalf as our scheduling and invoicing platform. We don't hand
+          behalf as our scheduling and invoicing platform. We don’t hand
           your details to any other third party. If a future integration
           changes that, this page will be updated to say exactly who and
           why before it happens.
@@ -71,10 +71,10 @@ export default function Privacy() {
 
         <h2>How long we keep it</h2>
         <p>
-          We keep your details for as long as you're an active or recurring
-          customer, plus the period we're required to retain records for tax
+          We keep your details for as long as you’re an active or recurring
+          customer, plus the period we’re required to retain records for tax
           purposes under Australian law. If you ask us to delete your
-          details and you're not an active customer, we will.
+          details and you’re not an active customer, we will.
         </p>
 
         <h2>Your rights</h2>
@@ -95,7 +95,7 @@ export default function Privacy() {
 
         <p className="legalNote">
           This page describes our actual practices in plain language. It
-          isn't a substitute for professional legal advice, and it's
+          isn’t a substitute for professional legal advice, and it’s
           reviewed as the business and this site grow.
         </p>
       </section>
@@ -104,6 +104,9 @@ export default function Privacy() {
         <span>CAIRNS BIN CLEANING</span>
         <nav>
           <Link href="/">Home</Link>
+          <Link href="/service-areas">Areas</Link>
+          <Link href="/faq">FAQ</Link>
+          <Link href="/about">About</Link>
           <Link href="/prices">Prices</Link>
           <Link href="/terms">Terms &amp; Cancellation</Link>
         </nav>

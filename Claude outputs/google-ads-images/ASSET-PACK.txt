@@ -1,0 +1,146 @@
+CAIRNS BIN CLEANING — GOOGLE ADS ASSET PACK
+Campaign: Pressure Washing - Cairns to Redlynch
+Prepared 18 September 2026
+
+Paste these in at Google Ads > Campaigns > your campaign > Ads > edit the responsive search ad.
+
+================================================================
+HEADLINES  (15 max, 30 characters each)
+================================================================
+
+ 1. Pressure Cleaning Cairns
+ 2. Cairns Pressure Washing
+ 3. Driveway & Path Cleaning
+ 4. House Washing Cairns
+ 5. Roof Cleaning Cairns
+ 6. Free Instant Quote
+ 7. See The Price First
+ 8. Local Cairns Crew
+ 9. Cairns To Redlynch, Daily
+10. $20M Public Liability
+11. Same Week Bookings
+12. We Turn Up When We Say
+13. Concrete Like New Again
+14. Fully Insured, Local
+15. Call 0434 052 755
+
+================================================================
+DESCRIPTIONS  (4 max, 90 characters each)
+================================================================
+
+ 1. Driveways, paths, roofs and house washing across Cairns. Straight prices, no sales visit.
+ 2. Local crew, fully insured, $20M public liability. We turn up when we say we will.
+ 3. See the price before you book. Same week bookings across Cairns and the northern beaches.
+ 4. Real jobs, real suburbs, honest quotes. For a greener cleaner FNQ.
+
+================================================================
+KEYWORDS
+================================================================
+
+Phrase match (the quote marks matter — paste them as written).
+
+-- Core service — phrase match
+   "pressure cleaning cairns"
+   "pressure washing cairns"
+   "driveway cleaning cairns"
+   "driveway pressure cleaning"
+   "high pressure cleaning cairns"
+   "concrete cleaning cairns"
+   "pressure cleaner cairns"
+   "exterior cleaning cairns"
+
+-- Adjacent services you actually do
+   "house washing cairns"
+   "soft wash cairns"
+   "roof cleaning cairns"
+   "roof washing cairns"
+   "gutter cleaning cairns"
+   "solar panel cleaning cairns"
+   "window cleaning cairns"
+
+-- Suburb intent — the campaign's own area
+   "pressure cleaning redlynch"
+   "pressure cleaning smithfield"
+   "pressure cleaning edmonton"
+   "pressure cleaning gordonvale"
+   "pressure cleaning trinity beach"
+   "driveway cleaning near me"
+   "pressure washing near me"
+
+-- Commercial / strata
+   "commercial pressure cleaning cairns"
+   "strata cleaning cairns"
+   "carpark cleaning cairns"
+
+================================================================
+NEGATIVE KEYWORDS
+================================================================
+
+Add these as campaign negatives. They are the searches that look
+relevant, cost money and never become a job — people after equipment,
+jobs, or a DIY answer.
+
+   free
+   diy
+   how to
+   hire
+   rental
+   rent
+   job
+   jobs
+   career
+   careers
+   salary
+   course
+   training
+   machine
+   machines
+   for sale
+   buy
+   bunnings
+   karcher
+   second hand
+   used
+   cheap
+   car wash
+   carpet
+   pool cleaning
+   gumtree
+   business for sale
+
+================================================================
+IMAGES
+================================================================
+
+24 files in the ads-images folder: 8 photos x 3 ratios (landscape 1200x628,
+square 1200x1200, portrait 960x1200). All real Cairns jobs from your own
+media library, centre-cropped, under Google's 5MB cap.
+
+Strongest five for this campaign, in order:
+
+ 1. surface-cleaner-redlynch    operator working, branded ute, tropical backdrop
+ 2. split-driveway-edmonton     the half-clean line — the clearest proof shot you own
+ 3. house-wash-smithfield       wand in hand, akubra, reads as a real person
+ 4. clean-driveway-mooroobool   branded ute against the ranges, unmistakably Cairns
+ 5. split-roof-whitfield        before/after line across roof sheets
+
+Weaker, include only if you want volume:
+
+ - stained-driveway-bentley-park   good contrast, but someone's legs crop oddly at the top
+ - pool-surround-trinity-beach     wet concrete; the improvement is hard to read
+ - clad-wall-gordonvale            see the note below
+
+================================================================
+TWO THINGS TO CHECK
+================================================================
+
+1. clad-wall-after-soft-wash-gordonvale.jpg appears to show a ROOF with
+   solar panels and air-conditioning units, not a clad wall. If the filename
+   is wrong, the alt text on the website is wrong too, and that alt text is
+   what a screen reader and Google both read.
+
+2. No price appears anywhere in this copy. Your only confirmed prices are
+   bin cleaning ($35.95 / $39.95 / $74.95) and solar ($14.50 per panel).
+   There is no confirmed driveway price, so nothing here promises one.
+   Give me a real figure and 'Driveways from $X' becomes the strongest
+   headline in the set — price in the headline is what stops the scroll.
