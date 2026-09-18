@@ -1,5 +1,5 @@
 'use client';
-import Link from 'next/link';import {useState} from 'react';import AtmosphereCanvas from './AtmosphereCanvas';import LiveStat from './LiveStat';import {services} from '../lib/services';import {LIFETIME_BIN_CLEANS} from '../lib/stats';
+import Image from 'next/image';import Link from 'next/link';import {useState} from 'react';import AtmosphereCanvas from './AtmosphereCanvas';import LiveStat from './LiveStat';import {services} from '../lib/services';import {LIFETIME_BIN_CLEANS} from '../lib/stats';
 export default function HomeExperience(){const [active,setActive]=useState(0);const s=services[active];return <main className={'site tone-'+s.tone}>
  <section className="heroScene">
   <video className="heroVideo" autoPlay muted loop playsInline poster="/media/IMG_3027.jpg"><source src="/media/pressure-hero.mp4" type="video/mp4"/></video>
@@ -12,7 +12,7 @@ export default function HomeExperience(){const [active,setActive]=useState(0);co
   <div className="stageIntro"><p className="eyebrow dark">START WITH THE PROBLEM</p><h2>Simple on purpose.</h2><p>No giant form. No hunting through menus. Choose what you need and we’ll take it from there.</p></div>
   <div className="serviceExplorer">
    <div className="serviceList">{services.map((item,i)=><Link key={item.slug} href={'/'+item.slug} onMouseEnter={()=>setActive(i)} onFocus={()=>setActive(i)} className={i===active?'active':''}><span>{String(i+1).padStart(2,'0')}</span>{item.name}<b>↗</b></Link>)}</div>
-   <Link href={'/'+s.slug} className="servicePreview"><img src={s.media} alt={s.name+' — '+s.short}/><div className="previewShade"/><div className="previewCopy"><small>{s.cue}</small><h3>{s.name}</h3><p>{s.short}</p><strong>{s.price}</strong><em>See service →</em></div></Link>
+   <Link href={'/'+s.slug} className="servicePreview"><Image src={s.media} alt={s.name+' — '+s.short} fill sizes="(max-width: 850px) 100vw, 55vw" quality={75}/><div className="previewShade"/><div className="previewCopy"><small>{s.cue}</small><h3>{s.name}</h3><p>{s.short}</p><strong>{s.price}</strong><em>See service →</em></div></Link>
   </div>
  </section>
  <section className="proofScene"><div><p className="eyebrow dark">REAL CAIRNS WORK</p><h2>Not stock photos.<br/>Not made-up jobs.</h2><p>The website is being built around the work we actually do — homes, commercial sites, bins, concrete and tropical exterior maintenance.</p>{LIFETIME_BIN_CLEANS!=null&&<LiveStat count={LIFETIME_BIN_CLEANS}/>}</div><div className="proofGrid"><img src="/media/IMG_3031.jpg" alt="Cleaned concrete in Cairns"/><img src="/media/IMG_2935.jpg" alt="Clean commercial walkway"/><img src="/media/IMG_2902.jpg" alt="Real Cairns job site"/></div></section>

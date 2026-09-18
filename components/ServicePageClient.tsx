@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import {
   useActionState,
@@ -23,11 +24,14 @@ import {
   type BookBinCleaningResult,
   bookSolarCleaning,
   type BookSolarCleaningResult,
+  requestServiceQuote,
+  type RequestServiceQuoteResult,
 } from "../lib/jobber/actions";
 
 import QuoteMeasure from "./QuoteMeasure";
 import ServiceGallery from "./ServiceGallery";
 import { useLeadEvent } from "./Analytics";
+import { serviceFaq } from "../lib/serviceFaq";
 
 /* Which service pages get the satellite measure-and-quote tool, and which
    quote service it opens on.
@@ -89,11 +93,15 @@ export default function ServicePageClient({
                   ? "#solar-booking"
                   : MEASURABLE_SERVICES[service.slug]
                     ? "#instant-quote"
-                    : "tel:+61434052755"
+                    : "#quote-request"
             }
             className="nav-book-btn"
           >
-            {MEASURABLE_SERVICES[service.slug] ? "INSTANT QUOTE" : "BOOK NOW"}
+            {MEASURABLE_SERVICES[service.slug]
+              ? "INSTANT QUOTE"
+              : service.slug === "bin-cleaning" || service.slug === "solar-panel-cleaning"
+                ? "BOOK NOW"
+                : "GET A PRICE"}
           </a>
         </nav>
       </header>
@@ -121,7 +129,26 @@ export default function ServicePageClient({
         </div>
 
         <div className="service-media">
-          <img src={service.media} alt={service.mediaCaption} />
+          {(() => {
+            /* Hero photo: the first thing on the page, so it loads first.
+               Dimensions come from its gallery entry. */
+            const hero = service.gallery.find((p) => p.src === service.media);
+            return hero ? (
+              <Image
+                src={service.media}
+                alt={hero.alt}
+                width={hero.width}
+                height={hero.height}
+                sizes="(max-width: 850px) 100vw, 50vw"
+                loading="eager"
+                fetchPriority="high"
+                quality={75}
+              />
+            ) : (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={service.media} alt={service.mediaCaption} fetchPriority="high" />
+            );
+          })()}
           <span className="service-media-caption">{service.mediaCaption}</span>
         </div>
       </section>
@@ -303,6 +330,19 @@ export default function ServicePageClient({
 
       <ServiceGallery service={service} />
 
+      <section className="service-faq" aria-labelledby="service-faq-title">
+        <span className="eyebrow">COMMON QUESTIONS</span>
+        <h2 id="service-faq-title">{service.name} in Cairns, answered.</h2>
+        <dl>
+          {serviceFaq(service).map(({ q, a }) => (
+            <div key={q}>
+              <dt>{q}</dt>
+              <dd>{a}</dd>
+            </div>
+          ))}
+        </dl>
+      </section>
+
       <section className="related-section">
         <span className="eyebrow">
           OFTEN MAKES SENSE TOGETHER
@@ -344,7 +384,8 @@ export default function ServicePageClient({
           <Link href="/privacy">Privacy</Link>
           <Link href="/terms">Terms</Link>
         </nav>
-      <small className="madeBy">Created by Siezar DeWaal</small></footer>
+        <small className="madeBy">Created by Siezar DeWaal</small>
+      </footer>
     </main>
   );
 }
@@ -366,22 +407,7 @@ function ServiceInteraction({
     ) : slug === "commercial-cleaning" ? (
       <CommercialExperience />
     ) : quoteService ? null : (
-      <section className="prototype-interaction">
-        <span className="eyebrow">
-          SIGNATURE INTERACTION
-        </span>
-
-        <h2>
-          This one still needs
-          its own idea.
-        </h2>
-
-        <p>
-          We won’t reuse another
-          service’s gimmick just because
-          it already exists.
-        </p>
-      </section>
+      <QuoteRequestForm slug={slug} />
     );
 
   /* The measure-and-quote tool IS the signature interaction for the
@@ -681,6 +707,9 @@ function BinBookingForm() {
       action={formAction}
       className="bin-booking"
     >
+      {/* Honeypot: hidden from people, filled by bots. See lib/guard.ts. */}
+      <input type="text" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" className="hp-field" />
+
       <div className="interaction-heading">
         <span className="eyebrow">
           LOCK IN A PLAN
@@ -873,6 +902,9 @@ function SolarExperience() {
         action={formAction}
         className="solar-calculator"
       >
+        {/* Honeypot: hidden from people, filled by bots. See lib/guard.ts. */}
+        <input type="text" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" className="hp-field" />
+
         <input type="hidden" name="panels" value={panels} />
 
         <label className="solar-suburb">
@@ -1164,6 +1196,101 @@ function CommercialExperience() {
           Opens your email app with the request ready to send.
         </p>
       </div>
+    </section>
+  );
+}
+
+/* QUOTE REQUEST — window and gutter cleaning.
+   Priced per pane and per metre of roofline, so there's no honest instant
+   number to show. This takes the job description, shows the one real
+   published figure (the flat visit fee) and creates the Jobber client and
+   request, same as every other booking path. */
+
+const QUOTE_REQUEST_COPY: Record<string, { heading: string; intro: string; placeholder: string; name: string }> = {
+  "window-cleaning": {
+    name: "Window Cleaning",
+    heading: "Tell us about the windows.",
+    intro: "Roughly how many, how many storeys, inside, outside or both. We’ll come back with one price for the job.",
+    placeholder: "e.g. single-storey house, about 14 windows, outside only, plus the sliding doors",
+  },
+  "gutter-cleaning": {
+    name: "Gutter Cleaning",
+    heading: "Tell us about the gutters.",
+    intro: "Single or double storey, and whether they’re overflowing yet. We’ll come back with one price for the job.",
+    placeholder: "e.g. lowset house, gutters overflowing at the back corner, big mango tree over the roof",
+  },
+};
+
+function QuoteRequestForm({ slug }: { slug: string }) {
+  const copy = QUOTE_REQUEST_COPY[slug] ?? {
+    name: getService(slug)?.name ?? "Service",
+    heading: "Tell us about the job.",
+    intro: "A couple of lines is plenty. We’ll come back with one price for the job.",
+    placeholder: "What needs cleaning, and roughly how big is it?",
+  };
+  const [suburb, setSuburb] = useState("");
+  const match = useMemo(() => findCallout(suburb), [suburb]);
+  const [result, formAction, pending] = useActionState<RequestServiceQuoteResult | null, FormData>(
+    requestServiceQuote,
+    null
+  );
+
+  useLeadEvent(result, slug);
+
+  return (
+    <section className="prototype-interaction" id="quote-request">
+      <form action={formAction} className="bin-booking">
+        {/* Honeypot: hidden from people, filled by bots. See lib/guard.ts. */}
+        <input type="text" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" className="hp-field" />
+        <input type="hidden" name="serviceName" value={copy.name} />
+
+        <div className="interaction-heading">
+          <span className="eyebrow">GET A PRICE</span>
+          <h2>{copy.heading}</h2>
+          <p>{copy.intro}</p>
+        </div>
+
+        <label className="solar-suburb">
+          SUBURB
+          <input
+            name="suburb"
+            value={suburb}
+            onChange={(event) => setSuburb(event.target.value)}
+            placeholder="e.g. Trinity Beach"
+            required
+          />
+        </label>
+
+        {suburb.trim() !== "" && (
+          <p className="quote-request-fee">
+            {match
+              ? match.fee != null
+                ? `Visit fee for ${match.suburb}: $${match.fee.toFixed(2)}. The job itself is priced when we reply.`
+                : `${match.suburb} is in our ${match.zone} run.`
+              : "Not on our loaded list yet. Send it anyway and we’ll check."}
+          </p>
+        )}
+
+        <textarea name="scope" rows={3} placeholder={copy.placeholder} className="quote-request-scope" />
+
+        <div className="bin-booking-fields">
+          <input name="firstName" placeholder="FIRST NAME" autoComplete="given-name" required />
+          <input name="lastName" placeholder="LAST NAME" autoComplete="family-name" />
+          <input name="phone" type="tel" placeholder="PHONE" autoComplete="tel" required />
+          <input name="email" type="email" placeholder="EMAIL (OPTIONAL)" autoComplete="email" />
+          <input name="street" placeholder="STREET ADDRESS" autoComplete="street-address" />
+        </div>
+
+        <button type="submit" disabled={pending}>
+          {pending ? "SENDING…" : "SEND MY QUOTE REQUEST →"}
+        </button>
+
+        {result && (
+          <p className={result.ok ? "bin-booking-status bin-booking-ok" : "bin-booking-status bin-booking-error"}>
+            {result.message}
+          </p>
+        )}
+      </form>
     </section>
   );
 }

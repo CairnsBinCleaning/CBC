@@ -12,6 +12,8 @@
    own with a caption saying what it is, because presenting two different
    properties as one before/after is a claim the customer can't check. */
 
+import Image from "next/image";
+
 import type { Service, ServicePhoto } from "../lib/services";
 
 const ROLE_LABEL: Record<ServicePhoto["role"], string> = {
@@ -76,13 +78,15 @@ export default function ServiceGallery({ service }: { service: Service }) {
 function GalleryFigure({ photo }: { photo: ServicePhoto }) {
   return (
     <figure className={`gallery-figure gallery-${photo.role}`}>
-      <img
+      {/* next/image serves a phone-sized copy to phones instead of the
+          full 1600px original. Lazy by default. */}
+      <Image
         src={photo.src}
         alt={photo.alt}
         width={photo.width}
         height={photo.height}
-        loading="lazy"
-        decoding="async"
+        sizes="(max-width: 850px) 100vw, 50vw"
+        quality={75}
       />
 
       <span className="gallery-role">{ROLE_LABEL[photo.role]}</span>

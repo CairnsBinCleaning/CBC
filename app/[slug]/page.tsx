@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { services, getService, type Service } from "../../lib/services";
 import ServicePageClient from "../../components/ServicePageClient";
+import { faqJsonLd } from "../../lib/serviceFaq";
 
 // Same fallback used in layout.tsx / sitemap.ts / robots.ts — one legacy
 // placeholder domain until NEXT_PUBLIC_SITE_URL is set in Vercel.
@@ -162,6 +163,12 @@ export default async function Page({
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(serviceJsonLd(service)).replace(/</g, "\\u003c"),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(faqJsonLd(service, `${siteUrl}/${service.slug}`)).replace(/</g, "\\u003c"),
         }}
       />
       {imageJsonLd(service).map((node) => (

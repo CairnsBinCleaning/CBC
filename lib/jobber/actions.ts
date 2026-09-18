@@ -15,6 +15,7 @@
 // live, not a reason to hold up everything else.
 
 import { jobberGraphQL } from "./client";
+import { guardSubmission } from "../guard";
 import { findCallout, SOLAR_RATE } from "../pricing";
 import {
   QUOTE_CONFIG,
@@ -110,6 +111,9 @@ export async function bookBinCleaning(
   _prev: BookBinCleaningResult | null,
   formData: FormData
 ): Promise<BookBinCleaningResult> {
+  const guard = await guardSubmission(formData, "bookBinCleaning");
+  if (!guard.ok) return guard.bot ? { ok: true, message: guard.message } : { ok: false, message: guard.message };
+
   const firstName = String(formData.get("firstName") ?? "").trim();
   const lastName = String(formData.get("lastName") ?? "").trim();
   const email = String(formData.get("email") ?? "").trim();
@@ -195,6 +199,9 @@ export async function bookSolarCleaning(
   _prev: BookSolarCleaningResult | null,
   formData: FormData
 ): Promise<BookSolarCleaningResult> {
+  const guard = await guardSubmission(formData, "bookSolarCleaning");
+  if (!guard.ok) return guard.bot ? { ok: true, message: guard.message } : { ok: false, message: guard.message };
+
   const firstName = String(formData.get("firstName") ?? "").trim();
   const lastName = String(formData.get("lastName") ?? "").trim();
   const email = String(formData.get("email") ?? "").trim();
@@ -294,6 +301,9 @@ export async function requestServiceQuote(
   _prev: RequestServiceQuoteResult | null,
   formData: FormData
 ): Promise<RequestServiceQuoteResult> {
+  const guard = await guardSubmission(formData, "requestServiceQuote");
+  if (!guard.ok) return guard.bot ? { ok: true, message: guard.message } : { ok: false, message: guard.message };
+
   const firstName = String(formData.get("firstName") ?? "").trim();
   const lastName = String(formData.get("lastName") ?? "").trim();
   const email = String(formData.get("email") ?? "").trim();
@@ -397,6 +407,9 @@ export async function bookMeasuredQuote(
   _prev: BookMeasuredQuoteResult | null,
   formData: FormData
 ): Promise<BookMeasuredQuoteResult> {
+  const guard = await guardSubmission(formData, "bookMeasuredQuote");
+  if (!guard.ok) return guard.bot ? { ok: true, message: guard.message } : { ok: false, message: guard.message };
+
   const firstName = String(formData.get("firstName") ?? "").trim();
   const lastName = String(formData.get("lastName") ?? "").trim();
   const email = String(formData.get("email") ?? "").trim();

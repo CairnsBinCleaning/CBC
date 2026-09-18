@@ -427,3 +427,20 @@ a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid #4f7d
  .quoteSteps li{padding:16px}
  .quoteActions{gap:16px}
 }
+
+/* Form honeypot (lib/guard.ts): off-screen, never focusable */
+.hp-field{position:absolute!important;left:-10000px!important;width:1px;height:1px;opacity:0;pointer-events:none}
+
+/* Quote request form (window + gutter pages) */
+.quote-request-fee{font-size:14px;color:#3c6415;margin:10px 0 0}
+.quote-request-scope{display:block;width:100%;margin:18px 0 6px;padding:14px 16px;border:1px solid #bbb;border-radius:14px;font:inherit;font-size:16px;background:#fff;resize:vertical}
+
+/* Per-service FAQ (lib/serviceFaq.ts) — same list feeds the FAQPage schema */
+.service-faq{padding:100px 5vw;background:#f4f2eb}
+.service-faq .eyebrow{color:#4f7d18}
+.service-faq h2{font-size:clamp(30px,4vw,50px);letter-spacing:-.03em;line-height:1.08;margin:14px 0 30px;font-weight:500;max-width:22ch}
+.service-faq dl{margin:0;max-width:820px;border-top:1px solid #bbb}
+.service-faq dl>div{padding:22px 0;border-bottom:1px solid #bbb}
+.service-faq dt{font-size:19px;font-weight:600;margin:0 0 8px;letter-spacing:-.01em}
+.service-faq dd{margin:0;font-size:16.5px;line-height:1.65;color:#4a5550;max-width:68ch}
+@media(max-width:850px){.service-faq{padding:70px 22px}}

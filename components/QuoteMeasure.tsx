@@ -1002,6 +1002,9 @@ export default function QuoteMeasure({
           </div>
         ) : (
           <form action={formAction} className={`${styles.sheet} ${styles.glass}`}>
+            {/* Honeypot: hidden from people, filled by bots. See lib/guard.ts. */}
+            <input type="text" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" className="hp-field" />
+
             <div className={styles.sh}>
               <h2 id="cbc-quote-dialog-title">
                 {totals.needsSiteVisit ? "Book the site visit" : "Lock it in"}
