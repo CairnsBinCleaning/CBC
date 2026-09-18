@@ -118,29 +118,6 @@ export default function ServicePageClient({
           <p>
             {service.intro}
           </p>
-
-          <div className="price-preview">
-            <small>
-              HOW PRICING WORKS
-            </small>
-
-            <strong>
-              {service.priceModel}
-            </strong>
-
-            <p>
-              {service.priceDetail}
-            </p>
-
-            {service.slug !== "bin-cleaning" && <CalloutLookup />}
-
-            <Link
-              href="/prices"
-              className="mini-link"
-            >
-              FULL PRICE LIST →
-            </Link>
-          </div>
         </div>
 
         <div className="service-media">
@@ -369,37 +346,6 @@ export default function ServicePageClient({
         </nav>
       </footer>
     </main>
-  );
-}
-
-/* Small suburb → call-out zone lookup, reused across every service page
-   except bin cleaning (which has no call-out). Never invents a dollar
-   figure — if a zone's fee isn't loaded yet, it says so plainly. */
-function CalloutLookup() {
-  const [suburb, setSuburb] = useState("");
-  const match = useMemo(() => findCallout(suburb), [suburb]);
-
-  return (
-    <div className="callout-lookup">
-      <label>
-        YOUR SUBURB
-        <input
-          value={suburb}
-          onChange={(event) => setSuburb(event.target.value)}
-          placeholder="e.g. Edge Hill"
-        />
-      </label>
-
-      {suburb && (
-        <p className={match ? "callout-found" : "callout-unknown"}>
-          {match
-            ? match.fee != null
-              ? `Call-out for ${match.suburb}: $${match.fee.toFixed(2)}`
-              : `${match.suburb} is in our ${match.zone} zone — call-out fee still being confirmed.`
-            : "Not in our loaded suburb list yet — we’ll confirm it when you call."}
-        </p>
-      )}
-    </div>
   );
 }
 
@@ -815,7 +761,7 @@ function BinBookingForm() {
         <span>
           <strong>While we’re on site — freshen up the driveway too?</strong>
           <small>
-            No extra call-out for this visit. We’ll price it and confirm
+            Nothing extra for this visit — we’ll price it and confirm
             when we call to lock in your bin day.
           </small>
         </span>

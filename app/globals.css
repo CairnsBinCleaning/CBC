@@ -402,3 +402,25 @@ a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid #4f7d
  .areasHead,.segmentHero{padding-left:22px;padding-right:22px}
  .areasBody,.areas-services,.segmentServices{padding-left:22px;padding-right:22px}
 }
+
+/* ---- Homepage instant-quote band -------------------------------------
+   The three steps under "Draw it. Price it. Book it." Numbered because
+   someone who has never measured anything on a map needs to see that it
+   is three taps, not a form. Plain <ol> so it still reads in order if
+   the CSS never arrives. */
+.quoteSteps{list-style:none;display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin:34px 0 0;padding:0;max-width:900px}
+.quoteSteps li{display:flex;flex-direction:column;gap:6px;padding:20px;border-radius:16px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1)}
+.quoteSteps b{font-size:11px;font-weight:900;letter-spacing:.1em;color:#79c51d}
+.quoteSteps span{font-size:17px;font-weight:600;color:#fff}
+.quoteSteps small{font-size:13px;line-height:1.5;color:#a9b8ad}
+.quoteActions{display:flex;align-items:center;gap:22px;flex-wrap:wrap;margin-top:30px}
+.quoteActions .primary.light{align-self:auto;margin-top:0}
+.quoteAlt{font-size:13px;letter-spacing:.02em;color:#a9b8ad;border-bottom:1px solid rgba(169,184,173,.4);padding-bottom:2px}
+.quoteAlt:hover{color:#fff;border-bottom-color:#fff}
+.quoteScene p.quoteFine{font-size:13px;line-height:1.6;color:#8b9a8f;margin-top:26px;max-width:62ch}
+
+@media(max-width:850px){
+ .quoteSteps{grid-template-columns:1fr;gap:12px;margin-top:26px}
+ .quoteSteps li{padding:16px}
+ .quoteActions{gap:16px}
+}

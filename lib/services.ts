@@ -52,14 +52,14 @@ export const services: Service[] = [
     media: "/media/driveway-mid-clean-split-line-edmonton.jpg",
     cue: "Concrete gone black?",
     short: "Driveways, paths, pool surrounds and hard surfaces.",
-    price: "Job price + call-out",
+    price: "Priced on the area cleaned",
     eyebrow: "PRESSURE CLEANING",
     heading: "Got a driveway that’s gone black?",
     intro:
       "Tell us where it is and roughly how much needs cleaning. We’ll show you how the price is built before you book.",
-    priceModel: "Call-out + job price",
+    priceModel: "One price for the job",
     priceDetail:
-      "Call-out for your suburb, plus the price for the area actually cleaned. No hidden extras.",
+      "Your suburb and the area actually cleaned — that’s the whole price. No hidden extras.",
     mediaCaption: "Same driveway, same pass. The line is where we stopped for the photo.",
     gallery: [
       {
@@ -136,12 +136,12 @@ export const services: Service[] = [
     media: "/media/roof-mid-clean-split-line-whitfield.jpg",
     cue: "Roof getting green?",
     short: "Tropical build-up, mould and exterior roof cleaning.",
-    price: "Area/access estimate + call-out",
+    price: "Priced on roof size & access",
     eyebrow: "ROOF CLEANING",
     heading: "The roof is doing the hard work. Look after it.",
     intro:
       "Cairns roofs cop heat, rain, shade and organic growth. We’ll price the job around the roof, access and what’s actually on it.",
-    priceModel: "Call-out + roof job price",
+    priceModel: "One price for the roof",
     priceDetail:
       "Priced on roof size, pitch, access and how much needs to come off. We’ll walk you through it before quoting a figure.",
     mediaCaption: "Mid-pass on a Whitfield roof. Left untouched, right done.",
@@ -224,8 +224,8 @@ export const services: Service[] = [
     eyebrow: "CAIRNS BIN CLEANING",
     heading: "Bins are our thing.",
     intro:
-      "Pick how often you want them cleaned. No call-out fee on bin cleaning — it’s the one service priced completely on its own.",
-    priceModel: "Fixed price · no call-out",
+      "Pick how often you want them cleaned. Nothing added for your suburb — it’s the one service priced completely on its own.",
+    priceModel: "One fixed price",
     priceDetail:
       "Two standard 240L bins: $35.95 fortnightly, $39.95 every four weeks, or $74.95 one-off. Recurring plans run on a 3-service minimum.",
     mediaCaption: "Commercial bin bay in Cairns, bins wheeled out for cleaning.",
@@ -307,12 +307,12 @@ export const services: Service[] = [
     media: "/media/IMG_2935.jpg",
     cue: "Glass lost its shine?",
     short: "Exterior glass and presentation cleaning.",
-    price: "Job price + call-out",
+    price: "Priced on windows & access",
     eyebrow: "WINDOW CLEANING",
     heading: "You notice clean glass when you stop noticing the glass.",
     intro:
       "Tell us the property and what you need cleaned. We’ll keep the scope and the price easy to understand.",
-    priceModel: "Call-out + job price",
+    priceModel: "One price for the windows",
     priceDetail:
       "Priced on window count, access and height. Ground-floor and single-storey work is usually the most straightforward to quote.",
     mediaCaption: "Glazed walkway on a Cairns strata building.",
@@ -338,14 +338,14 @@ export const services: Service[] = [
     media: "/media/solar-clean-harnessed-on-roof-brinsmead.jpg",
     cue: "Panels looking dusty?",
     short: "Simple per-panel pricing with your suburb added.",
-    price: "From $14.50 / panel + call-out",
+    price: "From $14.50 per panel",
     eyebrow: "SOLAR PANEL CLEANING",
     heading: "Count the panels. We’ll do the rest.",
     intro:
-      "$14.50 per panel single storey, $22.50 per panel double storey, plus the call-out for your suburb. Enter the property location, storey count and panel count below to see the job subtotal.",
-    priceModel: "$14.50 / panel single storey, $22.50 double storey + call-out",
+      "$14.50 per panel single storey, $22.50 per panel double storey — your suburb is already factored in. Enter the property location, storey count and panel count below to see the job subtotal.",
+    priceModel: "$14.50 a panel, simple as that",
     priceDetail:
-      "Flat rate per panel by storey — $14.50 single storey, $22.50 double storey — no matter the roof shape. Call-out is based on your suburb — we won’t guess a number for an area we haven’t loaded yet.",
+      "Flat rate per panel by storey — $14.50 single storey, $22.50 double storey — no matter the roof shape. Your suburb is built into the price — we won’t guess a number for an area we haven’t loaded yet.",
     mediaCaption: "Harnessed up, soft brush, nobody standing on the panels.",
     gallery: [
       {
@@ -389,9 +389,9 @@ export const services: Service[] = [
       "Searching for solar panel cleaning near me in Cairns? Same crew, same flat per-panel rate — no franchise call centre routing the job to whoever’s available.",
     ],
     related: ["roof-cleaning", "gutter-cleaning", "window-cleaning"],
-    seoTitle: "Solar Panel Cleaning Cairns | From $14.50 Per Panel + Call-Out",
+    seoTitle: "Solar Panel Cleaning Cairns | From $14.50 Per Panel",
     seoDescription:
-      "Solar panel cleaning in Cairns from $14.50 per panel single storey, $22.50 double storey, plus the local service call-out.",
+      "Solar panel cleaning in Cairns from $14.50 per panel single storey, $22.50 double storey — suburb included.",
   },
   {
     slug: "house-washing",
@@ -400,12 +400,12 @@ export const services: Service[] = [
     media: "/media/house-wash-action-lance-smithfield.jpg",
     cue: "Walls looking tropical?",
     short: "Exterior house washing suited to Cairns conditions.",
-    price: "Job price + call-out",
+    price: "Priced on wall area",
     eyebrow: "HOUSE WASHING",
     heading: "The whole place needs a freshen-up?",
     intro:
       "Start with the suburb and property. We’ll work out what surfaces actually need attention and keep the quote clear.",
-    priceModel: "Call-out + house job price",
+    priceModel: "One price for the house",
     priceDetail:
       "Priced on wall area, cladding type and how much organic growth has built up. We’ll tell you what’s realistic before we start.",
     mediaCaption: "Low pressure on render. Lifts the growth without stripping paint.",
@@ -462,12 +462,12 @@ export const services: Service[] = [
     media: "/media/roof-surface-cleaner-on-sheets-kanimbla.jpg",
     cue: "Wet season ready?",
     short: "Gutters, edges and exterior maintenance.",
-    price: "Job price + call-out",
+    price: "Priced on roofline length",
     eyebrow: "GUTTER CLEANING",
     heading: "Keep the wet-season water moving.",
     intro:
       "Tell us where the property is. Height, access and gutter size decide the rest of the job.",
-    priceModel: "Call-out + job price",
+    priceModel: "One price for the gutters",
     priceDetail:
       "Priced on roofline length, access and how blocked they are. Single-storey homes are usually the quickest to quote.",
     mediaCaption: "Roofline on a Kanimbla job. Gutters get cleared before the roof is washed.",
@@ -498,9 +498,9 @@ export const services: Service[] = [
     heading: "Need the site looked after without chasing the contractor?",
     intro:
       "Tell us the site and what needs cleaning. Straightforward scope, scheduling and site visits for larger work. We carry $20,000,000 in public liability cover, so procurement sign-off isn’t held up waiting on paperwork.",
-    priceModel: "Site scope or measured price",
+    priceModel: "One price for the site",
     priceDetail:
-      "Smaller jobs get the same call-out-plus-job-price model. Larger or recurring sites get a proper scope and, usually, a site visit rather than a number guessed over the phone.",
+      "Smaller jobs get one straightforward price, same as the rest of the site. Larger or recurring sites get a proper scope and, usually, a site visit rather than a number guessed over the phone.",
     mediaCaption: "A full site's worth of bins, done in one visit.",
     gallery: [
       {
