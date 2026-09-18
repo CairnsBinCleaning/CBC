@@ -70,7 +70,7 @@ function serviceJsonLd(service: Service) {
       "@type": "Offer",
       priceCurrency: "AUD",
       price: "14.50",
-      description: "Per solar panel, plus the suburb call-out",
+      description: "Per solar panel, plus a suburb visit fee",
     };
   }
 

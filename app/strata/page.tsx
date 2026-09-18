@@ -86,8 +86,8 @@ export default function Strata() {
         <p>
           Tell us what you manage and what needs doing — refuse rooms,
           common property pressure cleaning, bin cleaning for the complex,
-          gutters before the wet season. Smaller jobs get the same
-          call-out-plus-job-price model as any residential job; larger or
+          gutters before the wet season. Smaller jobs get one
+          straightforward price, same as any residential job; larger or
           recurring sites get a proper scope and, usually, a site visit
           rather than a number guessed over the phone.
         </p>

@@ -40,8 +40,8 @@ export default function Prices() {
         ))}
       </section>
       <p className="priceNote">
-        Solar is $14.50 per panel plus a local service call-out — the
-        call-out fee depends on your suburb, so give us a call and we’ll
+        Solar is $14.50 per panel plus a local visit fee — it
+        depends on your suburb, so give us a call and we’ll
         confirm the exact total before we book anything in.
       </p>
 

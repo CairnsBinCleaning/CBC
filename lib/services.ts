@@ -342,10 +342,10 @@ export const services: Service[] = [
     eyebrow: "SOLAR PANEL CLEANING",
     heading: "Count the panels. We’ll do the rest.",
     intro:
-      "$14.50 per panel single storey, $22.50 per panel double storey — your suburb is already factored in. Enter the property location, storey count and panel count below to see the job subtotal.",
+      "$14.50 per panel, plus a flat $50 visit fee. Enter your suburb and panel count below to see the total.",
     priceModel: "$14.50 a panel, simple as that",
     priceDetail:
-      "Flat rate per panel by storey — $14.50 single storey, $22.50 double storey — no matter the roof shape. Your suburb is built into the price — we won’t guess a number for an area we haven’t loaded yet.",
+      "$14.50 per panel, no matter the roof shape, plus a flat $50 visit fee anywhere we service in Cairns.",
     mediaCaption: "Harnessed up, soft brush, nobody standing on the panels.",
     gallery: [
       {
@@ -391,7 +391,7 @@ export const services: Service[] = [
     related: ["roof-cleaning", "gutter-cleaning", "window-cleaning"],
     seoTitle: "Solar Panel Cleaning Cairns | From $14.50 Per Panel",
     seoDescription:
-      "Solar panel cleaning in Cairns from $14.50 per panel single storey, $22.50 double storey — suburb included.",
+      "Solar panel cleaning in Cairns. $14.50 per panel plus a flat $50 visit fee. Harnessed, soft brush, no standing on panels.",
   },
   {
     slug: "house-washing",

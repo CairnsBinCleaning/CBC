@@ -263,8 +263,8 @@ export async function bookSolarCleaning(
 
     const priceLine =
       total != null
-        ? ` Estimated total: $${total.toFixed(2)} (${panels} panels at $${SOLAR_RATE.toFixed(2)} + ${callout!.zone} call-out).`
-        : " We’ll confirm your call-out fee and total when we call.";
+        ? ` Estimated total: $${total.toFixed(2)} (${panels} panels at $${SOLAR_RATE.toFixed(2)} + your ${callout!.zone} visit fee).`
+        : " We’ll confirm your visit fee and total when we call.";
 
     return {
       ok: true,
@@ -362,8 +362,8 @@ export async function requestServiceQuote(
 
     const feeLine =
       callout?.fee != null
-        ? ` The call-out for ${callout.suburb} is $${callout.fee.toFixed(2)} — the rest is priced from what you’ve told us and confirmed when we call.`
-        : " We’ll confirm your call-out fee and a full price when we call.";
+        ? ` The visit fee for ${callout.suburb} is $${callout.fee.toFixed(2)} — the rest is priced from what you’ve told us and confirmed when we call.`
+        : " We’ll confirm your visit fee and a full price when we call.";
 
     return {
       ok: true,
@@ -578,7 +578,7 @@ export async function bookMeasuredQuote(
       ok: true,
       message:
         `Got it, ${firstName} — ${measured} for ${suburb}. Total ${money(totals.grand)} including the ` +
-        `${money(totals.callout)} call-out and GST.${planLine} We’ll text you on ${phone} to lock in the day, ` +
+        `${money(totals.callout)} visit fee and GST.${planLine} We’ll text you on ${phone} to lock in the day, ` +
         `and we confirm the measurement on site before we start.`,
     };
   } catch (error) {

@@ -36,10 +36,10 @@ export default function Terms() {
       <section className="legalBody">
         <h2>How pricing works</h2>
         <p>
-          Bin cleaning is priced as a fixed fee — no call-out charge.
+          Bin cleaning is priced as a fixed fee — nothing added.
           Every other service on this site is priced as the job itself plus
-          a call-out fee for your suburb. Solar panel cleaning is $14.50 per
-          panel plus the same call-out. Any price shown on this site is an
+          a visit fee for your suburb. Solar panel cleaning is $14.50 per
+          panel plus the same visit fee. Any price shown on this site is an
           estimate until we’ve confirmed access, area and site conditions
           with you directly — we’ll always tell you the final figure before
           the work starts, not after.
@@ -72,7 +72,7 @@ export default function Terms() {
         <p>
           We ask for at least 24 hours’ notice to cancel or reschedule a
           booked visit. Less notice than that, or a missed appointment with
-          no notice at all, may incur a call-out fee to cover the time
+          no notice at all, may incur a fee to cover the time
           already allocated to your job — we’ll always discuss this with
           you directly rather than silently charge it.
         </p>

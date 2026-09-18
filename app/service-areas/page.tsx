@@ -28,8 +28,8 @@ export default function ServiceAreas() {
         <p className="eyebrow dark">WHERE WE WORK</p>
         <h1>Cairns &amp; Far North Queensland.</h1>
         <p>
-          Three zones, one flat $50 call-out fee across all of them — bin
-          cleaning has no call-out at all. If your suburb isn’t listed below,
+          Three zones, one flat $50 visit fee across all of them — bin
+          cleaning has nothing added at all. If your suburb isn’t listed below,
           call and we’ll confirm whether we cover it.
         </p>
       </section>
@@ -42,8 +42,8 @@ export default function ServiceAreas() {
               <h2>{zone.name}</h2>
               <p>
                 {zone.fee != null
-                  ? `$${zone.fee.toFixed(2)} call-out`
-                  : "Call-out fee being confirmed"}
+                  ? `$${zone.fee.toFixed(2)} visit fee`
+                  : "Visit fee being confirmed"}
               </p>
               <div className="suburb-chips">
                 {zone.suburbs.map((suburb) => (

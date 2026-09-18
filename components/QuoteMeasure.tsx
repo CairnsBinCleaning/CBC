@@ -886,7 +886,7 @@ export default function QuoteMeasure({
               {showNudge && (
                 <div className={styles.nudge}>
                   <b>While we&apos;re on site — the roof too?</b>
-                  Same visit, same gear, no second {money(QUOTE_CONFIG.callOutFee)} call-out.
+                  Same visit, same gear, no second {money(QUOTE_CONFIG.callOutFee)} visit fee.
                   <div className={styles.nudgeActs}>
                     <button
                       type="button"
@@ -919,7 +919,7 @@ export default function QuoteMeasure({
 
             <div className={styles.sums}>
               <div className={styles.r}>
-                <span>Call-out</span>
+                <span>Visit fee</span>
                 <span>{money(totals.callout)}</span>
               </div>
               <div className={styles.r}>

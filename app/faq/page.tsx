@@ -5,7 +5,7 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "FAQ | Cairns Bin Cleaning",
   description:
-    "Call-out fees, bin cleaning prices, solar panel cleaning rates, service areas, cancellation policy and insurance — answered plainly.",
+    "Suburb fees, bin cleaning prices, solar panel cleaning rates, service areas, cancellation policy and insurance — answered plainly.",
   alternates: { canonical: "/faq" },
 };
 
@@ -22,13 +22,13 @@ const faqs: { q: string; a: ReactNode }[] = [
     ),
   },
   {
-    q: "Do you charge a call-out fee?",
+    q: "Is there an extra fee for my suburb?",
     a: (
       <>
-        Every service except bin cleaning carries a call-out fee for your
-        suburb — currently a flat $50 across all three of our service zones.
-        Bin cleaning has no call-out at all; it’s priced completely on its
-        own.
+        Every service except bin cleaning has a small visit fee added for
+        your suburb — currently a flat $50 across all three of our service
+        zones. Bin cleaning has nothing added at all; it’s priced completely
+        on its own.
       </>
     ),
   },
@@ -47,7 +47,7 @@ const faqs: { q: string; a: ReactNode }[] = [
     q: "How much does solar panel cleaning cost?",
     a: (
       <>
-        $14.50 per panel plus the call-out fee for your suburb. Enter your
+        $14.50 per panel, plus a visit fee for your suburb. Enter your
         panel count on the{" "}
         <Link href="/solar-panel-cleaning">Solar Panel Cleaning</Link> page
         for an instant subtotal.
@@ -59,8 +59,8 @@ const faqs: { q: string; a: ReactNode }[] = [
     a: (
       <>
         We ask for at least 24 hours’ notice to cancel or reschedule. Less
-        notice than that, or a missed appointment, may incur a call-out fee
-        — we’ll always discuss it with you first. Full detail on{" "}
+        notice than that, or a missed appointment, may incur a fee for the
+        wasted visit — we’ll always discuss it with you first. Full detail on{" "}
         <Link href="/terms">Terms &amp; Cancellation</Link>.
       </>
     ),
@@ -120,10 +120,10 @@ const faqJsonLd = {
     },
     {
       "@type": "Question",
-      name: "Do you charge a call-out fee?",
+      name: "Is there an extra fee for my suburb?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Every service except bin cleaning carries a call-out fee for your suburb — currently a flat $50 across all three of our service zones. Bin cleaning has no call-out at all.",
+        text: "Every service except bin cleaning has a small visit fee added for your suburb — currently a flat $50 across all three of our service zones. Bin cleaning has nothing added at all.",
       },
     },
     {
@@ -139,7 +139,7 @@ const faqJsonLd = {
       name: "How much does solar panel cleaning cost?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "$14.50 per panel plus the call-out fee for your suburb.",
+        text: "$14.50 per panel, plus a visit fee for your suburb.",
       },
     },
     {
@@ -147,7 +147,7 @@ const faqJsonLd = {
       name: "What’s your cancellation policy?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "We ask for at least 24 hours’ notice to cancel or reschedule a booked visit. Less notice may incur a call-out fee.",
+        text: "We ask for at least 24 hours’ notice to cancel or reschedule a booked visit. Less notice may incur a fee for the wasted visit.",
       },
     },
     {
@@ -210,7 +210,7 @@ export default function FAQ() {
         <p className="eyebrow dark">QUESTIONS, ANSWERED PLAINLY</p>
         <h1>FAQ.</h1>
         <p>
-          The things people actually ask before booking — call-out fees,
+          The things people actually ask before booking — suburb fees,
           prices, areas and what happens if the weather doesn’t cooperate.
         </p>
       </section>

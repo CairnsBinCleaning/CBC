@@ -51,8 +51,8 @@ export default function About() {
 
         <h2>Why the pricing is built the way it is</h2>
         <p>
-          Bin cleaning is priced completely on its own, with no call-out
-          fee. Every other service is the job price plus a call-out for
+          Bin cleaning is priced completely on its own, with nothing added.
+          Every other service is the job price plus a visit fee for
           your suburb — currently a flat $50 across our three service
           zones. No number gets guessed on the phone and changed later; see{" "}
           <Link href="/faq">FAQ</Link> and{" "}

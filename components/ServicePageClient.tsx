@@ -691,7 +691,7 @@ function BinBookingForm() {
         </h2>
 
         <p>
-          No call-out fee on bin cleaning.
+          Nothing added for your suburb.
           Three-service minimum on
           the recurring plans.
         </p>
@@ -864,7 +864,7 @@ function SolarExperience() {
         <p>
           $14.50 a panel, flat rate.
           Add your suburb and we’ll
-          add the local call-out too.
+          work out your visit fee too.
         </p>
       </div>
 
@@ -935,7 +935,7 @@ function SolarExperience() {
           </strong>
 
           <small>
-            CALL-OUT
+            VISIT FEE
           </small>
 
           <strong>
@@ -961,10 +961,9 @@ function SolarExperience() {
           )}
 
           <p>
-            The panel rate is confirmed.
-            Call-out fees are a flat $50
-            for now until they’re set per
-            suburb.
+            Both prices are fixed: $14.50
+            a panel and a flat $50 visit
+            fee anywhere we service.
           </p>
         </div>
 
