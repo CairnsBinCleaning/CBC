@@ -40,9 +40,10 @@ export default function Prices() {
         ))}
       </section>
       <p className="priceNote">
-        Solar is $14.50 per panel plus a local visit fee — it
-        depends on your suburb, so give us a call and we’ll
-        confirm the exact total before we book anything in.
+        Solar is $14.50 per panel plus a flat $50 visit fee,
+        anywhere we service in Cairns. Bin cleaning has nothing
+        added. Every other job is confirmed with you before we
+        book anything in.
       </p>
 
       <footer className="service-footer">
