@@ -110,7 +110,7 @@ export default function Privacy() {
           <Link href="/prices">Prices</Link>
           <Link href="/terms">Terms &amp; Cancellation</Link>
         </nav>
-      </footer>
+      <small className="madeBy">Created by Siezar DeWaal</small></footer>
     </main>
   );
 }

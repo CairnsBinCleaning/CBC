@@ -1,0 +1,156 @@
+/* Cairns address finder.
+ *
+ * Every street address from Gordonvale to Palm Cove (postcodes 4865, 4868,
+ * 4869, 4870, 4878, 4879), taken from the national address file (G-NAF,
+ * © Geoscape Australia, Open G-NAF licence, CC BY 4.0) and kept in
+ * data/cairns-addresses.txt as "label|lat|lng" lines.
+ *
+ * Why our own copy instead of a search API:
+ *  - Google's address search needs a paid billing account.
+ *  - Mapbox only allows its results on a Mapbox map.
+ *  - OpenStreetMap and the Queensland locator are missing most Cairns house
+ *    numbers.
+ * G-NAF is the official list every Australian address database starts from,
+ * it can be used on any map, and a local copy answers in milliseconds.
+ *
+ * Refresh it every few months with tools/refresh-addresses.py.
+ */
+
+import { readFileSync } from "node:fs";
+import path from "node:path";
+
+export type AddressHit = { label: string; lat: number; lng: number };
+
+type Row = { label: string; lat: number; lng: number; words: string[]; street: string[]; flat: string; num: string };
+
+/* What people type -> what the address file says. */
+const ABBREV: Record<string, string> = {
+  st: "street", str: "street", rd: "road", dr: "drive", drv: "drive", cl: "close",
+  cres: "crescent", cr: "crescent", ave: "avenue", av: "avenue", ct: "court", crt: "court",
+  pl: "place", esp: "esplanade", cct: "circuit", cir: "circuit", hwy: "highway",
+  pde: "parade", tce: "terrace", bvd: "boulevard", blvd: "boulevard", ln: "lane",
+  gr: "grove", gdns: "gardens", pkwy: "parkway", sq: "square",
+  mt: "mount", nth: "north", sth: "south",
+};
+const STREET_TYPES = new Set([...Object.values(ABBREV), "close", "way", "boulevard", "circuit"]);
+const NOISE = new Set(["unit", "u", "apt", "apartment", "flat", "shop", "villa", "qld", "queensland", "cairns"]);
+
+let ROWS: Row[] | null = null;
+
+function load(): Row[] {
+  if (ROWS) return ROWS;
+  const file = readFileSync(path.join(process.cwd(), "data", "cairns-addresses.txt"), "utf8");
+  ROWS = file.split("\n").map((line) => {
+    const [label, lat, lng] = line.split("|");
+    const head = label.split(" ")[0]; // "12", "3/12", "120-124"
+    const [flat, num] = head.includes("/") ? head.split("/") : ["", head];
+    const words = label
+      .toLowerCase()
+      .replace(/[,/]/g, " ")
+      .split(/\s+/)
+      .filter(Boolean);
+    /* "Unit 4, 12 Smith Street, Edge Hill 4870" -> street part is "smith street" */
+    const parts = label.toLowerCase().split(",");
+    const streetPart = parts[parts.length - 2] ?? "";
+    const street = streetPart.split(/\s+/).filter((w) => w && !/\d/.test(w));
+    return { label, lat: +lat, lng: +lng, words, street, flat: flat.toLowerCase(), num: num.toLowerCase() };
+  });
+  return ROWS;
+}
+
+function numberMatches(row: Row, n: string, typingIt: boolean) {
+  const first = row.num.split("-")[0];
+  if (row.num === n || first === n) return true;
+  /* "120" should find "120-124"; while still typing, "12" can grow into "120". */
+  return typingIt && first.startsWith(n);
+}
+
+export function searchAddresses(query: string, limit = 6): AddressHit[] {
+  const exact = runSearch(query, limit, true);
+  if (exact.length) return exact;
+  /* The number isn't on that street (people misremember, or the house is
+     newer than the list). Show the nearest numbers on the street instead of
+     the same number on some other street. */
+  return runSearch(query, limit, false);
+}
+
+function runSearch(query: string, limit: number, useNumber: boolean): AddressHit[] {
+  const raw = query.toLowerCase().replace(/[,]/g, " ").trim();
+  if (raw.length < 3) return [];
+  const endsMidWord = !/\s$/.test(query);
+
+  let tokens = raw.split(/\s+/).filter(Boolean);
+
+  /* Pull the numbers off the front: "3/12", "u3 12", "12", "unit 3 12". */
+  let flat = "";
+  let num = "";
+  const rest: string[] = [];
+  for (const t of tokens) {
+    const slash = t.match(/^u?(\d+[a-z]?)\/(\d+[a-z]?)$/);
+    if (slash) {
+      flat = slash[1];
+      num = slash[2];
+      continue;
+    }
+    const n = t.replace(/^u(?=\d)/, "");
+    if (/^\d+[a-z]?$/.test(n) && rest.length === 0) {
+      if (num) {
+        flat = num;
+        num = n;
+      } else num = n;
+      continue;
+    }
+    if (NOISE.has(t)) continue;
+    rest.push(ABBREV[t] ?? t);
+  }
+  tokens = rest;
+  if (!num && tokens.length === 0) return [];
+
+  const wanted = parseInt(num, 10);
+  if (!useNumber) {
+    if (!num || tokens.length === 0) return [];
+    num = "";
+    flat = "";
+  }
+  const lastIsNum = tokens.length === 0 && endsMidWord;
+  const rows = load();
+  const hits: { row: Row; score: number }[] = [];
+
+  for (const row of rows) {
+    if (num && !numberMatches(row, num, lastIsNum)) continue;
+    if (flat && row.flat !== flat) continue;
+
+    let ok = true;
+    let score = 0;
+    let onStreet = tokens.length === 0;
+    for (let i = 0; i < tokens.length; i++) {
+      const t = tokens[i];
+      const last = i === tokens.length - 1 && endsMidWord;
+      const hit = row.words.some((w) => (last ? w.startsWith(t) : w === t || w.startsWith(t)));
+      if (!hit) {
+        ok = false;
+        break;
+      }
+      /* The street name is what people mean; the suburb just narrows it. */
+      const isType = STREET_TYPES.has(t);
+      if (row.street.some((w) => w === t)) {
+        score += isType ? 1 : 4;
+        if (!isType) onStreet = true;
+      } else if (row.street.some((w) => w.startsWith(t))) {
+        score += 3;
+        if (!isType) onStreet = true;
+      }
+      else if (row.words.includes(t)) score += 1;
+    }
+    if (!ok || !onStreet) continue;
+    if (!useNumber) score -= Math.abs((parseInt(row.num, 10) || 0) - wanted) / 1000;
+
+    if (num && row.num === num) score += 3;
+    if (!flat && !row.flat) score += 2; // "12 Smith St" means the house, not unit 7
+    hits.push({ row, score });
+    if (hits.length > 4000) break;
+  }
+
+  hits.sort((a, b) => b.score - a.score || a.row.label.localeCompare(b.row.label, "en", { numeric: true }));
+  return hits.slice(0, limit).map(({ row }) => ({ label: row.label, lat: row.lat, lng: row.lng }));
+}

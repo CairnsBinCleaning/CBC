@@ -2,17 +2,20 @@
 
 /* Instant satellite quote.
  *
- * Customer finds their place on Google satellite imagery, taps the corners of
- * what needs cleaning, and gets a real price. Accepting it runs the same
- * Server Action path every other booking on this site uses.
+ * Customer finds their place on aerial imagery, taps the corners of what
+ * needs cleaning, and gets a real price. Accepting it runs the same Server
+ * Action path every other booking on this site uses.
  *
  * Deliberate choices:
- *  - Google Maps JavaScript API, hybrid view, tilt locked flat. A tilted or
- *    rotated view cannot be measured honestly.
- *  - Address lookup runs on OpenStreetMap Nominatim, not Google Places.
- *    Places and Geocoding are "Enterprise" APIs needing a full paid billing
- *    account; the map only needs the standard one. Flip USE_GOOGLE_PLACES
- *    once that account upgrades.
+ *  - Imagery is the Queensland Government's own aerial photography (free,
+ *    CC BY 4.0, survey-corrected, about 15 cm a pixel over Cairns), drawn
+ *    with Leaflet. No Google account, no billing, no watermark. Always
+ *    straight down and north-up — a tilted view can't be measured honestly.
+ *  - Measuring never depends on the imagery: the tool records the real
+ *    lat/lng of every tap and lib/quote.ts works out the area from those.
+ *  - Address search is our own copy of the national address file
+ *    (/api/address, lib/addressSearch.ts) so it knows every Cairns house
+ *    number. Anything outside that list falls back to OpenStreetMap.
  *  - All geometry and pricing live in lib/quote.ts so the server recomputes
  *    the total from raw coordinates. Nothing the browser claims a job costs
  *    is ever trusted.
@@ -21,6 +24,8 @@
  */
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
+
+import "leaflet/dist/leaflet.css";
 
 import { useActionState, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
@@ -48,34 +53,19 @@ import {
 
 import { bookMeasuredQuote, type BookMeasuredQuoteResult } from "../lib/jobber/actions";
 
-const MAPS_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY ?? "";
-const USE_GOOGLE_PLACES = false;
 const MAX_PHOTOS = 3;
 
-let mapsPromise: Promise<any> | null = null;
+/* Queensland Government aerial imagery, pre-cut tiles, passed through our
+   own /api/tiles so Vercel's edge caches them (see that route). Sharp to
+   zoom 20; Leaflet enlarges that for 21–22 so corners land precisely. */
+const IMAGERY_URL = "/api/tiles/{z}/{y}/{x}";
+const IMAGERY_CREDIT =
+  'Imagery © State of Queensland (DNRMMRRD), <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a> · Addresses: G-NAF © Geoscape Australia';
 
-function loadMaps(): Promise<any> {
-  if (typeof window === "undefined") return Promise.reject(new Error("no window"));
-  if ((window as any).google?.maps?.importLibrary) return Promise.resolve((window as any).google);
-  if (mapsPromise) return mapsPromise;
-
-  mapsPromise = new Promise((resolve, reject) => {
-    const params = new URLSearchParams({
-      key: MAPS_KEY,
-      v: "weekly",
-      region: "AU",
-      language: "en-AU",
-      loading: "async",
-      callback: "__cbcMapsReady",
-    });
-    (window as any).__cbcMapsReady = () => resolve((window as any).google);
-    const s = document.createElement("script");
-    s.src = "https://maps.googleapis.com/maps/api/js?" + params;
-    s.async = true;
-    s.onerror = () => reject(new Error("Google Maps failed to load"));
-    document.head.appendChild(s);
-  });
-  return mapsPromise;
+/* Centred marker: a zero-size Leaflet icon whose child is shifted back by
+   half its own size, so the dot's centre sits exactly on the coordinate. */
+function dotIcon(L: any, className: string, html = "") {
+  return L.divIcon({ className: "cbc-anchor", html: `<div class="${className}">${html}</div>`, iconSize: [0, 0] });
 }
 
 type Address = { label: string; lat: number | null; lng: number | null };
@@ -124,7 +114,6 @@ export default function QuoteMeasure({
   const [planId, setPlanId] = useState("once");
 
   const [mode, setMode] = useState<"trace" | "box">("trace");
-  const [labelsOn, setLabelsOn] = useState(true);
   const [draw, setDraw] = useState<Draw>(EMPTY);
   const [hint, setHint] = useState("Enter your address to begin.");
   const [hintOpen, setHintOpen] = useState(true);
@@ -157,9 +146,8 @@ export default function QuoteMeasure({
 
   /* ------------------------------------------------------------ map refs */
   const mapEl = useRef<HTMLDivElement | null>(null);
-  const G = useRef<any>(null);
+  const G = useRef<any>(null); // the Leaflet module
   const map = useRef<any>(null);
-  const AdvMarker = useRef<any>(null);
   const points = useRef<LatLng[]>([]);
   const vertexM = useRef<any[]>([]);
   const edgeM = useRef<any[]>([]);
@@ -187,95 +175,96 @@ export default function QuoteMeasure({
 
   /* ---------------------------------------------------------- map setup */
   useEffect(() => {
-    if (!MAPS_KEY) {
-      setFailed("no-key");
-      return;
-    }
     let dead = false;
+    let created: any = null;
 
-    loadMaps()
-      .then(async (google) => {
+    import("leaflet")
+      .then((mod) => {
+        const L: any = (mod as any).default ?? mod;
         if (dead || !mapEl.current) return;
-        G.current = google;
-        const { Map } = await google.maps.importLibrary("maps");
-        const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
-        AdvMarker.current = AdvancedMarkerElement;
+        G.current = L;
 
-        const m = new Map(mapEl.current, {
-          center: { lat: QUOTE_CONFIG.start.lat, lng: QUOTE_CONFIG.start.lng },
+        const m = L.map(mapEl.current, {
+          center: [QUOTE_CONFIG.start.lat, QUOTE_CONFIG.start.lng],
           zoom: QUOTE_CONFIG.start.zoom,
-          mapTypeId: "hybrid",
-          mapId: "CBC_QUOTE_MAP",
-          tilt: 0,
-          heading: 0,
-          disableDefaultUI: true,
-          zoomControl: true,
-          zoomControlOptions: { position: google.maps.ControlPosition.RIGHT_BOTTOM },
-          clickableIcons: false,      // a POI pin must never steal a corner tap
-          gestureHandling: "greedy",  // one finger pans on a phone
-          maxZoom: 22,
           minZoom: 5,
-          keyboardShortcuts: false,
+          maxZoom: 22,
+          zoomControl: false,
+          attributionControl: true,
+          keyboard: false,
+          doubleClickZoom: false, // a quick second tap is a second corner, not a zoom
+          tapTolerance: 12,
         });
+        created = m;
         map.current = m;
+        m.attributionControl.setPrefix(false);
+        L.control.zoom({ position: "bottomright" }).addTo(m);
+        L.tileLayer(IMAGERY_URL, {
+          minZoom: 5,
+          maxNativeZoom: 20,
+          maxZoom: 22,
+          keepBuffer: 3, // hold a ring of tiles around the view so small pans don't show gaps
+          attribution: IMAGERY_CREDIT,
+        })
+          .on("tileerror", () => {
+            /* One missing tile is normal at the edge of coverage; the whole
+               layer failing means the government server is down. */
+          })
+          .addTo(m);
 
         const pushDraw = () => {
           const pts = points.current;
           setDraw({ count: pts.length, area: polygonArea(pts), perim: perimeter(pts) });
         };
 
+        const toLL = (p: LatLng) => [p.lat, p.lng];
+
         const redraw = () => {
-          vertexM.current.forEach((x) => (x.map = null));
+          vertexM.current.forEach((x) => x.remove());
           vertexM.current = [];
-          edgeM.current.forEach((x) => (x.map = null));
+          edgeM.current.forEach((x) => x.remove());
           edgeM.current = [];
-          if (poly.current) poly.current.setMap(null);
-          if (ghost.current) ghost.current.setMap(null);
+          if (poly.current) poly.current.remove();
+          if (ghost.current) ghost.current.remove();
           poly.current = ghost.current = null;
 
           const pts = points.current;
 
           if (pts.length >= 3) {
-            poly.current = new google.maps.Polygon({
-              paths: pts,
-              map: m,
-              strokeColor: "#FFC53D",
-              strokeWeight: 2.5,
+            poly.current = L.polygon(pts.map(toLL), {
+              color: "#FFC53D",
+              weight: 2.5,
               fillColor: "#FFC53D",
               fillOpacity: 0.22,
-              clickable: false,
-              zIndex: 5,
-            });
+              interactive: false,
+            }).addTo(m);
           } else if (pts.length === 2) {
-            ghost.current = new google.maps.Polyline({
-              path: pts,
-              map: m,
-              strokeColor: "#FFC53D",
-              strokeWeight: 2.5,
-              strokeOpacity: 0.9,
-              clickable: false,
-            });
+            ghost.current = L.polyline(pts.map(toLL), {
+              color: "#FFC53D",
+              weight: 2.5,
+              opacity: 0.9,
+              interactive: false,
+            }).addTo(m);
           }
 
           pts.forEach((p, i) => {
-            const el = document.createElement("div");
-            el.className = "cbc-vtx";
-            const mk = new AdvancedMarkerElement({
-              map: m,
-              position: p,
-              content: el,
-              gmpDraggable: true,
-              zIndex: 20,
-            });
-            mk.addListener("drag", (ev: any) => {
-              points.current[i] = { lat: ev.latLng.lat(), lng: ev.latLng.lng() };
+            const mk = L.marker(toLL(p), {
+              icon: dotIcon(L, "cbc-vtx"),
+              draggable: true,
+              autoPan: true,
+              zIndexOffset: 1000,
+              keyboard: false,
+            }).addTo(m);
+            mk.on("drag", (ev: any) => {
+              const ll = ev.target.getLatLng();
+              points.current[i] = { lat: ll.lat, lng: ll.lng };
               /* Move the outline live but leave markers alone mid-drag —
                  rebuilding them drops the drag. */
-              if (poly.current) poly.current.setPath(points.current);
-              if (ghost.current) ghost.current.setPath(points.current);
+              if (poly.current) poly.current.setLatLngs(points.current.map(toLL));
+              if (ghost.current) ghost.current.setLatLngs(points.current.map(toLL));
               pushDraw();
             });
-            mk.addListener("dragend", () => redraw());
+            mk.on("dragend", () => redraw());
             vertexM.current.push(mk);
           });
 
@@ -289,18 +278,18 @@ export default function QuoteMeasure({
               const a = pts[i];
               const b = pts[(i + 1) % n];
               const mid = { lat: (a.lat + b.lat) / 2, lng: (a.lng + b.lng) / 2 };
-              const el = document.createElement("div");
-              el.className = "cbc-edge";
-              el.textContent = lens[i].toFixed(1) + " m";
-              el.title = "Tap to add a corner here";
-              el.addEventListener("click", (ev) => {
-                ev.stopPropagation();
+              const label = L.marker(toLL(mid), {
+                icon: dotIcon(L, "cbc-edge", lens[i].toFixed(1) + " m"),
+                zIndexOffset: 500,
+                keyboard: false,
+                title: "Tap to add a corner here",
+              }).addTo(m);
+              label.on("click", (ev: any) => {
+                L.DomEvent.stopPropagation(ev);
                 points.current.splice(i + 1, 0, mid);
                 redraw();
               });
-              edgeM.current.push(
-                new AdvancedMarkerElement({ map: m, position: mid, content: el, zIndex: 15 })
-              );
+              edgeM.current.push(label);
             }
           }
 
@@ -309,13 +298,13 @@ export default function QuoteMeasure({
 
         refresh.current = redraw;
 
-        m.addListener("click", (e: any) => {
+        m.on("click", (e: any) => {
           if (!hasAddr.current) {
             setHint("Pop your address in first so we land on the right roof.");
             setHintOpen(true);
             return;
           }
-          const raw = { lat: e.latLng.lat(), lng: e.latLng.lng() };
+          const raw = { lat: e.latlng.lat, lng: e.latlng.lng };
 
           if (modeRef.current === "box") {
             if (!boxA.current) {
@@ -351,6 +340,8 @@ export default function QuoteMeasure({
 
     return () => {
       dead = true;
+      if (created) created.remove();
+      map.current = null;
     };
   }, []);
 
@@ -362,7 +353,8 @@ export default function QuoteMeasure({
     try {
       const st = decodeQuote(hash.slice(7));
       const rebuilt: QuoteLine[] = [];
-      const bounds = new G.current.maps.LatLngBounds();
+      const L = G.current;
+      const bounds = L.latLngBounds([]);
 
       (st.i ?? []).forEach((raw: any) => {
         const priced = priceShape({ service: raw.s, pitchId: raw.pi, storeys: raw.st, coords: raw.c });
@@ -370,18 +362,12 @@ export default function QuoteMeasure({
         rebuilt.push(priced);
         const pts = raw.c.map(([lat, lng]: [number, number]) => ({ lat, lng }));
         committed.current.push(
-          new G.current.maps.Polygon({
-            paths: pts,
-            map: map.current,
-            strokeColor: "#5AD1A5",
-            strokeWeight: 2,
-            fillColor: "#5AD1A5",
-            fillOpacity: 0.16,
-            clickable: false,
-            zIndex: 3,
-          })
+          L.polygon(
+            pts.map((p: LatLng) => [p.lat, p.lng]),
+            { color: "#5AD1A5", weight: 2, fillColor: "#5AD1A5", fillOpacity: 0.16, interactive: false }
+          ).addTo(map.current)
         );
-        pts.forEach((p: LatLng) => bounds.extend(p));
+        pts.forEach((p: LatLng) => bounds.extend([p.lat, p.lng]));
       });
 
       if (st.a) {
@@ -390,7 +376,7 @@ export default function QuoteMeasure({
         hasAddr.current = st.a.lat != null;
       }
       if (st.p) setPlanId(st.p);
-      if (!bounds.isEmpty()) map.current.fitBounds(bounds, 80);
+      if (bounds.isValid()) map.current.fitBounds(bounds, { padding: [80, 80] });
       if (rebuilt.length) {
         setLines(rebuilt);
         setNudgeOff(true);
@@ -403,12 +389,44 @@ export default function QuoteMeasure({
   }, [ready]);
 
   /* ------------------------------------------------------------ address */
+  /* Our own Cairns address list first (instant, knows house numbers). */
+  const searchLocal = useCallback(async (q: string) => {
+    const res = await fetch("/api/address?q=" + encodeURIComponent(q));
+    const data = await res.json();
+    return (data.results ?? []) as { label: string; lat: number; lng: number }[];
+  }, []);
+
+  /* Suggestions as you type. Waits for a short pause so it isn't a request
+     per keystroke, and ignores answers to anything but the latest text. */
+  const typed = useRef(0);
+  useEffect(() => {
+    const q = addrText.trim();
+    if (q.length < 3 || (address && address.label === addrText)) return;
+    const ticket = ++typed.current;
+    const t = window.setTimeout(async () => {
+      try {
+        const hits = await searchLocal(q);
+        if (ticket === typed.current) setResults(hits);
+      } catch {
+        /* Quiet while typing — FIND reports problems. */
+      }
+    }, 180);
+    return () => window.clearTimeout(t);
+  }, [addrText, address, searchLocal]);
+
   const findAddress = useCallback(async () => {
     const q = addrText.trim();
     if (!q) return;
     setSearching(true);
-    setResults([]);
     try {
+      const local = await searchLocal(q);
+      if (local.length) {
+        setResults(local);
+        setHintOpen(false);
+        return;
+      }
+      /* Outside our Cairns list: one OpenStreetMap lookup, only on FIND
+         (their usage rules don't allow search-as-you-type). */
       const res = await fetch(
         "https://nominatim.openstreetmap.org/search?format=jsonv2&countrycodes=au&limit=6&q=" +
           encodeURIComponent(q),
@@ -416,7 +434,8 @@ export default function QuoteMeasure({
       );
       const data = await res.json();
       if (!Array.isArray(data) || !data.length) {
-        setHint("No match — try adding the suburb, or drag the map to your place.");
+        setResults([]);
+        setHint("No match — check the street name, or drag the map to your place.");
         setHintOpen(true);
         return;
       }
@@ -430,7 +449,7 @@ export default function QuoteMeasure({
     } finally {
       setSearching(false);
     }
-  }, [addrText]);
+  }, [addrText, searchLocal]);
 
   const pickAddress = useCallback(
     (a: Address, instant?: boolean) => {
@@ -441,31 +460,22 @@ export default function QuoteMeasure({
       setHintOpen(true);
       if (a.lat == null || a.lng == null || !map.current) return;
 
-      if (homePin.current) homePin.current.map = null;
-      const el = document.createElement("div");
-      el.className = "cbc-home";
-      homePin.current = new AdvMarker.current({
-        map: map.current,
-        position: { lat: a.lat, lng: a.lng },
-        content: el,
-        zIndex: 2,
-      });
+      const L = G.current;
+      if (homePin.current) homePin.current.remove();
+      homePin.current = L.marker([a.lat, a.lng], {
+        icon: dotIcon(L, "cbc-home"),
+        interactive: false,
+        keyboard: false,
+      }).addTo(map.current);
 
       if (reduced || instant) {
-        map.current.setCenter({ lat: a.lat, lng: a.lng });
-        map.current.setZoom(QUOTE_CONFIG.workZoom);
+        map.current.setView([a.lat, a.lng], QUOTE_CONFIG.workZoom, { animate: false });
       } else {
-        /* Pull back to the coastline they recognise, then drop onto the roof.
-           Proof we found the right house, not decoration. */
-        map.current.setCenter({ lat: QUOTE_CONFIG.wideView.lat, lng: QUOTE_CONFIG.wideView.lng });
-        map.current.setZoom(QUOTE_CONFIG.wideView.zoom);
-        map.current.panTo({ lat: a.lat, lng: a.lng });
-        let z = QUOTE_CONFIG.wideView.zoom;
-        const dive = window.setInterval(() => {
-          z += 1;
-          map.current.setZoom(z);
-          if (z >= QUOTE_CONFIG.workZoom) window.clearInterval(dive);
-        }, 130);
+        /* Drop from street level onto the roof. Proof we found the right
+           house, not decoration. Starting any higher makes the map fetch
+           imagery at every zoom on the way down, which is slow on a phone. */
+        map.current.setView([a.lat, a.lng], 17, { animate: false });
+        map.current.flyTo([a.lat, a.lng], QUOTE_CONFIG.workZoom, { duration: 0.9 });
       }
     },
     [service.hint, reduced]
@@ -501,16 +511,12 @@ export default function QuoteMeasure({
     if (!priced) return;
 
     committed.current.push(
-      new G.current.maps.Polygon({
-        paths: points.current,
-        map: map.current,
-        strokeColor: "#5AD1A5",
-        strokeWeight: 2,
-        fillColor: "#5AD1A5",
-        fillOpacity: 0.16,
-        clickable: false,
-        zIndex: 3,
-      })
+      G.current
+        .polygon(
+          points.current.map((p) => [p.lat, p.lng]),
+          { color: "#5AD1A5", weight: 2, fillColor: "#5AD1A5", fillOpacity: 0.16, interactive: false }
+        )
+        .addTo(map.current)
     );
     setLines((prev) => [...prev, priced]);
     clearShape();
@@ -519,7 +525,7 @@ export default function QuoteMeasure({
 
   const removeLine = useCallback((i: number) => {
     const layer = committed.current[i];
-    if (layer) layer.setMap(null);
+    if (layer) layer.remove();
     committed.current.splice(i, 1);
     setLines((prev) => prev.filter((_, n) => n !== i));
     setShareUrl("");
@@ -533,12 +539,6 @@ export default function QuoteMeasure({
     points.current = points.current.slice(0, -1);
     refresh.current();
   }, []);
-
-  const toggleLabels = useCallback(() => {
-    const next = !labelsOn;
-    setLabelsOn(next);
-    map.current?.setMapTypeId(next ? "hybrid" : "satellite");
-  }, [labelsOn]);
 
   /* ------------------------------------------------------------- photos */
   const onPhotos = useCallback(async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -640,12 +640,8 @@ export default function QuoteMeasure({
         {failed && (
           <div className={styles.fallback}>
             <div>
-              <b>{failed === "no-key" ? "Map not configured" : "The map didn't load"}</b>
-              <p>
-                {failed === "no-key"
-                  ? "NEXT_PUBLIC_GOOGLE_MAPS_KEY isn't set for this deployment."
-                  : "Give us a call on 0434 052 755 and we'll quote it the old way — it takes two minutes."}
-              </p>
+              <b>The map didn&apos;t load</b>
+              <p>Give us a call on 0434 052 755 and we&apos;ll quote it the old way — it takes two minutes.</p>
             </div>
           </div>
         )}
@@ -659,7 +655,11 @@ export default function QuoteMeasure({
           <input
             type="text"
             value={addrText}
-            onChange={(e) => setAddrText(e.target.value)}
+            onChange={(e) => {
+              setAddrText(e.target.value);
+              if (e.target.value.trim().length < 3) setResults([]);
+            }}
+            autoComplete="off"
             onKeyDown={(e) => {
               if (e.key === "Enter") {
                 e.preventDefault();
@@ -729,9 +729,6 @@ export default function QuoteMeasure({
               }}
             >
               Draw a box instead
-            </button>
-            <button type="button" aria-pressed={labelsOn} onClick={toggleLabels}>
-              {labelsOn ? "Hide street names" : "Show street names"}
             </button>
           </div>
         )}

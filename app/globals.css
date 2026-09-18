@@ -355,6 +355,9 @@ a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid #4f7d
 
 .legalFooter nav,.service-footer nav{flex-wrap:wrap}
 
+/* Maker's credit, bottom of every page's footer */
+.madeBy{flex-basis:100%;font-size:11px;letter-spacing:.04em;color:#8d9a92;text-align:left!important}
+
 @media(max-width:850px){
  .legalHead{padding:70px 22px 40px}
  .legalBody{padding:0 22px 80px}

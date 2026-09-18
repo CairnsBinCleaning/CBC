@@ -231,7 +231,7 @@ export default function FAQ() {
           <Link href="/prices">Prices</Link>
           <Link href="/service-areas">Areas</Link>
         </nav>
-      </footer>
+      <small className="madeBy">Created by Siezar DeWaal</small></footer>
     </main>
   );
 }

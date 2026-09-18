@@ -85,7 +85,7 @@ export default function InstantQuotePage() {
             <Link href="/privacy">Privacy</Link>
             <Link href="/terms">Terms</Link>
           </nav>
-        </footer>
+        <small className="madeBy">Created by Siezar DeWaal</small></footer>
       </main>
     </>
   );

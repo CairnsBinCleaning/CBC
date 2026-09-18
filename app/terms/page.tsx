@@ -134,7 +134,7 @@ export default function Terms() {
           <Link href="/prices">Prices</Link>
           <Link href="/privacy">Privacy</Link>
         </nav>
-      </footer>
+      <small className="madeBy">Created by Siezar DeWaal</small></footer>
     </main>
   );
 }

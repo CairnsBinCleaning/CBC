@@ -86,7 +86,7 @@ export default function About() {
           <Link href="/prices">Prices</Link>
           <Link href="/faq">FAQ</Link>
         </nav>
-      </footer>
+      <small className="madeBy">Created by Siezar DeWaal</small></footer>
     </main>
   );
 }
