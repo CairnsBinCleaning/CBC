@@ -474,10 +474,20 @@ export function explainLine(line: QuoteLine): string {
     const n = line.storeys || 1;
     return `${line.perim} m around × ${QUOTE_CONFIG.wallHeightPerStorey} m × ${n} storey${n > 1 ? "s" : ""} → ${line.billable} m²`;
   }
-  return `${line.billable} m²${line.inhibitorAmount ? ` + mould inhibitor $${line.inhibitorAmount}` : ""}`;
+  return `${line.billable} m²${line.inhibitorAmount ? " + mould inhibitor" : ""}`;
 }
 
 export type QuoteTotals = {
+  /* Customer-facing figures. The suburb loading is folded in, never shown
+     as its own line (Siezar, 19 Sept): the price for your address is the
+     price. Null zone = no address yet, so no final price is shown. */
+  shownLines: number[];
+  shownWork: number;
+  shownSaving: number;
+  /* True when the $179 minimum lifted the price. */
+  minimumApplied: boolean;
+  /* No suburb yet: there's a measurement but no final price. */
+  needsSuburb: boolean;
   work: number;
   /* Suburb travel loading in dollars (lib/pricing.ts). null when the
      address isn't known yet, so no loading has been worked out. */
@@ -509,6 +519,20 @@ export function quoteTotals(
   const travel = lines.length && zone ? Math.round(job * zone.loading) : lines.length ? null : 0;
   const grand = lines.length ? job + (travel ?? 0) : 0;
 
+  /* Loading folded into what the customer sees. Line figures are rounded
+     first and everything else is built from them, so it always adds up. */
+  const factor = 1 + (zone?.loading ?? 0);
+  const shownLines = lines.map((l) => Math.round(l.amount * factor));
+  const shownWork = shownLines.reduce((n, a) => n + a, 0);
+  const shownSaving = Math.round(saving * factor);
+  const minimumApplied = lines.length > 0 && work - saving < QUOTE_CONFIG.minTotal;
+  const shownGrand = !lines.length
+    ? 0
+    : minimumApplied
+      ? Math.round(QUOTE_CONFIG.minTotal * factor)
+      : shownWork - shownSaving;
+  const needsSuburb = lines.length > 0 && !zone;
+
   const hours = lines.reduce((n, l) => n + l.hours, 0) + (lines.length ? QUOTE_CONFIG.setupHours : 0);
   const effectiveHourly = hours > 0 ? grand / hours : 0;
 
@@ -531,12 +555,19 @@ export function quoteTotals(
         : "a job this size gets measured on site before we lock a price";
 
   return {
+    shownLines,
+    shownWork,
+    shownSaving,
+    minimumApplied,
+    needsSuburb,
     work,
     travel,
     loading: zone?.loading ?? null,
     zone: zone?.zone ?? null,
     saving,
-    grand,
+    /* The one total anyone sees or books. Equal to job + travel give or
+       take a dollar of rounding. */
+    grand: shownGrand,
     plan,
     hours: Math.round(hours * 10) / 10,
     effectiveHourly: Math.round(effectiveHourly),
