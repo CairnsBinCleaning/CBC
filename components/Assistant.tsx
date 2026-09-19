@@ -66,7 +66,11 @@ export default function Assistant() {
       const res = await fetch("/api/assistant", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: next, page: pathname }),
+        body: JSON.stringify({
+          messages: next,
+          page: pathname,
+          quote: (window as Window & { cbcQuoteContext?: unknown }).cbcQuoteContext ?? null,
+        }),
       });
       const data = await res.json();
       setMsgs([...next, { role: "assistant", content: data.reply ?? "Call 0434 052 755 and we’ll help." }]);
