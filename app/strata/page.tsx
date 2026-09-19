@@ -114,7 +114,7 @@ export default function Strata() {
           <Link href="/government">Government</Link>
           <Link href="/faq">FAQ</Link>
         </nav>
-      <small className="madeBy">Created by Siezar DeWaal</small></footer>
+      <small className="madeBy">Created by <a href="/faq#siezar-dewaal">Siezar DeWaal</a></small></footer>
     </main>
   );
 }
