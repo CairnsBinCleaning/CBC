@@ -32,6 +32,7 @@ import QuoteMeasure from "./QuoteMeasure";
 import ServiceGallery from "./ServiceGallery";
 import { useLeadEvent } from "./Analytics";
 import { serviceFaq } from "../lib/serviceFaq";
+import { GOOGLE_REVIEWS } from "../lib/stats";
 
 /* Which service pages get the satellite measure-and-quote tool, and which
    quote service it opens on.
@@ -115,11 +116,12 @@ export default function ServicePageClient({
             ← WHAT CAN WE CLEAN?
           </Link>
 
-          <span className="eyebrow">
-            {service.eyebrow}
-          </span>
-
           <h1>
+            {/* The search phrase leads the H1 so Google and the ads both read
+                "[service] Cairns" as the page's subject. Styled as the eyebrow. */}
+            <span className="eyebrow h1-kicker">
+              {service.keyword}
+            </span>{" "}
             {service.heading}
           </h1>
 
@@ -258,16 +260,17 @@ export default function ServicePageClient({
           </small>
 
           <strong>
-            Real proof belongs
-            beside the price.
+            {GOOGLE_REVIEWS.rating.toFixed(1)} stars from{" "}
+            {GOOGLE_REVIEWS.count} Google reviews.
           </strong>
 
           <p>
-            Google review rating,
-            repeat-customer evidence
-            and any guarantees will only
-            appear here once they are real
-            and verified.
+            Fully insured and our work is
+            guaranteed. Most jobs are booked
+            in the same week.{" "}
+            <a href={GOOGLE_REVIEWS.url} target="_blank" rel="noopener noreferrer">
+              Read the reviews →
+            </a>
           </p>
         </div>
 
