@@ -25,10 +25,24 @@ export async function guardSubmission(formData: FormData, action: string): Promi
     return { ok: false, bot: true, message: "Thanks — we’ll be in touch." };
   }
 
+  const count = await countHit(action, WINDOW_SECONDS);
+  if (count > LIMIT) {
+    return {
+      ok: false,
+      bot: false,
+      message:
+        "That’s a lot of requests from one place in a short time. Give us a call on 0434 052 755 and we’ll sort it directly.",
+    };
+  }
+  return { ok: true };
+}
+
+/* One more hit for this visitor on this action, in a rolling window.
+   Returns the count so far, or 0 when Redis isn't there (fail open). */
+export async function countHit(action: string, windowSeconds: number): Promise<number> {
   const url = process.env.KV_REST_API_URL ?? process.env.UPSTASH_REDIS_REST_URL;
   const token = process.env.KV_REST_API_TOKEN ?? process.env.UPSTASH_REDIS_REST_TOKEN;
-  if (!url || !token) return { ok: true };
-
+  if (!url || !token) return 0;
   try {
     const h = await headers();
     const ip = (h.get("x-forwarded-for") ?? h.get("x-real-ip") ?? "unknown").split(",")[0].trim();
@@ -40,24 +54,14 @@ export async function guardSubmission(formData: FormData, action: string): Promi
       headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
       body: JSON.stringify([
         ["INCR", key],
-        ["EXPIRE", key, String(WINDOW_SECONDS), "NX"],
+        ["EXPIRE", key, String(windowSeconds), "NX"],
       ]),
       cache: "no-store",
     });
-    if (!res.ok) return { ok: true };
-    const body = (await res.json()) as { result?: unknown }[];
-    const count = Number(body?.[0]?.result ?? 0);
-
-    if (count > LIMIT) {
-      return {
-        ok: false,
-        bot: false,
-        message:
-          "That’s a lot of requests from one place in a short time. Give us a call on 0434 052 755 and we’ll sort it directly.",
-      };
-    }
+    if (!res.ok) return 0;
+    const out = (await res.json()) as { result?: unknown }[];
+    return Number(out?.[0]?.result ?? 0);
   } catch {
-    return { ok: true };
+    return 0;
   }
-  return { ok: true };
 }
