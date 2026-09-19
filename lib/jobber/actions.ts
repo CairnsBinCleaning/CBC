@@ -277,7 +277,7 @@ export async function bookSolarCleaning(
       total != null
         ? onBinDay
           ? ` Estimated total: $${total.toFixed(2)} (${panels} panels at $${SOLAR_RATE.toFixed(2)}, nothing added because it’s on your bin-clean day).`
-          : ` Estimated total: $${total.toFixed(2)} (${panels} panels at $${SOLAR_RATE.toFixed(2)} plus ${callout!.zone} ${pct(callout!.loading)}).`
+          : ` Estimated total: $${total.toFixed(2)} for ${panels} panels in ${callout!.suburb}, GST included.`
         : " We’ll confirm the total for your suburb when we call.";
 
     return {
@@ -373,7 +373,7 @@ export async function requestServiceQuote(
     if (clientId) {
       await createJobberRequest(
         clientId,
-        `${serviceName || "Service"} quote request — ${suburb}${winLabel ? ` (${winLabel}, est. $${winTotal!.toFixed(2)})` : ""}`
+        `${serviceName || "Service"} quote request — ${suburb}${winLabel ? ` (${winLabel}, est. $${winTotal!.toFixed(2)}${winLoading == null ? " before suburb" : ""})` : ""}`
       );
     }
 
@@ -396,14 +396,15 @@ export async function requestServiceQuote(
       return {
         ok: true,
         message:
-          `Got it, ${firstName} — ${winLabel} for ${suburb}: $${winTotal!.toFixed(2)} including GST` +
-          (winLoading != null ? ` and the ${callout!.zone} suburb loading` : ", before the loading for your suburb") +
-          `. We’ll text you on ${phone} to lock in a day, and confirm the pane count on site before we start.`,
+          (winLoading != null
+            ? `Got it, ${firstName} — ${winLabel} for ${suburb}: $${winTotal!.toFixed(2)} including GST.`
+            : `Got it, ${firstName} — ${winLabel}. We’ll confirm your suburb and the exact price when we text.`) +
+          ` We’ll text you on ${phone} to lock in a day, and confirm the pane count on site before we start.`,
       };
     }
 
     const feeLine = callout
-      ? ` ${callout.suburb} is in our ${callout.zone} zone, which adds ${pct(callout.loading).slice(1)} to the job price. The job itself is priced from what you’ve told us and confirmed when we call.`
+      ? ` We cover ${callout.suburb}. The job is priced from what you’ve told us and confirmed when we call.`
       : " We’ll confirm the price for your suburb when we call.";
 
     return {
@@ -595,7 +596,7 @@ export async function bookMeasuredQuote(
 
     const planLine =
       totals.saving > 0
-        ? ` On the ${totals.plan.label.toLowerCase()} plan that’s ${money(totals.saving)} off.`
+        ? ` On the ${totals.plan.label.toLowerCase()} plan that’s ${money(totals.shownSaving)} off.`
         : "";
 
     const measured = lines
@@ -606,6 +607,16 @@ export async function bookMeasuredQuote(
     // figure stays an indication and the next step is a site visit, not a
     // start date — quoting a stranger four figures sight-unseen is how you
     // end up doing the work for half what it's worth.
+    /* No suburb from the address: there's no final price to confirm. */
+    if (totals.needsSuburb) {
+      return {
+        ok: true,
+        message:
+          `Got it, ${firstName} — ${measured}. We couldn’t place your suburb from the address, so ` +
+          `we’ll call ${phone} to confirm it and give you the exact price before anything is booked.`,
+      };
+    }
+
     if (totals.needsSiteVisit) {
       return {
         ok: true,
@@ -620,11 +631,8 @@ export async function bookMeasuredQuote(
     return {
       ok: true,
       message:
-        `Got it, ${firstName} — ${measured} for ${suburb}. Total ${money(totals.grand)} including GST` +
-        (totals.travel != null && totals.zone
-          ? ` and the ${totals.zone} suburb loading (${money(totals.travel)})`
-          : ", before the loading for your suburb, which we confirm when we text") +
-        `.${planLine} We’ll text you on ${phone} to lock in the day, ` +
+        `Got it, ${firstName} — ${measured} for ${suburb}. Total ${money(totals.grand)} including GST.` +
+        `${planLine} We’ll text you on ${phone} to lock in the day, ` +
         `and we confirm the measurement on site before we start.`,
     };
   } catch (error) {
