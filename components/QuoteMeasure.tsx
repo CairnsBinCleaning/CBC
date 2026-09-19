@@ -93,10 +93,14 @@ export default function QuoteMeasure({
   defaultService = "driveway",
   heading = "Measure it yourself. Get the price now.",
   intro = "Find your place on the satellite map, tap the corners of what needs cleaning, and the price appears as you draw.",
+  asPageTitle = false,
 }: {
   defaultService?: string;
   heading?: string;
   intro?: string;
+  /* On /instant-quote the tool IS the page, so its heading is the H1.
+     Everywhere else it sits under a service page's own H1. */
+  asPageTitle?: boolean;
 }) {
   const reduced =
     typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -629,8 +633,19 @@ export default function QuoteMeasure({
   return (
     <section className={styles.wrap} id="instant-quote">
       <div className={styles.intro}>
-        <span className={styles.eyebrow}>INSTANT SATELLITE QUOTE</span>
-        <h2>{heading}</h2>
+        {asPageTitle ? (
+          <>
+            <h1>
+              <span className={styles.eyebrow}>INSTANT PRESSURE CLEANING QUOTE · CAIRNS</span>{" "}
+              {heading}
+            </h1>
+          </>
+        ) : (
+          <>
+            <span className={styles.eyebrow}>INSTANT SATELLITE QUOTE</span>
+            <h2>{heading}</h2>
+          </>
+        )}
         <p>{intro}</p>
       </div>
 
