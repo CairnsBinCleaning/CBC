@@ -6,7 +6,8 @@
    like equipment rather than a brochure. The mono is for figures only, so
    square metres and dollars line up in columns as they change. Both have
    real fallback stacks; the tool is legible without them. */
-@import url("https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500;600&display=swap");
+/* Fonts are loaded with next/font in QuoteMeasure.tsx (self-hosted, not
+   render-blocking) and handed over as --qm-barlow / --qm-plex. */
 
 .wrap {
   --ground: #06110e;
@@ -23,7 +24,7 @@
   background: var(--ground);
   color: var(--ink);
   padding: clamp(24px, 5vw, 56px) clamp(16px, 4vw, 44px);
-  font-family: "Barlow", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-family: var(--qm-barlow), "Barlow", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
 .intro {
@@ -358,7 +359,7 @@
   min-width: 186px;
 }
 .val {
-  font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-family: var(--qm-plex), "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
   font-weight: 600;
   font-size: 36px;
   line-height: 1;
@@ -388,7 +389,7 @@
   margin-top: 3px;
 }
 .cash {
-  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-family: var(--qm-plex), "IBM Plex Mono", ui-monospace, monospace;
   font-size: 15px;
   font-weight: 600;
   color: var(--amber);
@@ -556,7 +557,7 @@
   line-height: 1.4;
 }
 .amt {
-  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-family: var(--qm-plex), "IBM Plex Mono", ui-monospace, monospace;
   font-size: 14px;
   font-weight: 600;
   white-space: nowrap;
@@ -655,7 +656,7 @@
   color: var(--ink-2);
 }
 .r span:last-child {
-  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-family: var(--qm-plex), "IBM Plex Mono", ui-monospace, monospace;
 }
 .save {
   color: var(--mint);
@@ -669,7 +670,7 @@
   border-top: 1px solid var(--hair);
 }
 .total b {
-  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-family: var(--qm-plex), "IBM Plex Mono", ui-monospace, monospace;
   font-size: 30px;
   font-weight: 600;
   letter-spacing: -1.2px;
@@ -749,7 +750,7 @@
   border: 1px solid var(--hair);
   border-radius: 8px;
   color: var(--ink-2);
-  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-family: var(--qm-plex), "IBM Plex Mono", ui-monospace, monospace;
   font-size: 11px;
   padding: 8px 9px;
 }
@@ -853,7 +854,7 @@
 .sheet {
   overflow: auto;
   max-height: 90vh;
-  font-family: "Barlow", -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: var(--qm-barlow), "Barlow", -apple-system, BlinkMacSystemFont, sans-serif;
   --ground: #06110e;
   --glassbg: rgba(10, 26, 22, 0.94);
   --hair: rgba(255, 255, 255, 0.13);
@@ -902,7 +903,7 @@
   margin-bottom: 16px;
 }
 .recap b {
-  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-family: var(--qm-plex), "IBM Plex Mono", ui-monospace, monospace;
   font-size: 24px;
   font-weight: 600;
   color: var(--amber);
@@ -1072,7 +1073,7 @@
   box-shadow: 0 0 0 3px rgba(90, 209, 165, 0.35);
 }
 .wrap :global(.cbc-edge) {
-  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-family: var(--qm-plex), "IBM Plex Mono", ui-monospace, monospace;
   font-size: 10.5px;
   font-weight: 600;
   color: #0b1a16;
@@ -1100,4 +1101,34 @@
 }
 .wrap :global(.leaflet-right .leaflet-control) {
   margin-right: 14px;
+}
+
+/* "Need a hand?" helper, shown when someone looks stuck. */
+.help {
+  padding: 11px 13px;
+  font-size: 13px;
+  line-height: 1.45;
+  max-width: 340px;
+  border: 1px solid rgba(255, 197, 61, 0.3);
+}
+.help b {
+  display: block;
+  color: var(--amber);
+  margin-bottom: 3px;
+}
+.help u {
+  text-decoration: none;
+  color: var(--mint);
+  font-weight: 700;
+}
+.nudgeActs a {
+  flex: 1;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  padding: 7px;
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+  text-align: center;
 }
