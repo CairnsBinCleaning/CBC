@@ -13,7 +13,7 @@ import type { Service } from "./services";
 
 export type QA = { q: string; a: string };
 
-const MEASURABLE = new Set(["pressure-cleaning", "roof-cleaning", "house-washing", "commercial-cleaning"]);
+const MEASURABLE = new Set(["pressure-cleaning", "roof-cleaning", "house-washing", "commercial-cleaning", "gutter-cleaning"]);
 
 const lower = (s: string) => s.toLowerCase();
 
@@ -30,6 +30,8 @@ function areasAnswer() {
 
 function priceAnswer(s: Service) {
   if (s.slug === "bin-cleaning") return s.priceDetail + " Nothing is added for your suburb.";
+  // Solar's own price line already covers the loading and the bin-day rule.
+  if (s.slug === "solar-panel-cleaning") return s.priceDetail;
   return (
     s.priceDetail +
     ` Your suburb adds a small percentage to the job price for the drive out: ${loadingSummary()}.` +
@@ -42,6 +44,8 @@ function bookAnswer(s: Service) {
     return "Pick a plan and book online on this page, or call 0434 052 755.";
   if (s.slug === "solar-panel-cleaning")
     return "Enter your suburb and panel count on this page to see the total, then book online — or call 0434 052 755.";
+  if (s.slug === "window-cleaning")
+    return "Count your panes in the quote form on this page to see the price, then send it and we text you to lock in a day. Or call 0434 052 755.";
   if (MEASURABLE.has(s.slug))
     return "Use the instant quote on this page: find your place on the aerial map, tap the corners of the area, and the price appears. Accept it to book, or call 0434 052 755.";
   return "Send a quote request from this page with a short description of the job, or call 0434 052 755. We’ll confirm the price before anything is booked.";
