@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { loadingSummary } from "../../lib/pricing";
 
 export const metadata: Metadata = {
   title: "Terms & Cancellation Policy | Cairns Bin Cleaning",
@@ -38,8 +39,9 @@ export default function Terms() {
         <p>
           Bin cleaning is priced as a fixed fee — nothing added.
           Every other service on this site is priced as the job itself plus
-          a visit fee for your suburb. Solar panel cleaning is $14.50 per
-          panel plus the same visit fee. Any price shown on this site is an
+          a percentage for your suburb ({loadingSummary()}). Solar panel
+          cleaning is $14.50 per panel plus the same loading, or nothing added
+          when it&rsquo;s booked on your bin-clean day. Any price shown on this site is an
           estimate until we’ve confirmed access, area and site conditions
           with you directly — we’ll always tell you the final figure before
           the work starts, not after.
