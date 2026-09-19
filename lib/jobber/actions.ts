@@ -16,7 +16,7 @@
 
 import { jobberGraphQL } from "./client";
 import { guardSubmission } from "../guard";
-import { findCallout, SOLAR_RATE } from "../pricing";
+import { findCallout, pct, solarQuote, SOLAR_RATE, zoneFromAddress } from "../pricing";
 import {
   QUOTE_CONFIG,
   explainLine,
@@ -209,6 +209,7 @@ export async function bookSolarCleaning(
   const street = String(formData.get("street") ?? "").trim();
   const suburb = String(formData.get("suburb") ?? "").trim();
   const panels = Number(formData.get("panels") ?? 0);
+  const onBinDay = formData.get("binDay") === "on";
 
   if (!firstName || !phone || !suburb || !panels) {
     return {
@@ -217,12 +218,9 @@ export async function bookSolarCleaning(
     };
   }
 
-  // Recomputed here, not trusted from the form — the panel rate and
-  // call-out fee are the source of truth server-side, same as the price
-  // shown on the calculator.
-  const callout = findCallout(suburb);
-  const subtotal = panels * SOLAR_RATE;
-  const total = callout?.fee != null ? subtotal + callout.fee : null;
+  // Recomputed here, not trusted from the form: same solarQuote() the
+  // calculator uses, so the price shown is the price logged.
+  const { subtotal, zone: callout, travel, total } = solarQuote(panels, suburb, onBinDay);
 
   try {
     const result = await jobberGraphQL<ClientCreateResponse>(CLIENT_CREATE, {
@@ -252,7 +250,10 @@ export async function bookSolarCleaning(
     const clientId = result.clientCreate.client?.id;
 
     if (clientId) {
-      await createJobberRequest(clientId, `Solar panel cleaning — ${panels} panels, ${suburb}`);
+      await createJobberRequest(
+        clientId,
+        `Solar panel cleaning — ${panels} panels, ${suburb}${onBinDay ? " (on their bin-clean day)" : ""}`
+      );
     }
 
     // Same scope note as bookBinCleaning above: the Client and the Request
@@ -264,14 +265,18 @@ export async function bookSolarCleaning(
       street,
       suburb,
       subtotal,
-      calloutFee: callout?.fee ?? null,
+      zone: callout?.zone ?? null,
+      travelLoading: travel,
+      onBinDay,
       total,
     });
 
     const priceLine =
       total != null
-        ? ` Estimated total: $${total.toFixed(2)} (${panels} panels at $${SOLAR_RATE.toFixed(2)} + your ${callout!.zone} visit fee).`
-        : " We’ll confirm your visit fee and total when we call.";
+        ? onBinDay
+          ? ` Estimated total: $${total.toFixed(2)} (${panels} panels at $${SOLAR_RATE.toFixed(2)}, nothing added because it’s on your bin-clean day).`
+          : ` Estimated total: $${total.toFixed(2)} (${panels} panels at $${SOLAR_RATE.toFixed(2)} plus ${callout!.zone} ${pct(callout!.loading)}).`
+        : " We’ll confirm the total for your suburb when we call.";
 
     return {
       ok: true,
@@ -366,14 +371,13 @@ export async function requestServiceQuote(
       scope,
       street,
       suburb,
-      calloutZone: callout?.zone ?? null,
-      calloutFee: callout?.fee ?? null,
+      zone: callout?.zone ?? null,
+      travelLoading: callout ? pct(callout.loading) : null,
     });
 
-    const feeLine =
-      callout?.fee != null
-        ? ` The visit fee for ${callout.suburb} is $${callout.fee.toFixed(2)} — the rest is priced from what you’ve told us and confirmed when we call.`
-        : " We’ll confirm your visit fee and a full price when we call.";
+    const feeLine = callout
+      ? ` ${callout.suburb} is in our ${callout.zone} zone, which adds ${pct(callout.loading).slice(1)} to the job price. The job itself is priced from what you’ve told us and confirmed when we call.`
+      : " We’ll confirm the price for your suburb when we call.";
 
     return {
       ok: true,
@@ -456,16 +460,14 @@ export async function bookMeasuredQuote(
     };
   }
 
-  const totals = quoteTotals(lines, String(parsed.planId ?? "once"));
   const addressLabel = String(parsed.address?.label ?? "").slice(0, 300);
+  // Same zoneFromAddress() the map uses, so the loading can't drift.
+  const totals = quoteTotals(lines, String(parsed.planId ?? "once"), zoneFromAddress(addressLabel));
 
   // Pull a known suburb out of the geocoded label so the Jobber client lands
   // in the right place. Uses the same list as every other call-out lookup on
   // the site — and if nothing matches, it says so instead of inventing one.
-  const suburbMatch = addressLabel
-    .split(",")
-    .map((part) => findCallout(part))
-    .find((hit) => hit !== null);
+  const suburbMatch = zoneFromAddress(addressLabel);
   const suburb = suburbMatch?.suburb ?? "Cairns";
 
   try {
@@ -518,7 +520,8 @@ export async function bookMeasuredQuote(
         coords: line.coords,
       })),
       pricing: {
-        callOut: totals.callout,
+        zone: totals.zone,
+        travelLoading: totals.travel,
         work: totals.work,
         planSaving: totals.saving,
         grandTotal: totals.grand,
@@ -590,8 +593,11 @@ export async function bookMeasuredQuote(
     return {
       ok: true,
       message:
-        `Got it, ${firstName} — ${measured} for ${suburb}. Total ${money(totals.grand)} including the ` +
-        `${money(totals.callout)} visit fee and GST.${planLine} We’ll text you on ${phone} to lock in the day, ` +
+        `Got it, ${firstName} — ${measured} for ${suburb}. Total ${money(totals.grand)} including GST` +
+        (totals.travel != null && totals.zone
+          ? ` and the ${totals.zone} suburb loading (${money(totals.travel)})`
+          : ", before the loading for your suburb, which we confirm when we text") +
+        `.${planLine} We’ll text you on ${phone} to lock in the day, ` +
         `and we confirm the measurement on site before we start.`,
     };
   } catch (error) {
