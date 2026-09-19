@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { calloutZones } from "../../lib/pricing";
 import { services } from "../../lib/services";
+import { suburbPages, suburbSlug } from "../../lib/suburbs";
 
 export const metadata: Metadata = {
   title: "Service Areas | Cairns Bin Cleaning",
@@ -50,9 +51,15 @@ export default function ServiceAreas() {
                 {zone.suburbs.length} {zone.name} suburbs.
               </p>
               <div className="suburb-chips">
-                {zone.suburbs.map((suburb) => (
-                  <span key={suburb}>{suburb}</span>
-                ))}
+                {zone.suburbs.map((suburb) =>
+                  suburbPages.some((p) => p.name === suburb) ? (
+                    <Link key={suburb} href={`/service-areas/${suburbSlug(suburb)}`}>
+                      {suburb}
+                    </Link>
+                  ) : (
+                    <span key={suburb}>{suburb}</span>
+                  )
+                )}
               </div>
             </div>
           ))}
