@@ -448,3 +448,14 @@ a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid #4f7d
 .reviewBadge{display:inline-flex;align-items:baseline;gap:10px;margin-top:22px;padding:12px 18px;border-radius:999px;background:#fff;color:#16211a;font-size:14px;box-shadow:0 10px 30px rgba(20,30,25,.08)}.reviewBadge b{font-size:18px;color:#4f7d18}.reviewBadge:hover{background:#f4f2eb}
 .trust-money p a{color:#4f7d18;font-weight:700;white-space:nowrap}
 .madeBy::before{content:"ABN 36 318 413 406 · "}
+.priceRows .priceDetail{grid-column:1/-1;font-style:normal;font-size:14px;line-height:1.5;color:#666;max-width:70ch;margin-top:-10px}
+.priceHow{padding:20px 5vw 90px;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:28px 4vw}
+.priceHow h2{grid-column:1/-1;font-size:clamp(32px,4vw,52px);letter-spacing:-.04em;font-weight:500;margin:0}
+.priceHow>div{border-top:2px solid #111;padding-top:16px}
+.priceHow h3{font-size:18px;font-weight:600;margin:0 0 8px}
+.priceHow p{font-size:15px;line-height:1.6;color:#555;margin:0}
+.priceHow a{color:#4f7d18;text-decoration:underline}
+.zone-card>p.zone-note{color:#5a5a5a;font-size:13.5px;color:#5a5a5a;margin:10px 0 0!important}
+.areas-service-grid a strong{display:block;font-weight:600}
+.areas-service-grid a small{display:block;font-size:13px;color:#666;font-weight:400;margin-top:4px;line-height:1.4}
+@media(max-width:850px){.priceHow{padding:10px 22px 70px}}
