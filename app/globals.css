@@ -471,3 +471,4 @@ a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid #4f7d
 .suburbNearby{padding-bottom:90px}
 @media(max-width:850px){.suburbJobs{padding:10px 22px 50px}}
 @media(max-width:850px){.main-header{height:auto;min-height:68px;padding:10px 16px;gap:10px}.main-header .brand{letter-spacing:.16em;min-width:0}.main-header .brand span{letter-spacing:.14em;line-height:1.4;max-width:150px}.main-header nav{gap:12px}.main-header nav a[href="/"],.main-header nav a[href="/prices"]{display:none}.main-header nav a[href^="tel:"]{white-space:nowrap;letter-spacing:.02em}.main-header .nav-book-btn{white-space:nowrap}}
+.bin-day-toggle{display:flex;gap:10px;align-items:flex-start;grid-column:1/-1;font-size:13px;line-height:1.45;color:#3d4a44;margin:6px 0 4px;cursor:pointer}.bin-day-toggle input{width:18px;height:18px;margin-top:1px;accent-color:#4f7d18;flex:none}
