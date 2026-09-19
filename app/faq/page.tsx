@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import Link from "next/link";
+import { loadingSummary } from "../../lib/pricing";
 
 export const metadata: Metadata = {
   title: "FAQ | Cairns Bin Cleaning",
@@ -25,10 +26,10 @@ const faqs: { q: string; a: ReactNode }[] = [
     q: "Is there an extra fee for my suburb?",
     a: (
       <>
-        Every service except bin cleaning has a small visit fee added for
-        your suburb — currently a flat $50 across all three of our service
-        zones. Bin cleaning has nothing added at all; it’s priced completely
-        on its own.
+        Every service except bin cleaning adds a small percentage to the job
+        price for the drive to your suburb: {loadingSummary()}. Bin cleaning
+        has nothing added at all, and solar booked on your bin-clean day
+        has nothing added either.
       </>
     ),
   },
@@ -47,8 +48,8 @@ const faqs: { q: string; a: ReactNode }[] = [
     q: "How much does solar panel cleaning cost?",
     a: (
       <>
-        $14.50 per panel, plus a visit fee for your suburb. Enter your
-        panel count on the{" "}
+        $14.50 per panel, plus your suburb&rsquo;s loading (nothing on your
+        bin-clean day). Enter your panel count on the{" "}
         <Link href="/solar-panel-cleaning">Solar Panel Cleaning</Link> page
         for an instant subtotal.
       </>
@@ -123,7 +124,7 @@ const faqJsonLd = {
       name: "Is there an extra fee for my suburb?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Every service except bin cleaning has a small visit fee added for your suburb — currently a flat $50 across all three of our service zones. Bin cleaning has nothing added at all.",
+        text: `Every service except bin cleaning adds a small percentage to the job price for the drive to your suburb: ${loadingSummary()}. Bin cleaning has nothing added at all, and solar booked on your bin-clean day has nothing added either.`,
       },
     },
     {
@@ -139,7 +140,7 @@ const faqJsonLd = {
       name: "How much does solar panel cleaning cost?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "$14.50 per panel, plus a visit fee for your suburb.",
+        text: "$14.50 per panel, plus your suburb’s loading, or nothing added when it’s booked on your bin-clean day.",
       },
     },
     {
