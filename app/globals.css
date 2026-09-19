@@ -444,3 +444,7 @@ a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid #4f7d
 .service-faq dt{font-size:19px;font-weight:600;margin:0 0 8px;letter-spacing:-.01em}
 .service-faq dd{margin:0;font-size:16.5px;line-height:1.65;color:#4a5550;max-width:68ch}
 @media(max-width:850px){.service-faq{padding:70px 22px}}
+.h1-kicker{display:block;font-size:11px;letter-spacing:.24em;line-height:1.4;font-weight:900;color:#4f7d18;margin:0 0 18px;text-transform:uppercase}
+.reviewBadge{display:inline-flex;align-items:baseline;gap:10px;margin-top:22px;padding:12px 18px;border-radius:999px;background:#fff;color:#16211a;font-size:14px;box-shadow:0 10px 30px rgba(20,30,25,.08)}.reviewBadge b{font-size:18px;color:#4f7d18}.reviewBadge:hover{background:#f4f2eb}
+.trust-money p a{color:#4f7d18;font-weight:700;white-space:nowrap}
+.madeBy::before{content:"ABN 36 318 413 406 · "}
