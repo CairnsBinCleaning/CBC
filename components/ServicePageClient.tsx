@@ -28,6 +28,7 @@ import {
   type RequestServiceQuoteResult,
 } from "../lib/jobber/actions";
 
+import { windowQuote, WINDOW_RATES, type WindowType } from "../lib/quote";
 import QuoteMeasure from "./QuoteMeasure";
 import ServiceGallery from "./ServiceGallery";
 import ComplianceDocs from "./ComplianceDocs";
@@ -46,6 +47,7 @@ const MEASURABLE_SERVICES: Record<string, string> = {
   "roof-cleaning": "roof",
   "house-washing": "house",
   "commercial-cleaning": "carpark",
+  "gutter-cleaning": "gutter",
 };
 
 export default function ServicePageClient({
@@ -467,6 +469,11 @@ const QUOTE_HEADINGS: Record<string, { heading: string; intro: string }> = {
     heading: "Measure the house. See the wall price.",
     intro:
       "Trace around the building and pick the number of storeys. House washing is priced on wall area, not floor area, so that's exactly what this measures.",
+  },
+  "gutter-cleaning": {
+    heading: "Trace the roof edge. See the gutter price.",
+    intro:
+      "Find your place on the satellite map, tap the corners of the roof, and pick single or double storey. $199 single, $299 double covers the first 45 m of gutter, downpipes flushed. Longer runs add $4 a metre.",
   },
   "commercial-cleaning": {
     heading: "Scope your site before you call us.",
@@ -1029,7 +1036,7 @@ const QUOTE_REQUEST_COPY: Record<string, { heading: string; intro: string; place
   "window-cleaning": {
     name: "Window Cleaning",
     heading: "Tell us about the windows.",
-    intro: "Roughly how many, how many storeys, inside, outside or both. We’ll come back with one price for the job.",
+    intro: "$9.95 a pane outside only, $14.95 inside and out. Count the panes for your price now, then send it and we lock in a day.",
     placeholder: "e.g. single-storey house, about 14 windows, outside only, plus the sliding doors",
   },
   "gutter-cleaning": {
@@ -1049,6 +1056,12 @@ function QuoteRequestForm({ slug }: { slug: string }) {
   };
   const [suburb, setSuburb] = useState("");
   const match = useMemo(() => findCallout(suburb), [suburb]);
+  /* Windows are priced per pane (lib/quote.ts), so they get a real number. */
+  const isWindows = slug === "window-cleaning";
+  const [panes, setPanes] = useState("");
+  const [windowType, setWindowType] = useState<WindowType>("outside");
+  const win = windowQuote(Number(panes), windowType);
+  const winLoading = match && win.price ? Math.round(win.price * match.loading * 100) / 100 : null;
   const [result, formAction, pending] = useActionState<RequestServiceQuoteResult | null, FormData>(
     requestServiceQuote,
     null
@@ -1083,9 +1096,51 @@ function QuoteRequestForm({ slug }: { slug: string }) {
         {suburb.trim() !== "" && (
           <p className="quote-request-fee">
             {match
-              ? `${match.suburb} is in our ${match.zone} zone: ${pct(match.loading)} on the job price. The job itself is priced when we reply.`
+              ? `${match.suburb} is in our ${match.zone} zone: ${pct(match.loading)} on the job price.${isWindows ? "" : " The job itself is priced when we reply."}`
               : "Not on our loaded list yet. Send it anyway and we’ll check."}
           </p>
+        )}
+
+        {isWindows && (
+          <div className="pane-calc">
+            <label>
+              PANES
+              <input
+                name="panes"
+                type="number"
+                inputMode="numeric"
+                min={1}
+                max={500}
+                value={panes}
+                onChange={(event) => setPanes(event.target.value)}
+                placeholder="e.g. 20"
+              />
+            </label>
+            <div className="pane-type" role="group" aria-label="Which sides">
+              {(["outside", "both"] as WindowType[]).map((t) => (
+                <button
+                  key={t}
+                  type="button"
+                  aria-pressed={windowType === t}
+                  onClick={() => setWindowType(t)}
+                >
+                  {t === "outside" ? "Outside only" : "Inside & out"}
+                  <small>${WINDOW_RATES[t].toFixed(2)} a pane</small>
+                </button>
+              ))}
+            </div>
+            <input type="hidden" name="windowType" value={windowType} />
+            {win.price > 0 && (
+              <p className="pane-total">
+                <span>
+                  {win.panes} panes × ${win.rate.toFixed(2)}
+                  {win.panes * win.rate < 179 ? " (jobs start from $179)" : ""}
+                  {winLoading != null ? ` + ${match!.zone} ${pct(match!.loading)}` : ""}
+                </span>
+                <strong>${(win.price + (winLoading ?? 0)).toFixed(2)}</strong>
+              </p>
+            )}
+          </div>
         )}
 
         <textarea name="scope" rows={3} placeholder={copy.placeholder} className="quote-request-scope" />
