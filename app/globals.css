@@ -459,3 +459,14 @@ a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid #4f7d
 .areas-service-grid a strong{display:block;font-weight:600}
 .areas-service-grid a small{display:block;font-size:13px;color:#666;font-weight:400;margin-top:4px;line-height:1.4}
 @media(max-width:850px){.priceHow{padding:10px 22px 70px}}
+.suburb-chips a{background:#e9f2dc;border:1px solid #c9dcb0;border-radius:999px;padding:7px 14px;font-size:13px;color:#376400;font-weight:600}
+.suburb-chips a:hover{background:#dcebc8}
+.suburbJobs{padding:10px 5vw 60px}
+.suburbJobs h2,.suburbNearby h2{font-size:clamp(28px,3.6vw,44px);letter-spacing:-.03em;margin:0 0 24px;font-weight:500}
+.suburbJobGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px}
+.suburbJobGrid figure{margin:0;background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 20px 60px rgba(20,30,25,.06)}
+.suburbJobGrid img{width:100%;height:240px;object-fit:cover;display:block}
+.suburbJobGrid figcaption{padding:14px 16px 18px;font-size:14px;line-height:1.5;color:#555}
+.suburbJobGrid figcaption a{display:block;font-weight:700;color:#376400;margin-bottom:4px}
+.suburbNearby{padding-bottom:90px}
+@media(max-width:850px){.suburbJobs{padding:10px 22px 50px}}
