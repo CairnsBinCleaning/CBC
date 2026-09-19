@@ -52,6 +52,7 @@ import {
 } from "../lib/quote";
 
 import { bookMeasuredQuote, type BookMeasuredQuoteResult } from "../lib/jobber/actions";
+import { pct, zoneFromAddress } from "../lib/pricing";
 import { useLeadEvent } from "./Analytics";
 
 const MAX_PHOTOS = 3;
@@ -134,7 +135,10 @@ export default function QuoteMeasure({
   const [restored, setRestored] = useState(false);
 
   const service = getQuoteService(serviceId) ?? QUOTE_SERVICES[0];
-  const totals = useMemo(() => quoteTotals(lines, planId), [lines, planId]);
+  /* Suburb travel loading comes from the address (lib/pricing.ts). The
+     server works it out again from the same label when the quote is booked. */
+  const suburbZone = useMemo(() => (address?.label ? zoneFromAddress(address.label) : null), [address]);
+  const totals = useMemo(() => quoteTotals(lines, planId, suburbZone), [lines, planId, suburbZone]);
 
   /* Live figure for the shape currently being drawn. */
   const live = useMemo(() => {
@@ -903,7 +907,7 @@ export default function QuoteMeasure({
               {showNudge && (
                 <div className={styles.nudge}>
                   <b>While we&apos;re on site — the roof too?</b>
-                  Same visit, same gear, no second {money(QUOTE_CONFIG.callOutFee)} visit fee.
+                  Same visit, same gear, one trip out to you.
                   <div className={styles.nudgeActs}>
                     <button
                       type="button"
@@ -936,10 +940,6 @@ export default function QuoteMeasure({
 
             <div className={styles.sums}>
               <div className={styles.r}>
-                <span>Visit fee</span>
-                <span>{money(totals.callout)}</span>
-              </div>
-              <div className={styles.r}>
                 <span>Cleaning</span>
                 <span>{money(totals.work)}</span>
               </div>
@@ -949,6 +949,14 @@ export default function QuoteMeasure({
                   <span>−{money(totals.saving)}</span>
                 </div>
               )}
+              <div className={styles.r}>
+                <span>
+                  {totals.zone && totals.loading != null
+                    ? `${totals.zone} ${pct(totals.loading)}`
+                    : "Suburb loading"}
+                </span>
+                <span>{totals.travel != null ? money(totals.travel) : "set by your address"}</span>
+              </div>
             </div>
 
             <div className={styles.total}>
