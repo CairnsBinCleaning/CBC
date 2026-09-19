@@ -17,7 +17,7 @@ import {
   type Service,
 } from "../lib/services";
 
-import { findCallout, loadingSummary, pct, solarQuote, SOLAR_RATE } from "../lib/pricing";
+import { findCallout, solarQuote, SOLAR_RATE } from "../lib/pricing";
 
 import {
   bookBinCleaning,
@@ -158,7 +158,7 @@ export default function ServicePageClient({
                 sizes="(max-width: 850px) 100vw, 50vw"
                 loading="eager"
                 fetchPriority="high"
-                quality={75}
+                quality={60}
               />
             ) : (
               // eslint-disable-next-line @next/next/no-img-element
@@ -405,7 +405,7 @@ export default function ServicePageClient({
           <Link href="/privacy">Privacy</Link>
           <Link href="/terms">Terms</Link>
         </nav>
-        <small className="madeBy">Created by Siezar DeWaal</small>
+        <small className="madeBy">Created by <a href="/faq#siezar-dewaal">Siezar DeWaal</a></small>
       </footer>
     </main>
   );
@@ -760,7 +760,7 @@ function SolarExperience() {
   const [onBinDay, setOnBinDay] = useState(false);
 
   /* Same solarQuote() the booking action uses (lib/pricing.ts). */
-  const { subtotal, zone: match, travel, total } = useMemo(
+  const { subtotal, total } = useMemo(
     () => solarQuote(panels, suburb, onBinDay),
     [panels, suburb, onBinDay]
   );
@@ -854,26 +854,9 @@ function SolarExperience() {
 
         <div className="solar-total">
           <small>
-            {panels} × ${SOLAR_RATE.toFixed(2)}
+            {panels} PANELS × ${SOLAR_RATE.toFixed(2)}
+            {subtotal > panels * SOLAR_RATE ? " · JOBS FROM $179" : ""}
           </small>
-
-          <strong>
-            ${subtotal.toFixed(2)}
-          </strong>
-
-          <small>
-            {match ? `${match.zone.toUpperCase()} ${pct(match.loading)}` : "SUBURB LOADING"}
-          </small>
-
-          <strong>
-            {suburb === ""
-              ? "Enter a suburb"
-              : match
-                ? onBinDay
-                  ? "$0.00 on your bin day"
-                  : `$${(travel ?? 0).toFixed(2)}`
-                : "Outside our loaded list — we’ll check it"}
-          </strong>
 
           <label className="bin-day-toggle">
             <input
@@ -883,26 +866,23 @@ function SolarExperience() {
               onChange={(event) => setOnBinDay(event.target.checked)}
             />
             Do it on my bin-clean day. We&rsquo;re already in your
-            street, so nothing is added for your suburb.
+            street, so it&rsquo;s cheaper.
           </label>
 
-          {total != null && (
-            <>
-              <small>
-                ESTIMATED TOTAL
-              </small>
-
-              <strong className="solar-grand-total">
-                ${total.toFixed(2)}
-              </strong>
-            </>
-          )}
+          {/* The suburb adjustment is folded into the price, never shown as
+              its own line (lib/pricing.ts). No suburb, no final price. */}
+          <small>YOUR PRICE</small>
+          <strong className={total != null ? "solar-grand-total" : undefined}>
+            {suburb.trim() === ""
+              ? "Enter your suburb"
+              : total != null
+                ? `$${total.toFixed(2)}`
+                : "We’ll check your suburb"}
+          </strong>
 
           <p>
-            ${SOLAR_RATE.toFixed(2)} a panel, plus
-            the loading for your area
-            ({loadingSummary()}). Nothing
-            added on your bin day.
+            ${SOLAR_RATE.toFixed(2)} a panel, GST included. The price
+            above is for your suburb, with no call-out fee.
           </p>
         </div>
 
@@ -1096,7 +1076,7 @@ function QuoteRequestForm({ slug }: { slug: string }) {
         {suburb.trim() !== "" && (
           <p className="quote-request-fee">
             {match
-              ? `${match.suburb} is in our ${match.zone} zone: ${pct(match.loading)} on the job price.${isWindows ? "" : " The job itself is priced when we reply."}`
+              ? `We cover ${match.suburb}.${isWindows ? "" : " The job is priced when we reply."}`
               : "Not on our loaded list yet. Send it anyway and we’ll check."}
           </p>
         )}
@@ -1134,10 +1114,17 @@ function QuoteRequestForm({ slug }: { slug: string }) {
               <p className="pane-total">
                 <span>
                   {win.panes} panes × ${win.rate.toFixed(2)}
-                  {win.panes * win.rate < 179 ? " (jobs start from $179)" : ""}
-                  {winLoading != null ? ` + ${match!.zone} ${pct(match!.loading)}` : ""}
+                  {win.panes * win.rate < 179 ? " · jobs start from $179" : ""}
                 </span>
-                <strong>${(win.price + (winLoading ?? 0)).toFixed(2)}</strong>
+                {/* Price includes the suburb adjustment; none shown until
+                    the suburb is known. */}
+                <strong>
+                  {winLoading != null
+                    ? `$${(win.price + winLoading).toFixed(2)}`
+                    : suburb.trim()
+                      ? "We’ll check your suburb"
+                      : "Enter your suburb above"}
+                </strong>
               </p>
             )}
           </div>
