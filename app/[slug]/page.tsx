@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { services, getService, type Service } from "../../lib/services";
 import ServicePageClient from "../../components/ServicePageClient";
 import { faqJsonLd } from "../../lib/serviceFaq";
+import { GUTTER, ROOF_MATERIALS, WINDOW_RATES } from "../../lib/quote";
 
 // Same fallback used in layout.tsx / sitemap.ts / robots.ts — one legacy
 // placeholder domain until NEXT_PUBLIC_SITE_URL is set in Vercel.
@@ -74,6 +75,40 @@ function serviceJsonLd(service: Service) {
       description: "Per solar panel, plus a small suburb loading (none on your bin-clean day)",
     };
   }
+
+  /* The per-unit rates from lib/quote.ts (19 Sept schedule). */
+  const unit = (price: number, unitText: string, description: string) => ({
+    "@type": "Offer",
+    priceCurrency: "AUD",
+    description,
+    priceSpecification: {
+      "@type": "UnitPriceSpecification",
+      priceCurrency: "AUD",
+      price: price.toFixed(2),
+      unitText,
+    },
+  });
+  const [metal, tile] = ROOF_MATERIALS;
+  const perUnit: Record<string, object[]> = {
+    "pressure-cleaning": [
+      unit(2.95, "square metre", "Driveways and concrete ($2.45/m² past 200 m²), jobs from $179"),
+      unit(3.45, "square metre", "Patios and pool surrounds, jobs from $179"),
+    ],
+    "roof-cleaning": [
+      unit(metal.rate, "square metre", `Metal roof soft wash, from $${metal.min}`),
+      unit(tile.rate, "square metre", `Tile roof soft wash, from $${tile.min}`),
+    ],
+    "house-washing": [unit(3.3, "square metre of wall", "House soft wash ($2.40/m² past 150 m²), from $429")],
+    "gutter-cleaning": [
+      { "@type": "Offer", priceCurrency: "AUD", price: String(GUTTER.base[1]), description: `Single storey, first ${GUTTER.includedM} m, downpipes flushed` },
+      { "@type": "Offer", priceCurrency: "AUD", price: String(GUTTER.base[2]), description: `Double storey, first ${GUTTER.includedM} m, downpipes flushed` },
+    ],
+    "window-cleaning": [
+      unit(WINDOW_RATES.outside, "pane", "Outside only, jobs from $179"),
+      unit(WINDOW_RATES.both, "pane", "Inside and out, jobs from $179"),
+    ],
+  };
+  if (perUnit[service.slug]) jsonLd.offers = perUnit[service.slug];
 
   return jsonLd;
 }
