@@ -1,4 +1,12 @@
 import { loadingSummary } from "./pricing";
+import { GUTTER, QUOTE_CONFIG, ROOF_MATERIALS, WINDOW_RATES } from "./quote";
+
+/* Price copy built from lib/quote.ts, so the words can't drift from the
+   numbers the quote tool actually charges. */
+const $ = (n: number) => `$${n % 1 ? n.toFixed(2) : n}`;
+const MIN = $(QUOTE_CONFIG.minTotal);
+const [METAL, TILE] = ROOF_MATERIALS;
+const INHIBIT = $(QUOTE_CONFIG.inhibitorPerM2);
 // Single source of truth for every service on the site.
 // One shape, used by the homepage list, the service pages, the prices page
 // and page metadata — so there is only ever one place to update a price,
@@ -54,7 +62,7 @@ export const services: Service[] = [
     media: "/media/driveway-mid-clean-split-line-edmonton.jpg",
     cue: "Concrete gone black?",
     short: "Driveways, paths, pool surrounds and hard surfaces.",
-    price: "Priced on the area cleaned",
+    price: "From $2.95/m²",
     eyebrow: "PRESSURE CLEANING",
     keyword: "Pressure Cleaning Cairns", // leads the page H1: what people type into Google
     heading: "Got a driveway that’s gone black?",
@@ -62,7 +70,7 @@ export const services: Service[] = [
       "Tell us where it is and roughly how much needs cleaning. We’ll show you how the price is built before you book.",
     priceModel: "One price for the job",
     priceDetail:
-      "Your suburb and the area actually cleaned — that’s the whole price. No hidden extras.",
+      `Driveways and concrete $2.95/m² ($2.45 past 200 m²), patios and pool surrounds $3.45/m². Every job from ${MIN}. Mould inhibitor ${INHIBIT}/m² extra if you want it. Measure it on the map for the exact price.`,
     mediaCaption: "Same driveway, same pass. The line is where we stopped for the photo.",
     gallery: [
       {
@@ -140,7 +148,7 @@ export const services: Service[] = [
     media: "/media/roof-mid-clean-split-line-whitfield.jpg",
     cue: "Roof getting green?",
     short: "Tropical build-up, mould and exterior roof cleaning.",
-    price: "Priced on roof size & access",
+    price: `Metal ${$(METAL.rate)}/m², tile ${$(TILE.rate)}/m²`,
     eyebrow: "ROOF CLEANING",
     keyword: "Roof Cleaning Cairns", // leads the page H1: what people type into Google
     heading: "The roof is doing the hard work. Look after it.",
@@ -148,7 +156,7 @@ export const services: Service[] = [
       "Cairns roofs cop heat, rain, shade and organic growth. We’ll price the job around the roof, access and what’s actually on it.",
     priceModel: "One price for the roof",
     priceDetail:
-      "Priced on roof size, pitch, access and how much needs to come off. We’ll walk you through it before quoting a figure.",
+      `Soft wash. Metal roofs ${$(METAL.rate)}/m² (from ${$(METAL.min)}), tile ${$(TILE.rate)}/m² (from ${$(TILE.min)}), on the real roof area with the slope added. Older fibro roofs get looked at before we quote.`,
     mediaCaption: "Mid-pass on a Whitfield roof. Left untouched, right done.",
     gallery: [
       {
@@ -315,7 +323,7 @@ export const services: Service[] = [
     media: "/media/IMG_2935.jpg",
     cue: "Glass lost its shine?",
     short: "Exterior glass and presentation cleaning.",
-    price: "Priced on windows & access",
+    price: `From ${$(WINDOW_RATES.outside)} a pane`,
     eyebrow: "WINDOW CLEANING",
     keyword: "Window Cleaning Cairns", // leads the page H1: what people type into Google
     heading: "You notice clean glass when you stop noticing the glass.",
@@ -323,7 +331,7 @@ export const services: Service[] = [
       "Tell us the property and what you need cleaned. We’ll keep the scope and the price easy to understand.",
     priceModel: "One price for the windows",
     priceDetail:
-      "Priced on window count, access and height. Ground-floor and single-storey work is usually the most straightforward to quote.",
+      `${$(WINDOW_RATES.outside)} a pane outside only, ${$(WINDOW_RATES.both)} inside and out. Every job from ${MIN}.`,
     mediaCaption: "Glazed walkway on a Cairns strata building.",
     // TODO: no confirmed Cairns Bin Cleaning photo of this service exists yet.
     // Left empty on purpose rather than filled with a stock image.
@@ -412,7 +420,7 @@ export const services: Service[] = [
     media: "/media/house-wash-action-lance-smithfield.jpg",
     cue: "Walls looking tropical?",
     short: "Exterior house washing suited to Cairns conditions.",
-    price: "Priced on wall area",
+    price: "From $429",
     eyebrow: "HOUSE WASHING",
     keyword: "House Washing Cairns", // leads the page H1: what people type into Google
     heading: "The whole place needs a freshen-up?",
@@ -420,7 +428,7 @@ export const services: Service[] = [
       "Start with the suburb and property. We’ll work out what surfaces actually need attention and keep the quote clear.",
     priceModel: "One price for the house",
     priceDetail:
-      "Priced on wall area, cladding type and how much organic growth has built up. We’ll tell you what’s realistic before we start.",
+      "Soft wash, priced on wall area: $3.30/m² ($2.40 past 150 m²). A single-storey house starts at $429; double storey is usually $650 to $800.",
     mediaCaption: "Low pressure on render. Lifts the growth without stripping paint.",
     gallery: [
       {
@@ -476,15 +484,15 @@ export const services: Service[] = [
     media: "/media/roof-surface-cleaner-on-sheets-kanimbla.jpg",
     cue: "Wet season ready?",
     short: "Gutters, edges and exterior maintenance.",
-    price: "Priced on roofline length",
+    price: `${$(GUTTER.base[1])} single, ${$(GUTTER.base[2])} double`,
     eyebrow: "GUTTER CLEANING",
     keyword: "Gutter Cleaning Cairns", // leads the page H1: what people type into Google
     heading: "Keep the wet-season water moving.",
     intro:
-      "Tell us where the property is. Height, access and gutter size decide the rest of the job.",
+      "Single or double storey, and how much gutter there is. That decides the price, and you can see it on the map below.",
     priceModel: "One price for the gutters",
     priceDetail:
-      "Priced on roofline length, access and how blocked they are. Single-storey homes are usually the quickest to quote.",
+      `${$(GUTTER.base[1])} single storey or ${$(GUTTER.base[2])} double for the first ${GUTTER.includedM} m of gutter, then ${$(GUTTER.perExtraM)} a metre. Downpipes flushed, included.`,
     mediaCaption: "Roofline on a Kanimbla job. Gutters get cleared before the roof is washed.",
     // TODO: no confirmed Cairns Bin Cleaning photo of this service exists yet.
     // Left empty on purpose rather than filled with a stock image.
