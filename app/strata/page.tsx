@@ -1,31 +1,34 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { services } from "../../lib/services";
+import ComplianceDocs from "../../components/ComplianceDocs";
 
 export const metadata: Metadata = {
-  title: "Strata & Body Corporate Cleaning Cairns | Cairns Bin Cleaning",
+  title: "Strata & Body Corporate Cleaning Cairns | CBC Exterior & Property Maintenance",
   description:
-    "Recurring exterior maintenance for strata and body corporate properties in Cairns — bin cleaning, pressure cleaning, window and gutter cleaning, scheduled around occupancy.",
+    "Recurring exterior maintenance for strata and body corporate properties in Cairns — pressure cleaning, window and gutter cleaning, refuse rooms and bins, scheduled around occupancy.",
   alternates: { canonical: "/strata" },
 };
 
 const strataServiceSlugs = [
-  "bin-cleaning",
   "pressure-cleaning",
   "window-cleaning",
   "gutter-cleaning",
   "commercial-cleaning",
+  "bin-cleaning",
 ];
 
 export default function Strata() {
-  const list = services.filter((s) => strataServiceSlugs.includes(s.slug));
+  const list = strataServiceSlugs
+    .map((slug) => services.find((s) => s.slug === slug))
+    .filter((s): s is (typeof services)[number] => Boolean(s));
 
   return (
     <main className="legalPage">
       <header className="nav navLight">
         <Link href="/" className="brand">
-          <span>CAIRNS</span>
-          <small>BIN CLEANING</small>
+          <span>CBC</span>
+          <small>EXTERIOR &amp; PROPERTY MAINTENANCE</small>
         </Link>
         <nav>
           <Link href="/">Home</Link>
@@ -64,10 +67,14 @@ export default function Strata() {
           <small>ACCOUNTABILITY</small>
           <strong>One call, one contractor.</strong>
           <p>
-            Bins, pressure cleaning, windows and gutters through a single
+            Pressure cleaning, windows, gutters and bins through a single
             point of contact — not a different contractor for every job.
           </p>
         </div>
+      </section>
+
+      <section className="document-grid">
+        <ComplianceDocs />
       </section>
 
       <section className="segmentServices">
@@ -101,7 +108,7 @@ export default function Strata() {
       </section>
 
       <footer className="legalFooter">
-        <span>CAIRNS BIN CLEANING</span>
+        <span>CBC EXTERIOR &amp; PROPERTY MAINTENANCE · CAIRNS BIN CLEANING</span>
         <nav>
           <Link href="/">Home</Link>
           <Link href="/government">Government</Link>
