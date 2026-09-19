@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
     return Response.json({ error: "off" }, { status: 404 });
   }
 
-  let body: { messages?: Msg[]; page?: string };
+  let body: { messages?: Msg[]; page?: string; quote?: unknown };
   try {
     body = await request.json();
   } catch {
@@ -41,6 +41,8 @@ export async function POST(request: NextRequest) {
   }
 
   const page = String(body.page ?? "").slice(0, 120);
+  /* The visitor's instant quote so far, if they have one on screen. */
+  const quote = body.quote ? JSON.stringify(body.quote).slice(0, 2000) : "";
 
   try {
     const res = await fetch("https://api.anthropic.com/v1/messages", {
@@ -53,7 +55,7 @@ export async function POST(request: NextRequest) {
       body: JSON.stringify({
         model: ASSISTANT_MODEL(),
         max_tokens: 500,
-        system: assistantInstructions(page),
+        system: assistantInstructions(page, quote),
         messages,
       }),
       cache: "no-store",
