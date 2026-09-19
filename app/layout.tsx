@@ -127,31 +127,20 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         {children}
         {/* Website assistant: shows only once ANTHROPIC_API_KEY is set. */}
         {ASSISTANT_ENABLED() && <Assistant />}
-        {gaId && (
+        {/* One gtag.js for both GA4 and Google Ads: the second copy was
+            ~150 KB of duplicate script on every page. */}
+        {(gaId || adsId) && (
           <>
             <Script
-              src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}
+              src={`https://www.googletagmanager.com/gtag/js?id=${gaId || adsId}`}
               strategy="afterInteractive"
             />
-            <Script id="ga4-init" strategy="afterInteractive">
+            <Script id="gtag-init" strategy="afterInteractive">
               {`window.dataLayer = window.dataLayer || [];
                 function gtag(){dataLayer.push(arguments);}
                 gtag('js', new Date());
-                gtag('config', '${gaId}');`}
-            </Script>
-          </>
-        )}
-        {adsId && (
-          <>
-            <Script
-              src={`https://www.googletagmanager.com/gtag/js?id=${adsId}`}
-              strategy="afterInteractive"
-            />
-            <Script id="ads-init" strategy="afterInteractive">
-              {`window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
-                gtag('js', new Date());
-                gtag('config', '${adsId}');`}
+                ${gaId ? `gtag('config', '${gaId}');` : ""}
+                ${adsId ? `gtag('config', '${adsId}');` : ""}`}
             </Script>
           </>
         )}
