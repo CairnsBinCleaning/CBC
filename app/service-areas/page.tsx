@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { calloutZones } from "../../lib/pricing";
+import { calloutZones, loadingSummary, pct } from "../../lib/pricing";
 import { services } from "../../lib/services";
 import { suburbPages, suburbSlug } from "../../lib/suburbs";
 
@@ -29,9 +29,10 @@ export default function ServiceAreas() {
         <p className="eyebrow dark">WHERE WE WORK</p>
         <h1>Cairns &amp; Far North Queensland.</h1>
         <p>
-          Three zones, one flat $50 visit fee across all of them — bin
-          cleaning has nothing added at all. If your suburb isn’t listed below,
-          call and we’ll confirm whether we cover it.
+          Three zones. Each adds a small percentage to the job price for the
+          drive out: {loadingSummary()}. Bin cleaning has nothing added at
+          all, and neither does solar booked on your bin-clean day. If your
+          suburb isn’t listed below, call and we’ll confirm whether we cover it.
         </p>
       </section>
 
@@ -42,9 +43,7 @@ export default function ServiceAreas() {
               <span>SERVICE ZONE</span>
               <h2>{zone.name}</h2>
               <p>
-                {zone.fee != null
-                  ? `$${zone.fee.toFixed(2)} visit fee`
-                  : "Visit fee being confirmed"}
+                {pct(zone.loading)} on the job price
               </p>
               <p className="zone-note">
                 Every service on this site is available in all{" "}
