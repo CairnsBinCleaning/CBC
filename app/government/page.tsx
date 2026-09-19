@@ -83,7 +83,7 @@ export default function Government() {
           <Link href="/strata">Strata</Link>
           <Link href="/faq">FAQ</Link>
         </nav>
-      <small className="madeBy">Created by Siezar DeWaal</small></footer>
+      <small className="madeBy">Created by <a href="/faq#siezar-dewaal">Siezar DeWaal</a></small></footer>
     </main>
   );
 }
