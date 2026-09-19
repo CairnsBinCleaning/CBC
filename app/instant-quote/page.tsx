@@ -92,7 +92,7 @@ export default function InstantQuotePage() {
             <Link href="/privacy">Privacy</Link>
             <Link href="/terms">Terms</Link>
           </nav>
-        <small className="madeBy">Created by Siezar DeWaal</small></footer>
+        <small className="madeBy">Created by <a href="/faq#siezar-dewaal">Siezar DeWaal</a></small></footer>
       </main>
     </>
   );
