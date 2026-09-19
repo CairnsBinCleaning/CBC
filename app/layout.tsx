@@ -133,7 +133,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <>
             <Script
               src={`https://www.googletagmanager.com/gtag/js?id=${gaId || adsId}`}
-              strategy="afterInteractive"
+              /* Loads when the page is idle so it never competes with the
+                 first paint on a phone. Events before then wait in
+                 dataLayer and are sent when it arrives. */
+              strategy="lazyOnload"
             />
             <Script id="gtag-init" strategy="afterInteractive">
               {`window.dataLayer = window.dataLayer || [];
