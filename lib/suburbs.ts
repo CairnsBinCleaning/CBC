@@ -19,7 +19,7 @@ export type SuburbPage = {
   slug: string;
   name: string;
   zone: string;
-  fee: number | null;
+  loading: number;
   neighbours: string[]; // other suburbs in the same zone
   jobs: SuburbJob[];
 };
@@ -44,7 +44,7 @@ export const suburbPages: SuburbPage[] = calloutZones.flatMap((zone) =>
       slug: suburbSlug(name),
       name,
       zone: zone.name,
-      fee: zone.fee,
+      loading: zone.loading,
       neighbours: zone.suburbs.filter((s) => s !== name),
       jobs: jobsIn(name),
     }))
