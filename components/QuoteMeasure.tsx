@@ -43,10 +43,11 @@ import {
   perimeter,
   polygonArea,
   priceShape,
+  ROOF_MATERIALS,
+  shapePrice,
   quoteTotals,
   scaleComparison,
   snapRightAngle,
-  tieredPrice,
   type LatLng,
   type QuoteLine,
 } from "../lib/quote";
@@ -78,7 +79,14 @@ function encodeQuote(address: Address | null, lines: QuoteLine[], planId: string
   const payload = {
     a: address,
     p: planId,
-    i: lines.map((l) => ({ s: l.service, c: l.coords, pi: l.pitchId ?? null, st: l.storeys ?? null })),
+    i: lines.map((l) => ({
+      s: l.service,
+      c: l.coords,
+      pi: l.pitchId ?? null,
+      st: l.storeys ?? null,
+      m: l.material ?? null,
+      h: l.inhibitor ? 1 : 0,
+    })),
   };
   const bytes = new TextEncoder().encode(JSON.stringify(payload));
   let bin = "";
@@ -117,6 +125,8 @@ export default function QuoteMeasure({
   const [serviceId, setServiceId] = useState(defaultService);
   const [pitchId, setPitchId] = useState("normal");
   const [storeys, setStoreys] = useState(1);
+  const [material, setMaterial] = useState<string>("metal");
+  const [inhibitor, setInhibitor] = useState(false);
   const [planId, setPlanId] = useState("once");
 
   const [mode, setMode] = useState<"trace" | "box">("trace");
@@ -150,8 +160,8 @@ export default function QuoteMeasure({
       const panels = Math.max(1, Math.round(draw.area / QUOTE_CONFIG.solarPanelM2));
       return { billable: panels, cash: Math.max(panels * QUOTE_CONFIG.solarRatePerPanel, service.min) };
     }
-    return { billable, cash: Math.max(tieredPrice(billable, service.tiers), service.min) };
-  }, [draw, service, pitchId, storeys]);
+    return { billable, cash: shapePrice(service, billable, { material, inhibitor, storeys }).amount };
+  }, [draw, service, pitchId, storeys, material, inhibitor]);
 
   /* ------------------------------------------------------------ map refs */
   const mapEl = useRef<HTMLDivElement | null>(null);
@@ -366,7 +376,14 @@ export default function QuoteMeasure({
       const bounds = L.latLngBounds([]);
 
       (st.i ?? []).forEach((raw: any) => {
-        const priced = priceShape({ service: raw.s, pitchId: raw.pi, storeys: raw.st, coords: raw.c });
+        const priced = priceShape({
+          service: raw.s,
+          pitchId: raw.pi,
+          storeys: raw.st,
+          material: raw.m ?? null,
+          inhibitor: Boolean(raw.h),
+          coords: raw.c,
+        });
         if (!priced) return;
         rebuilt.push(priced);
         const pts = raw.c.map(([lat, lng]: [number, number]) => ({ lat, lng }));
@@ -514,7 +531,9 @@ export default function QuoteMeasure({
     const priced = priceShape({
       service: service.id,
       pitchId: service.mode === "roof" ? pitchId : null,
-      storeys: service.mode === "walls" ? storeys : null,
+      storeys: service.mode === "walls" || service.mode === "gutter" ? storeys : null,
+      material: service.mode === "roof" ? (material as "metal" | "tile" | "unsure") : null,
+      inhibitor: Boolean(service.inhibitor && inhibitor),
       coords: points.current.map((p) => [+p.lat.toFixed(6), +p.lng.toFixed(6)] as [number, number]),
     });
     if (!priced) return;
@@ -530,7 +549,7 @@ export default function QuoteMeasure({
     setLines((prev) => [...prev, priced]);
     clearShape();
     setShareUrl("");
-  }, [service, pitchId, storeys, clearShape]);
+  }, [service, pitchId, storeys, material, inhibitor, clearShape]);
 
   const removeLine = useCallback((i: number) => {
     const layer = committed.current[i];
@@ -603,6 +622,8 @@ export default function QuoteMeasure({
           service: l.service,
           pitchId: l.pitchId ?? null,
           storeys: l.storeys ?? null,
+          material: l.material ?? null,
+          inhibitor: Boolean(l.inhibitor),
           coords: l.coords,
         })),
         photos,
@@ -687,7 +708,9 @@ export default function QuoteMeasure({
             onKeyDown={(e) => {
               if (e.key === "Enter") {
                 e.preventDefault();
-                findAddress();
+                /* Enter takes the top suggestion, like every map app. */
+                if (results.length) pickAddress(results[0]);
+                else findAddress();
               }
             }}
             placeholder="Start typing your address…"
@@ -785,20 +808,20 @@ export default function QuoteMeasure({
           <div className={`${styles.readout} ${styles.glass}`} aria-live="polite">
             <div className={styles.val}>
               <span>{live.billable.toLocaleString("en-AU")}</span>
-              <u>{service.mode === "panels" ? "panels" : "m²"}</u>
+              <u>{service.mode === "panels" ? "panels" : service.mode === "gutter" ? "m of gutter" : "m²"}</u>
             </div>
             <div className={styles.sub}>
               {draw.count < 3
                 ? draw.count === 0
                   ? "Tap each corner of the area"
                   : `${draw.count} corner${draw.count > 1 ? "s" : ""} so far`
-                : service.mode === "walls"
+                : service.mode === "walls" || service.mode === "gutter"
                   ? `${Math.round(draw.perim)} m around · ${storeys} storey${storeys > 1 ? "s" : ""}`
                   : service.mode === "roof"
                     ? `${Math.round(draw.area)} m² footprint · slope added`
                     : `${Math.round(draw.perim)} m perimeter · ${draw.count} corners`}
             </div>
-            {live.billable > 0 && service.mode !== "panels" && (
+            {live.billable > 0 && service.mode !== "panels" && service.mode !== "gutter" && (
               <div className={styles.scale}>{scaleComparison(live.billable)}</div>
             )}
             {live.cash > 0 && (
@@ -834,7 +857,41 @@ export default function QuoteMeasure({
             </div>
           )}
 
-          {service.mode === "walls" && (
+          {service.mode === "roof" && (
+            <div className={`${styles.mods} ${styles.glass}`}>
+              <span className={styles.label}>Roof</span>
+              {ROOF_MATERIALS.map((m) => (
+                <button
+                  key={m.id}
+                  type="button"
+                  aria-pressed={m.id === material}
+                  title={`${m.desc}${m.id === "unsure" ? "" : ` · $${m.rate.toFixed(2)}/m², from $${m.min}`}`}
+                  onClick={() => setMaterial(m.id)}
+                >
+                  {m.label}
+                </button>
+              ))}
+            </div>
+          )}
+
+          {service.inhibitor && (
+            <div className={`${styles.mods} ${styles.glass}`}>
+              <span className={styles.label}>Mould inhibitor</span>
+              <button type="button" aria-pressed={!inhibitor} onClick={() => setInhibitor(false)}>
+                No
+              </button>
+              <button
+                type="button"
+                aria-pressed={inhibitor}
+                title={`Slows the black mould coming back. +$${QUOTE_CONFIG.inhibitorPerM2.toFixed(2)}/m²`}
+                onClick={() => setInhibitor(true)}
+              >
+                Yes +${QUOTE_CONFIG.inhibitorPerM2.toFixed(2)}/m²
+              </button>
+            </div>
+          )}
+
+          {(service.mode === "walls" || service.mode === "gutter") && (
             <div className={`${styles.mods} ${styles.glass}`}>
               <span className={styles.label}>Storeys</span>
               {[1, 2, 3].map((n) => (
@@ -1046,7 +1103,7 @@ export default function QuoteMeasure({
               <div className={styles.recap}>
                 <b>{money(totals.grand)}</b>
                 <div>
-                  {lines.map((l) => `${l.label.toLowerCase()} ${l.billable} ${l.mode === "panels" ? "panels" : "m²"}`).join(" · ")}
+                  {lines.map((l) => `${l.label.toLowerCase()} ${l.billable} ${l.mode === "panels" ? "panels" : l.mode === "gutter" ? "m" : "m²"}`).join(" · ")}
                   {totals.saving > 0 ? ` · ${totals.plan.label}` : ""}
                   <br />
                   {address?.label ?? ""}
