@@ -8,7 +8,7 @@
  * claimed here. Change a fact at its source and this follows.
  */
 
-import { calloutZones, loadingSummary } from "./pricing";
+import { calloutZones, SUBURB_NOTE } from "./pricing";
 import type { Service } from "./services";
 
 export type QA = { q: string; a: string };
@@ -22,7 +22,7 @@ function areasAnswer() {
   const first = calloutZones[calloutZones.length - 1]?.suburbs.slice(-1)[0];
   const last = calloutZones.find((z) => z.name === "Northern Beaches")?.suburbs.slice(-1)[0];
   return (
-    `Greater Cairns, across three zones: ${zones}` +
+    `Greater Cairns: ${zones}` +
     (first && last ? ` — roughly ${first} to ${last}.` : ".") +
     " If your suburb isn’t on our list, call and we’ll check it."
   );
@@ -32,11 +32,7 @@ function priceAnswer(s: Service) {
   if (s.slug === "bin-cleaning") return s.priceDetail + " Nothing is added for your suburb.";
   // Solar's own price line already covers the loading and the bin-day rule.
   if (s.slug === "solar-panel-cleaning") return s.priceDetail;
-  return (
-    s.priceDetail +
-    ` Your suburb adds a small percentage to the job price for the drive out: ${loadingSummary()}.` +
-    (s.slug === "solar-panel-cleaning" ? " Book it on your bin-clean day and nothing is added." : "")
-  );
+  return `${s.priceDetail} ${SUBURB_NOTE}`;
 }
 
 function bookAnswer(s: Service) {
