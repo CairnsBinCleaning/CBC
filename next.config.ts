@@ -1,6 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  /* AVIF first (about half the size of JPEG), WebP fallback. */
+  images: { formats: ["image/avif", "image/webp"] },
+
   /* The address finder reads its Cairns address list from disk at runtime.
      Tell the bundler to ship that file with the route. */
   outputFileTracingIncludes: {
