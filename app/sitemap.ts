@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { services } from "../lib/services";
+import { suburbPages } from "../lib/suburbs";
 
 const siteUrl =
   process.env.NEXT_PUBLIC_SITE_URL || "https://www.zacsbinandpressurecleaning.com.au";
@@ -24,5 +25,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.9,
   }));
 
-  return [...staticRoutes, ...serviceRoutes];
+  const suburbRoutes: MetadataRoute.Sitemap = suburbPages.map((p) => ({
+    url: `${siteUrl}/service-areas/${p.slug}`,
+    changeFrequency: "monthly",
+    priority: 0.6,
+  }));
+
+  return [...staticRoutes, ...serviceRoutes, ...suburbRoutes];
 }
