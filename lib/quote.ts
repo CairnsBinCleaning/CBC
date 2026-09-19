@@ -4,7 +4,16 @@
  * to show a price; the Server Action imports it to recompute that price from
  * the raw coordinates. The browser is never trusted for a dollar figure.
  *
- * PRICING BASIS (2026 market rates, Queensland):
+ * PRICE SCHEDULE (set by Siezar 19 Sept 2026, "CBC Prices & How To Sell
+ * Them"): every job from $179, target $140/hr incl. GST.
+ *   Driveway $2.95/m² ($2.45 past 200 m²) · Patio $3.45/m²
+ *   Roof metal $3.95/m² (min $590) · tile $4.95/m² (min $690)
+ *   House wash $3.30/m² of wall ($2.40 past 150 m²), from $429
+ *   Gutters $199 single / $299 double up to 45 m, +$4/m after
+ *   Mould inhibitor +$0.80/m² · Solar $14.50/panel
+ * The suburb loading (lib/pricing.ts) goes on top of the job price.
+ *
+ * Original market research behind the bands (2026, Queensland):
  *   - Roof cleaning in Brisbane/QLD runs $4.50–$10.50 per m², with a typical
  *     residential job at $650–$1,500 and Colorbond at the lower end.
  *   - A standard single/double driveway runs $150–$300 all in; concrete paths
@@ -19,7 +28,7 @@
  * measured area is converted to a panel count rather than charged per m².
  */
 
-export type MeasureMode = "area" | "roof" | "walls" | "panels";
+export type MeasureMode = "area" | "roof" | "walls" | "panels" | "gutter";
 
 export type PriceTier = { upTo: number; rate: number };
 
@@ -38,7 +47,32 @@ export type QuoteService = {
      to the customer — it exists so Siezar can see whether a quote clears his
      hourly target before he accepts the job. */
   m2PerHour: number;
+  /* Mould inhibitor can be added (concrete only). */
+  inhibitor?: boolean;
 };
+
+export type RoofMaterial = "metal" | "tile" | "unsure";
+
+export const ROOF_MATERIALS: { id: RoofMaterial; label: string; rate: number; min: number; desc: string }[] = [
+  { id: "metal", label: "Metal", rate: 3.95, min: 590, desc: "Colorbond, zincalume, tin" },
+  { id: "tile", label: "Tile", rate: 4.95, min: 690, desc: "Concrete or terracotta tiles" },
+  /* Fibro sheeting on pre-1990 houses can be asbestos cement. High pressure
+     releases fibres, so we look at it first rather than quoting blind. */
+  { id: "unsure", label: "Not sure", rate: 4.95, min: 690, desc: "Or fibro / older sheeting: we check it first" },
+];
+
+/* Windows: per pane, every job from $179 (QUOTE_CONFIG.minTotal). */
+export const WINDOW_RATES = { outside: 9.95, both: 14.95 } as const;
+export type WindowType = keyof typeof WINDOW_RATES;
+
+export function windowQuote(panes: number, type: WindowType) {
+  const n = Math.max(0, Math.min(Math.round(panes) || 0, 500));
+  const rate = WINDOW_RATES[type] ?? WINDOW_RATES.outside;
+  return { panes: n, rate, price: n ? Math.max(Math.round(n * rate * 100) / 100, 179) : 0 };
+}
+
+/* Gutters: flat price by storeys covers the first 45 m, then per metre. */
+export const GUTTER = { includedM: 45, perExtraM: 4, base: { 1: 199, 2: 299 } as Record<number, number> };
 
 export type LatLng = { lat: number; lng: number };
 
@@ -46,7 +80,10 @@ export type LatLng = { lat: number; lng: number };
 
 export const QUOTE_CONFIG = {
   /* Absolute floor; per-service minimums below are what normally bind. */
-  minTotal: 50,
+  minTotal: 179,
+
+  /* Optional mould inhibitor on concrete, per m². */
+  inhibitorPerM2: 0.8,
 
   /* House wash is priced on wall area: distance around × this × storeys. */
   wallHeightPerStorey: 2.7,
@@ -61,7 +98,7 @@ export const QUOTE_CONFIG = {
 
   /* What the truck needs to earn per hour to be worth running. Private —
      never rendered to a customer, only attached to Siezar's notification. */
-  targetHourlyRate: 110,
+  targetHourlyRate: 140,
 
   /* Above either of these, stop quoting a bookable number and ask for a site
      visit. Handing a stranger an instant $4,000 price on work nobody has
@@ -103,64 +140,66 @@ export const QUOTE_SERVICES: QuoteService[] = [
     name: "Driveway & concrete",
     mode: "area",
     hint: "Trace the edge of the concrete.",
-    // 50 m² double driveway → $190 before the suburb loading, mid the $150–300 market band.
+    // 100 m² → $295. $2.45/m² past 200 m².
     tiers: [
-      { upTo: 60, rate: 3.8 },
-      { upTo: 200, rate: 3.0 },
-      { upTo: 600, rate: 2.4 },
-      { upTo: Infinity, rate: 1.9 },
+      { upTo: 200, rate: 2.95 },
+      { upTo: Infinity, rate: 2.45 },
     ],
-    min: 180,
-    m2PerHour: 120,
+    min: 179,
+    m2PerHour: 100,
+    inhibitor: true,
   },
   {
     id: "patio",
     name: "Patio / pool surround",
     mode: "area",
     hint: "Trace around the pavers.",
-    // Fiddlier than a driveway — edges, furniture, garden beds.
-    tiers: [
-      { upTo: 40, rate: 4.5 },
-      { upTo: 120, rate: 3.6 },
-      { upTo: Infinity, rate: 2.9 },
-    ],
-    min: 160,
-    m2PerHour: 80,
+    // 60 m² → $207.
+    tiers: [{ upTo: Infinity, rate: 3.45 }],
+    min: 179,
+    m2PerHour: 70,
+    inhibitor: true,
   },
   {
     id: "roof",
     name: "Roof wash",
     mode: "roof",
-    hint: "Trace the roof outline — we add the slope.",
-    // 200 m² of roof → ~$1,095 all in. QLD band is $650–$1,500, average ~$950.
-    tiers: [
-      { upTo: 150, rate: 5.5 },
-      { upTo: 400, rate: 4.4 },
-      { upTo: Infinity, rate: 3.6 },
-    ],
-    min: 450,
-    m2PerHour: 90,
+    hint: "Trace the roof outline, pick metal or tile. We add the slope.",
+    // Rate and minimum come from ROOF_MATERIALS; these are the metal figures.
+    tiers: [{ upTo: Infinity, rate: 3.95 }],
+    min: 590,
+    m2PerHour: 80,
   },
   {
     id: "house",
     name: "House wash",
     mode: "walls",
-    hint: "Trace around the house — we price the walls, not the floor.",
-    // Single storey, 48 m around → 130 m² of wall → ~$518. Band $250–$700.
+    hint: "Trace around the house. We price the walls, not the floor.",
+    // Single storey, 48 m around → 130 m² of wall → $429. Double → ~$757.
     tiers: [
-      { upTo: 150, rate: 3.6 },
-      { upTo: 350, rate: 2.9 },
-      { upTo: Infinity, rate: 2.3 },
+      { upTo: 150, rate: 3.3 },
+      { upTo: Infinity, rate: 2.4 },
     ],
-    min: 320,
-    m2PerHour: 70,
+    min: 429,
+    m2PerHour: 60,
+  },
+  {
+    id: "gutter",
+    name: "Gutters",
+    mode: "gutter",
+    hint: "Trace around the roof edge. The gutter length is the distance around.",
+    // Priced from GUTTER (storeys + metres); tiers unused.
+    tiers: [{ upTo: Infinity, rate: 0 }],
+    min: 199,
+    // Metres of gutter an hour. A guess until real job times replace it.
+    m2PerHour: 40,
   },
   {
     id: "carpark",
     name: "Car park / commercial",
     mode: "area",
     hint: "Trace the bays and lanes.",
-    // Open ground, bigger gear, real economies of scale.
+    // Not on the 19 Sept schedule: kept from the market-rate bands.
     tiers: [
       { upTo: 500, rate: 2.2 },
       { upTo: 2000, rate: 1.7 },
@@ -168,6 +207,7 @@ export const QUOTE_SERVICES: QuoteService[] = [
     ],
     min: 400,
     m2PerHour: 220,
+    inhibitor: true,
   },
   {
     id: "solar",
@@ -176,8 +216,9 @@ export const QUOTE_SERVICES: QuoteService[] = [
     hint: "Trace the panel array, not the whole roof.",
     // Priced per panel at the real published rate; tiers unused.
     tiers: [{ upTo: Infinity, rate: 0 }],
-    min: 150,
-    m2PerHour: 50,
+    min: 179,
+    // Panels an hour.
+    m2PerHour: 12,
   },
 ];
 
@@ -275,6 +316,8 @@ export type QuoteShape = {
   service: string;
   pitchId?: string | null;
   storeys?: number | null;
+  material?: RoofMaterial | null;
+  inhibitor?: boolean | null;
   coords: [number, number][];
 };
 
@@ -286,6 +329,8 @@ export type QuoteLine = QuoteShape & {
   billable: number;      // m² charged (or panels, for solar)
   panels?: number;
   amount: number;
+  /* Mould inhibitor dollars, already inside amount. */
+  inhibitorAmount?: number;
   hours: number;
 };
 
@@ -301,6 +346,7 @@ export function billableFor(input: {
     const p = QUOTE_CONFIG.pitches.find((x) => x.id === input.pitchId) ?? QUOTE_CONFIG.pitches[2];
     return input.area / Math.cos(rad(p.deg));
   }
+  if (input.mode === "gutter") return input.perim;
   if (input.mode === "walls") {
     return input.perim * QUOTE_CONFIG.wallHeightPerStorey * (input.storeys || 1);
   }
@@ -353,31 +399,82 @@ export function priceShape(shape: QuoteShape): QuoteLine | null {
   const billable = Math.round(
     billableFor({ mode: service.mode, area, perim, pitchId: shape.pitchId, storeys: shape.storeys })
   );
-  const amount = Math.round(Math.max(tieredPrice(billable, service.tiers), service.min));
+  const { amount, inhibitorAmount, label } = shapePrice(service, billable, shape);
 
   return {
     ...shape,
-    label: service.name,
+    material: service.mode === "roof" ? roofMaterial(shape.material).id : null,
+    inhibitor: Boolean(service.inhibitor && shape.inhibitor),
+    storeys: service.mode === "walls" || service.mode === "gutter" ? gutterStoreys(shape.storeys) : shape.storeys ?? null,
+    label,
     mode: service.mode,
     area: Math.round(area),
     perim: Math.round(perim),
     billable,
     amount,
+    inhibitorAmount,
     hours: billable / service.m2PerHour,
   };
 }
 
+export const roofMaterial = (id?: string | null) =>
+  ROOF_MATERIALS.find((m) => m.id === id) ?? ROOF_MATERIALS[0];
+
+const gutterStoreys = (n?: number | null) => Math.min(Math.max(Math.round(n || 1), 1), 3);
+
+export function gutterPrice(metres: number, storeys: number) {
+  const base = GUTTER.base[Math.min(gutterStoreys(storeys), 2)];
+  return base + Math.max(0, Math.ceil(metres - GUTTER.includedM)) * GUTTER.perExtraM;
+}
+
+/* Price for one measured shape. Shared by the live readout on the map and
+   priceShape(), so the number under your finger is the number you book. */
+export function shapePrice(
+  service: QuoteService,
+  billable: number,
+  opts: { material?: string | null; inhibitor?: boolean | null; storeys?: number | null }
+): { amount: number; inhibitorAmount: number; label: string } {
+  if (service.mode === "gutter") {
+    const n = gutterStoreys(opts.storeys);
+    return {
+      amount: gutterPrice(billable, n),
+      inhibitorAmount: 0,
+      label: `${service.name}, ${n > 1 ? "double" : "single"} storey`,
+    };
+  }
+  if (service.mode === "roof") {
+    const m = roofMaterial(opts.material);
+    return {
+      amount: Math.round(Math.max(billable * m.rate, m.min)),
+      inhibitorAmount: 0,
+      label: m.id === "unsure" ? service.name : `${service.name}, ${m.label.toLowerCase()}`,
+    };
+  }
+  const inhibitorAmount =
+    service.inhibitor && opts.inhibitor ? Math.round(billable * QUOTE_CONFIG.inhibitorPerM2) : 0;
+  return {
+    amount: Math.round(Math.max(tieredPrice(billable, service.tiers), service.min)) + inhibitorAmount,
+    inhibitorAmount,
+    label: service.name,
+  };
+}
+
 export function explainLine(line: QuoteLine): string {
+  if (line.mode === "gutter") {
+    const extra = Math.max(0, Math.ceil(line.billable - GUTTER.includedM));
+    return `${line.billable} m of gutter${extra ? ` · first ${GUTTER.includedM} m + ${extra} m × $${GUTTER.perExtraM}` : `, first ${GUTTER.includedM} m included`}`;
+  }
   if (line.mode === "panels") return `${line.panels} panels × $${QUOTE_CONFIG.solarRatePerPanel}`;
   if (line.mode === "roof") {
     const p = QUOTE_CONFIG.pitches.find((x) => x.id === line.pitchId) ?? QUOTE_CONFIG.pitches[2];
-    return `${line.area} m² footprint · ${p.label.toLowerCase()} ${p.deg}° → ${line.billable} m² of roof`;
+    const m = roofMaterial(line.material);
+    return `${line.area} m² footprint · ${p.label.toLowerCase()} ${p.deg}° → ${line.billable} m² × $${m.rate.toFixed(2)}`;
   }
   if (line.mode === "walls") {
     const n = line.storeys || 1;
     return `${line.perim} m around × ${QUOTE_CONFIG.wallHeightPerStorey} m × ${n} storey${n > 1 ? "s" : ""} → ${line.billable} m²`;
   }
-  return `${line.billable} m²`;
+  return `${line.billable} m²${line.inhibitorAmount ? ` + mould inhibitor $${line.inhibitorAmount}` : ""}`;
 }
 
 export type QuoteTotals = {
@@ -407,21 +504,27 @@ export function quoteTotals(
   const plan = QUOTE_CONFIG.plans.find((p) => p.id === planId) ?? QUOTE_CONFIG.plans[0];
   const work = lines.reduce((n, l) => n + l.amount, 0);
   const saving = Math.round(work * plan.discount);
-  const travel = lines.length && zone ? Math.round((work - saving) * zone.loading) : lines.length ? null : 0;
-  const grand = lines.length ? Math.max(work - saving + (travel ?? 0), QUOTE_CONFIG.minTotal) : 0;
+  /* Every job starts from $179; the suburb loading goes on top of that. */
+  const job = lines.length ? Math.max(work - saving, QUOTE_CONFIG.minTotal) : 0;
+  const travel = lines.length && zone ? Math.round(job * zone.loading) : lines.length ? null : 0;
+  const grand = lines.length ? job + (travel ?? 0) : 0;
 
   const hours = lines.reduce((n, l) => n + l.hours, 0) + (lines.length ? QUOTE_CONFIG.setupHours : 0);
   const effectiveHourly = hours > 0 ? grand / hours : 0;
 
   const bigArea = lines.find((l) => l.billable > QUOTE_CONFIG.autoQuoteCeiling.singleAreaM2);
+  const roofUnsure = lines.find((l) => l.mode === "roof" && l.material === "unsure");
   const needsSiteVisit =
     grand > QUOTE_CONFIG.autoQuoteCeiling.total ||
     Boolean(bigArea) ||
+    Boolean(roofUnsure) ||
     lines.some((l) => (l.storeys || 1) >= 3);
 
   const siteVisitReason = !needsSiteVisit
     ? null
-    : bigArea
+    : roofUnsure
+      ? "we check what the roof is made of before quoting it (older fibro sheeting can contain asbestos)"
+      : bigArea
       ? `${bigArea.label} is ${bigArea.billable} m² — worth walking before anyone commits`
       : lines.some((l) => (l.storeys || 1) >= 3)
         ? "three storeys means access gear, and that gets looked at first"
