@@ -29,7 +29,17 @@ import "leaflet/dist/leaflet.css";
 
 import { useActionState, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
+import { Barlow, IBM_Plex_Mono } from "next/font/google";
 import styles from "./QuoteMeasure.module.css";
+
+/* Self-hosted at build time: no request to Google, no render blocking. */
+const barlow = Barlow({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
+  display: "swap",
+  variable: "--qm-barlow",
+});
+const plex = IBM_Plex_Mono({ subsets: ["latin"], weight: ["500", "600"], display: "swap", variable: "--qm-plex" });
 
 import {
   QUOTE_CONFIG,
@@ -53,7 +63,8 @@ import {
 } from "../lib/quote";
 
 import { bookMeasuredQuote, type BookMeasuredQuoteResult } from "../lib/jobber/actions";
-import { pct, zoneFromAddress } from "../lib/pricing";
+import { zoneFromAddress } from "../lib/pricing";
+import { track } from "../lib/analytics";
 import { useLeadEvent } from "./Analytics";
 
 const MAX_PHOTOS = 3;
@@ -126,7 +137,7 @@ export default function QuoteMeasure({
   const [pitchId, setPitchId] = useState("normal");
   const [storeys, setStoreys] = useState(1);
   const [material, setMaterial] = useState<string>("metal");
-  const [inhibitor, setInhibitor] = useState(false);
+  const inhibitor = false;
   const [planId, setPlanId] = useState("once");
 
   const [mode, setMode] = useState<"trace" | "box">("trace");
@@ -137,6 +148,12 @@ export default function QuoteMeasure({
   const [lines, setLines] = useState<QuoteLine[]>([]);
   const [photos, setPhotos] = useState<string[]>([]);
   const [nudgeOff, setNudgeOff] = useState(false);
+  /* Suggestions the customer already said no to (by id). */
+  const [skipped, setSkipped] = useState<string[]>([]);
+  /* "Looks like you're stuck" helper. */
+  const [struggle, setStruggle] = useState<string | null>(null);
+  const [helpOff, setHelpOff] = useState(false);
+  const redoCount = useRef(0);
   const [peek, setPeek] = useState(false);
   const [peekTouched, setPeekTouched] = useState(false);
   const [toolsOpen, setToolsOpen] = useState(false);
@@ -560,6 +577,7 @@ export default function QuoteMeasure({
   }, []);
 
   const undo = useCallback(() => {
+    redoCount.current += 1;
     if (boxA.current) {
       boxA.current = null;
       return;
@@ -636,7 +654,117 @@ export default function QuoteMeasure({
     [address, planId, lines, photos, totals.needsSiteVisit]
   );
 
-  const showNudge = lines.length > 0 && !lines.some((l) => l.service === "roof") && !nudgeOff;
+  /* "Did you miss something?" One suggestion at a time, the most useful
+     first, each built from what's actually on the quote. Rule-based, so it
+     works with no AI and can't suggest something we don't sell. */
+  const suggestion = useMemo(() => {
+    if (!lines.length) return null;
+    const has = (id: string) => lines.some((l) => l.service === id);
+    const factor = 1 + (suburbZone?.loading ?? 0);
+    const out: { id: string; title: string; body: string; cta: string }[] = [];
+    const bare = lines.findIndex((l) => getQuoteService(l.service)?.inhibitor && !l.inhibitor);
+    if (bare >= 0) {
+      const add = Math.round(lines[bare].billable * QUOTE_CONFIG.inhibitorPerM2 * factor);
+      out.push({
+        id: `inhibitor-${bare}`,
+        title: "Stop the black coming back?",
+        body: `In Cairns the mould comes back fast on concrete. A mould inhibitor slows it down for months: ${money(add)} for your ${lines[bare].billable} m².`,
+        cta: "Add it",
+      });
+    }
+    const roof = lines.find((l) => l.service === "roof");
+    if (roof && !has("gutter")) {
+      const g = priceShape({ service: "gutter", storeys: 1, coords: roof.coords });
+      if (g)
+        out.push({
+          id: "gutter",
+          title: "Gutters while we're up there?",
+          body: `We'll use your roof outline: about ${g.billable} m of gutter, ${money(g.amount * factor)} single storey, downpipes flushed.`,
+          cta: "Add gutters",
+        });
+    }
+    if (roof && !has("solar"))
+      out.push({
+        id: "solar",
+        title: "Solar panels on that roof?",
+        body: "Dirty panels lose output. $14.50 a panel while we're already up there.",
+        cta: "Measure panels",
+      });
+    if (!roof && !nudgeOff)
+      out.push({
+        id: "roof",
+        title: "While we're on site — the roof too?",
+        body: "Same visit, same gear, one trip out to you.",
+        cta: "Measure it",
+      });
+    return out.find((x) => !skipped.includes(x.id)) ?? null;
+  }, [lines, skipped, nudgeOff, suburbZone]);
+
+  const acceptSuggestion = useCallback(
+    (id: string) => {
+      if (id.startsWith("inhibitor-")) {
+        const i = Number(id.split("-")[1]);
+        setLines((prev) =>
+          prev.map((l, n) => (n === i ? priceShape({ ...l, inhibitor: true }) ?? l : l))
+        );
+      } else if (id === "gutter") {
+        const roof = lines.find((l) => l.service === "roof");
+        const g = roof && priceShape({ service: "gutter", storeys: 1, coords: roof.coords });
+        if (g) setLines((prev) => [...prev, g]);
+      } else if (id === "solar" || id === "roof") {
+        setServiceId(id);
+        setNudgeOff(true);
+        clearShape();
+        setPeek(false);
+      }
+      setSkipped((prev) => [...prev, id]);
+      track("quote_suggestion_accepted", { suggestion: id.replace(/-\d+$/, "") });
+    },
+    [lines, clearShape]
+  );
+
+  /* What's on the quote, for the website assistant (components/Assistant),
+     so it can answer about this quote and notice anything missed. */
+  useEffect(() => {
+    (window as Window & { cbcQuoteContext?: unknown }).cbcQuoteContext = {
+      measuring: service.name,
+      suburb: suburbZone?.suburb ?? null,
+      items: lines.map((l, i) => ({
+        what: l.label,
+        size: `${l.billable} ${l.mode === "panels" ? "panels" : l.mode === "gutter" ? "m" : "m²"}`,
+        mouldInhibitor: l.inhibitor || undefined,
+        price: totals.needsSuburb ? null : totals.shownLines[i],
+      })),
+      total: totals.needsSuburb ? null : totals.grand,
+      siteVisit: totals.needsSiteVisit,
+      stuck: struggle,
+    };
+  }, [service.name, suburbZone, lines, totals, struggle]);
+
+  /* Spot someone struggling and offer a way through, instead of letting
+     them give up on the page. Each signal is simple and local:
+     - address found but nothing drawn after 45 seconds
+     - four corners or more on the map for a minute without adding it
+     - lots of undo / start again */
+  useEffect(() => {
+    if (helpOff || struggle) return;
+    if (redoCount.current >= 6) {
+      setStruggle("redo");
+      return;
+    }
+    if (address && draw.count === 0 && lines.length === 0) {
+      const t = window.setTimeout(() => setStruggle("idle"), 45000);
+      return () => window.clearTimeout(t);
+    }
+    if (draw.count >= 3) {
+      const t = window.setTimeout(() => setStruggle("notAdded"), 60000);
+      return () => window.clearTimeout(t);
+    }
+  }, [address, draw.count, lines.length, helpOff, struggle]);
+
+  useEffect(() => {
+    if (struggle) track("quote_struggle", { kind: struggle, service: serviceId });
+  }, [struggle, serviceId]);
 
   useEffect(() => {
     if (lines.length && !peekTouched && window.matchMedia("(max-width:900px)").matches) setPeek(true);
@@ -661,7 +789,7 @@ export default function QuoteMeasure({
 
   /* ---------------------------------------------------------------- view */
   return (
-    <section className={styles.wrap} id="instant-quote">
+    <section className={`${styles.wrap} ${barlow.variable} ${plex.variable}`} id="instant-quote">
       <div className={styles.intro}>
         {asPageTitle ? (
           <>
@@ -745,7 +873,14 @@ export default function QuoteMeasure({
           <button type="button" onClick={undo} disabled={draw.count === 0}>
             Undo
           </button>
-          <button type="button" onClick={clearShape} disabled={draw.count === 0}>
+          <button
+            type="button"
+            onClick={() => {
+              redoCount.current += 3;
+              clearShape();
+            }}
+            disabled={draw.count === 0}
+          >
             Start again
           </button>
           <button type="button" aria-expanded={toolsOpen} onClick={() => setToolsOpen((o) => !o)}>
@@ -788,6 +923,52 @@ export default function QuoteMeasure({
             <div className={`${styles.hint} ${styles.glass}`} dangerouslySetInnerHTML={{ __html: hint }} />
           )}
 
+          {struggle && !helpOff && (
+            <div className={`${styles.help} ${styles.glass}`} role="status">
+              <b>Need a hand?</b>
+              {struggle === "notAdded" ? (
+                <span>
+                  Happy with the shape? Tap <u>Add this area to my quote</u> and the price goes on your quote.
+                </span>
+              ) : (
+                <span>
+                  Easiest way: zoom in on your place, then tap one corner of the area and the opposite
+                  corner. We make the box, you drag the corners to fit.
+                </span>
+              )}
+              <div className={styles.nudgeActs}>
+                {struggle !== "notAdded" && (
+                  <button
+                    type="button"
+                    className={styles.yes}
+                    onClick={() => {
+                      clearShape();
+                      setMode("box");
+                      redoCount.current = 0;
+                      setStruggle(null);
+                      setHelpOff(true);
+                    }}
+                  >
+                    Draw a box
+                  </button>
+                )}
+                <a className={styles.no} href="tel:+61434052755">
+                  Call us: we&apos;ll measure it
+                </a>
+                <button
+                  type="button"
+                  className={styles.no}
+                  onClick={() => {
+                    setStruggle(null);
+                    setHelpOff(true);
+                  }}
+                >
+                  I&apos;m fine
+                </button>
+              </div>
+            </div>
+          )}
+
           {zone && (
             <div className={`${styles.zone} ${styles.glass} ${zone.inside ? styles.zoneIn : styles.zoneOut}`}>
               <i className={styles.dot} />
@@ -826,7 +1007,7 @@ export default function QuoteMeasure({
             )}
             {live.cash > 0 && (
               <div className={styles.cash}>
-                {money(live.cash)} · {service.name.toLowerCase()}
+                {money(live.cash * (1 + (suburbZone?.loading ?? 0)))} · {service.name.toLowerCase()}
               </div>
             )}
           </div>
@@ -874,22 +1055,9 @@ export default function QuoteMeasure({
             </div>
           )}
 
-          {service.inhibitor && (
-            <div className={`${styles.mods} ${styles.glass}`}>
-              <span className={styles.label}>Mould inhibitor</span>
-              <button type="button" aria-pressed={!inhibitor} onClick={() => setInhibitor(false)}>
-                No
-              </button>
-              <button
-                type="button"
-                aria-pressed={inhibitor}
-                title={`Slows the black mould coming back. +$${QUOTE_CONFIG.inhibitorPerM2.toFixed(2)}/m²`}
-                onClick={() => setInhibitor(true)}
-              >
-                Yes +${QUOTE_CONFIG.inhibitorPerM2.toFixed(2)}/m²
-              </button>
-            </div>
-          )}
+          {/* Mould inhibitor is offered after the area is added (the
+              suggestion card on the quote), not here: on a phone every row in
+              this column is map you can't tap. */}
 
           {(service.mode === "walls" || service.mode === "gutter") && (
             <div className={`${styles.mods} ${styles.glass}`}>
@@ -949,7 +1117,7 @@ export default function QuoteMeasure({
                     {l.label}
                     <small>{explainLine(l)}</small>
                   </div>
-                  <div className={styles.amt}>{money(l.amount)}</div>
+                  <div className={styles.amt}>{money(totals.shownLines[i] ?? l.amount)}</div>
                   <button
                     type="button"
                     className={styles.kill}
@@ -961,24 +1129,22 @@ export default function QuoteMeasure({
                 </div>
               ))}
 
-              {showNudge && (
+              {suggestion && (
                 <div className={styles.nudge}>
-                  <b>While we&apos;re on site — the roof too?</b>
-                  Same visit, same gear, one trip out to you.
+                  <b>{suggestion.title}</b>
+                  {suggestion.body}
                   <div className={styles.nudgeActs}>
+                    <button type="button" className={styles.yes} onClick={() => acceptSuggestion(suggestion.id)}>
+                      {suggestion.cta}
+                    </button>
                     <button
                       type="button"
-                      className={styles.yes}
+                      className={styles.no}
                       onClick={() => {
-                        setServiceId("roof");
-                        setNudgeOff(true);
-                        clearShape();
-                        setPeek(false);
+                        setSkipped((prev) => [...prev, suggestion.id]);
+                        if (suggestion.id === "roof") setNudgeOff(true);
                       }}
                     >
-                      Measure it
-                    </button>
-                    <button type="button" className={styles.no} onClick={() => setNudgeOff(true)}>
                       No thanks
                     </button>
                   </div>
@@ -998,31 +1164,38 @@ export default function QuoteMeasure({
             <div className={styles.sums}>
               <div className={styles.r}>
                 <span>Cleaning</span>
-                <span>{money(totals.work)}</span>
+                <span>{money(totals.shownWork)}</span>
               </div>
               {totals.saving > 0 && (
                 <div className={`${styles.r} ${styles.save}`}>
                   <span>{totals.plan.label} saving</span>
-                  <span>−{money(totals.saving)}</span>
+                  <span>−{money(totals.shownSaving)}</span>
                 </div>
               )}
-              <div className={styles.r}>
-                <span>
-                  {totals.zone && totals.loading != null
-                    ? `${totals.zone} ${pct(totals.loading)}`
-                    : "Suburb loading"}
-                </span>
-                <span>{totals.travel != null ? money(totals.travel) : "set by your address"}</span>
-              </div>
+              {totals.minimumApplied && !totals.needsSuburb && (
+                <div className={styles.r}>
+                  <span>Jobs start from {money(QUOTE_CONFIG.minTotal)}</span>
+                  <span>minimum</span>
+                </div>
+              )}
             </div>
 
-            <div className={styles.total}>
-              <span className={styles.label}>{totals.needsSiteVisit ? "Indicative" : "Total"}</span>
-              <b>{money(totals.grand)}</b>
-            </div>
-            <div className={styles.fine}>Incl. GST · ABN 36 318 413 406</div>
+            {totals.needsSuburb ? (
+              <p className={styles.siteVisit}>
+                <b>Add your address to see your price.</b> The price depends on your suburb, so we
+                don&apos;t show a total until we know where you are. Type it in the box at the top.
+              </p>
+            ) : (
+              <>
+                <div className={styles.total}>
+                  <span className={styles.label}>{totals.needsSiteVisit ? "Indicative" : "Total"}</span>
+                  <b>{money(totals.grand)}</b>
+                </div>
+                <div className={styles.fine}>Incl. GST · the price for your address · no call-out fee</div>
+              </>
+            )}
 
-            {totals.needsSiteVisit && (
+            {totals.needsSiteVisit && !totals.needsSuburb && (
               <p className={styles.siteVisit}>
                 <b>We&apos;ll walk this one first.</b> {totals.siteVisitReason}. The figure above is a
                 genuine indication from the measurement — we confirm it on site before anyone commits.
@@ -1030,9 +1203,19 @@ export default function QuoteMeasure({
             )}
 
             <div className={styles.qfoot}>
-              <button type="button" className={styles.cta} onClick={() => dialogRef.current?.showModal()}>
-                {totals.needsSiteVisit ? "Request a site visit" : `Accept ${money(totals.grand)} & book`}
-              </button>
+              {totals.needsSuburb ? (
+                <button
+                  type="button"
+                  className={styles.cta}
+                  onClick={() => document.getElementById("cbc-quote-address")?.focus()}
+                >
+                  Add your address first
+                </button>
+              ) : (
+                <button type="button" className={styles.cta} onClick={() => dialogRef.current?.showModal()}>
+                  {totals.needsSiteVisit ? "Request a site visit" : `Accept ${money(totals.grand)} & book`}
+                </button>
+              )}
               <div className={styles.mini}>
                 <button
                   type="button"
