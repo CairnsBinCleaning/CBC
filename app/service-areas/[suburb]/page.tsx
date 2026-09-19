@@ -5,7 +5,6 @@ import { notFound } from "next/navigation";
 
 import { services } from "../../../lib/services";
 import { getSuburbPage, suburbPages, suburbSlug } from "../../../lib/suburbs";
-import { pct } from "../../../lib/pricing";
 
 /* One page per suburb where we have real job photos. See lib/suburbs.ts for
    why suburbs without a photo don't get a page. */
@@ -26,7 +25,7 @@ export async function generateMetadata({
   const done = [...new Set(page.jobs.map((j) => j.service.name.toLowerCase()))].join(", ");
   return {
     title: `${page.name} Pressure Cleaning, Bin Cleaning & More | Cairns Bin Cleaning`,
-    description: `Exterior cleaning in ${page.name}, Cairns: see real ${done} jobs we've done there. ${page.zone} zone, ${pct(page.loading)} on the job price, bin cleaning with nothing added. Call 0434 052 755.`,
+    description: `Exterior cleaning in ${page.name}, Cairns: see real ${done} jobs we've done there. Instant prices online, no call-out fee. Call 0434 052 755.`,
     alternates: { canonical: `/service-areas/${page.slug}` },
     openGraph: {
       title: `Exterior cleaning in ${page.name} — Cairns Bin Cleaning`,
@@ -65,11 +64,10 @@ export default async function SuburbPage({
           {page.name}.
         </h1>
         <p>
-          {page.name} is in our {page.zone} zone, which adds{" "}
-          {pct(page.loading).slice(1)} to the job price for the drive out. Bin
-          cleaning has nothing added, and neither does solar booked on your
-          bin-clean day. Below is work we&rsquo;ve done in {page.name}, and
-          everything we can do there.
+          We work right across {page.name}, with no call-out fee. Below is work
+          we&rsquo;ve done in {page.name}, and everything we can do there. Put
+          your address into the instant quote and the price you see is the
+          price for your place.
         </p>
       </section>
 
@@ -133,6 +131,7 @@ export default async function SuburbPage({
         </div>
       </section>
 
+      {page.neighbours.length > 0 && (
       <section className="areasBody suburbNearby">
         <div className="zone-card">
           <span>ALSO IN THE {page.zone.toUpperCase()} ZONE</span>
@@ -149,6 +148,7 @@ export default async function SuburbPage({
           </div>
         </div>
       </section>
+      )}
 
       <footer className="legalFooter">
         <span>CAIRNS BIN CLEANING</span>
@@ -158,7 +158,7 @@ export default async function SuburbPage({
           <Link href="/prices">Prices</Link>
           <Link href="/faq">FAQ</Link>
         </nav>
-        <small className="madeBy">Created by Siezar DeWaal</small>
+        <small className="madeBy">Created by <a href="/faq#siezar-dewaal">Siezar DeWaal</a></small>
       </footer>
     </main>
   );
