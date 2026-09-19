@@ -52,6 +52,7 @@ import {
 } from "../lib/quote";
 
 import { bookMeasuredQuote, type BookMeasuredQuoteResult } from "../lib/jobber/actions";
+import { useLeadEvent } from "./Analytics";
 
 const MAX_PHOTOS = 3;
 
@@ -580,6 +581,10 @@ export default function QuoteMeasure({
     bookMeasuredQuote,
     null
   );
+
+  /* An accepted quote or a site-visit request is a lead. The value is the
+     quoted total, except for site visits, which have no agreed price yet. */
+  useLeadEvent(result, "instant-quote", totals.needsSiteVisit ? undefined : totals.grand);
 
   useEffect(() => {
     dialogRef.current?.setAttribute("closedby", "any");
