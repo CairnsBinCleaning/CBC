@@ -23,7 +23,9 @@ import {
   money,
   priceShape,
   quoteTotals,
+  windowQuote,
   type QuoteShape,
+  type WindowType,
 } from "../quote";
 
 export type BookBinCleaningResult =
@@ -317,6 +319,12 @@ export async function requestServiceQuote(
   const suburb = String(formData.get("suburb") ?? "").trim();
   const serviceName = String(formData.get("serviceName") ?? "").trim();
   const scope = String(formData.get("scope") ?? "").trim();
+  /* Windows: per-pane price recomputed here from the same windowQuote() the
+     page shows. Other services have no per-unit price, so no number. */
+  const win = windowQuote(
+    Number(formData.get("panes") ?? 0),
+    (formData.get("windowType") === "both" ? "both" : "outside") as WindowType
+  );
 
   if (!firstName || !phone || !suburb) {
     return {
@@ -329,6 +337,11 @@ export async function requestServiceQuote(
   // page — never trusted from the form, and never inflated into a job
   // total we haven't actually priced.
   const callout = findCallout(suburb);
+  const winLoading = win.price && callout ? Math.round(win.price * callout.loading * 100) / 100 : null;
+  const winTotal = win.price ? win.price + (winLoading ?? 0) : null;
+  const winLabel = win.price
+    ? `${win.panes} panes, ${win.rate === 14.95 ? "inside & out" : "outside only"}`
+    : "";
 
   try {
     const result = await jobberGraphQL<ClientCreateResponse>(CLIENT_CREATE, {
@@ -358,7 +371,10 @@ export async function requestServiceQuote(
     const clientId = result.clientCreate.client?.id;
 
     if (clientId) {
-      await createJobberRequest(clientId, `${serviceName || "Service"} quote request — ${suburb}`);
+      await createJobberRequest(
+        clientId,
+        `${serviceName || "Service"} quote request — ${suburb}${winLabel ? ` (${winLabel}, est. $${winTotal!.toFixed(2)})` : ""}`
+      );
     }
 
     // Same scope note as bookBinCleaning/bookSolarCleaning above: the
@@ -373,7 +389,18 @@ export async function requestServiceQuote(
       suburb,
       zone: callout?.zone ?? null,
       travelLoading: callout ? pct(callout.loading) : null,
+      windows: win.price ? { ...win, loading: winLoading, total: winTotal } : null,
     });
+
+    if (win.price) {
+      return {
+        ok: true,
+        message:
+          `Got it, ${firstName} — ${winLabel} for ${suburb}: $${winTotal!.toFixed(2)} including GST` +
+          (winLoading != null ? ` and the ${callout!.zone} suburb loading` : ", before the loading for your suburb") +
+          `. We’ll text you on ${phone} to lock in a day, and confirm the pane count on site before we start.`,
+      };
+    }
 
     const feeLine = callout
       ? ` ${callout.suburb} is in our ${callout.zone} zone, which adds ${pct(callout.loading).slice(1)} to the job price. The job itself is priced from what you’ve told us and confirmed when we call.`
