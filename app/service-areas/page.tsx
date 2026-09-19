@@ -45,6 +45,10 @@ export default function ServiceAreas() {
                   ? `$${zone.fee.toFixed(2)} visit fee`
                   : "Visit fee being confirmed"}
               </p>
+              <p className="zone-note">
+                Every service on this site is available in all{" "}
+                {zone.suburbs.length} {zone.name} suburbs.
+              </p>
               <div className="suburb-chips">
                 {zone.suburbs.map((suburb) => (
                   <span key={suburb}>{suburb}</span>
@@ -60,9 +64,37 @@ export default function ServiceAreas() {
         <div className="areas-service-grid">
           {services.map((s) => (
             <Link key={s.slug} href={`/${s.slug}`}>
-              {s.name}
+              <strong>{s.name}</strong>
+              <small>{s.short}</small>
             </Link>
           ))}
+        </div>
+      </section>
+
+      <section className="priceHow areasHow">
+        <h2>Booking, wherever you are.</h2>
+        <div>
+          <h3>Bins and solar panels</h3>
+          <p>
+            Book online on the <Link href="/bin-cleaning">bin cleaning</Link> or{" "}
+            <Link href="/solar-panel-cleaning">solar panel cleaning</Link> page.
+            Pick your suburb and the price is there before you book.
+          </p>
+        </div>
+        <div>
+          <h3>Driveways, roofs and patios</h3>
+          <p>
+            The <Link href="/instant-quote">instant quote</Link> works for any
+            address from Gordonvale to Palm Cove: type it in, tap the corners of
+            the area on the aerial map, and accept the price to book.
+          </p>
+        </div>
+        <div>
+          <h3>Windows, gutters and commercial sites</h3>
+          <p>
+            Send a quote request from the service page or call 0434 052 755. We
+            confirm the price before anything is booked in.
+          </p>
         </div>
       </section>
 
