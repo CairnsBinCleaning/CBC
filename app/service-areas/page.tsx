@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { calloutZones, loadingSummary, pct } from "../../lib/pricing";
+import { calloutZones, SUBURB_NOTE } from "../../lib/pricing";
 import { services } from "../../lib/services";
 import { suburbPages, suburbSlug } from "../../lib/suburbs";
 
@@ -29,10 +29,8 @@ export default function ServiceAreas() {
         <p className="eyebrow dark">WHERE WE WORK</p>
         <h1>Cairns &amp; Far North Queensland.</h1>
         <p>
-          Three zones. Each adds a small percentage to the job price for the
-          drive out: {loadingSummary()}. Bin cleaning has nothing added at
-          all, and neither does solar booked on your bin-clean day. If your
-          suburb isn’t listed below, call and we’ll confirm whether we cover it.
+          Every service, in every suburb below. {SUBURB_NOTE} If your suburb
+          isn’t listed, call and we’ll confirm whether we cover it.
         </p>
       </section>
 
@@ -42,12 +40,10 @@ export default function ServiceAreas() {
             <div key={zone.name} className="zone-card">
               <span>SERVICE ZONE</span>
               <h2>{zone.name}</h2>
-              <p>
-                {pct(zone.loading)} on the job price
-              </p>
               <p className="zone-note">
-                Every service on this site is available in all{" "}
-                {zone.suburbs.length} {zone.name} suburbs.
+                {zone.suburbs.length > 1
+                  ? `Every service on this site is available in all ${zone.suburbs.length} ${zone.name} suburbs.`
+                  : `Every service on this site is available in ${zone.name}.`}
               </p>
               <div className="suburb-chips">
                 {zone.suburbs.map((suburb) =>
@@ -111,7 +107,7 @@ export default function ServiceAreas() {
           <Link href="/prices">Prices</Link>
           <Link href="/faq">FAQ</Link>
         </nav>
-      <small className="madeBy">Created by Siezar DeWaal</small></footer>
+      <small className="madeBy">Created by <a href="/faq#siezar-dewaal">Siezar DeWaal</a></small></footer>
     </main>
   );
 }
