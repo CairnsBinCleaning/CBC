@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 
 import { services } from "../../../lib/services";
 import { getSuburbPage, suburbPages, suburbSlug } from "../../../lib/suburbs";
+import { pct } from "../../../lib/pricing";
 
 /* One page per suburb where we have real job photos. See lib/suburbs.ts for
    why suburbs without a photo don't get a page. */
@@ -25,7 +26,7 @@ export async function generateMetadata({
   const done = [...new Set(page.jobs.map((j) => j.service.name.toLowerCase()))].join(", ");
   return {
     title: `${page.name} Pressure Cleaning, Bin Cleaning & More | Cairns Bin Cleaning`,
-    description: `Exterior cleaning in ${page.name}, Cairns: see real ${done} jobs we've done there. Flat $50 visit fee, bin cleaning with nothing added. Call 0434 052 755.`,
+    description: `Exterior cleaning in ${page.name}, Cairns: see real ${done} jobs we've done there. ${page.zone} zone, ${pct(page.loading)} on the job price, bin cleaning with nothing added. Call 0434 052 755.`,
     alternates: { canonical: `/service-areas/${page.slug}` },
     openGraph: {
       title: `Exterior cleaning in ${page.name} — Cairns Bin Cleaning`,
@@ -64,10 +65,11 @@ export default async function SuburbPage({
           {page.name}.
         </h1>
         <p>
-          {page.name} is in our {page.zone} zone. The visit fee is a flat $
-          {page.fee ?? 50}, the same as everywhere we service in Cairns, and bin
-          cleaning has nothing added. Below is work we&rsquo;ve done in{" "}
-          {page.name}, and everything we can do there.
+          {page.name} is in our {page.zone} zone, which adds{" "}
+          {pct(page.loading).slice(1)} to the job price for the drive out. Bin
+          cleaning has nothing added, and neither does solar booked on your
+          bin-clean day. Below is work we&rsquo;ve done in {page.name}, and
+          everything we can do there.
         </p>
       </section>
 
