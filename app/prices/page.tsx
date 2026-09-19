@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { services } from "../../lib/services";
+import { loadingSummary } from "../../lib/pricing";
 
 export const metadata: Metadata = {
   title: "Prices | Cairns Bin Cleaning",
@@ -46,11 +47,12 @@ export default function Prices() {
       <section className="priceHow">
         <h2>How our prices work.</h2>
         <div>
-          <h3>One flat $50 visit fee</h3>
+          <h3>A small loading for your suburb</h3>
           <p>
-            Anywhere we service in Cairns, from Palm Cove to Gordonvale, the
-            visit fee is the same $50. It covers getting the crew and gear to
-            you. Bin cleaning is the exception: nothing is added for your suburb.
+            The job price goes up by a percentage for the drive out:{" "}
+            {loadingSummary()}. Bin cleaning is the exception: nothing is added
+            for your suburb. Solar booked on your bin-clean day has nothing
+            added either.
           </p>
         </div>
         <div>
@@ -81,10 +83,10 @@ export default function Prices() {
         </div>
       </section>
       <p className="priceNote">
-        Solar is $14.50 per panel plus a flat $50 visit fee,
-        anywhere we service in Cairns. Bin cleaning has nothing
-        added. Every other job is confirmed with you before we
-        book anything in.
+        Solar is $14.50 per panel plus your suburb&rsquo;s
+        loading, or nothing added on your bin-clean day. Bin
+        cleaning has nothing added. Every other job is confirmed
+        with you before we book anything in.
       </p>
 
       <footer className="service-footer">
