@@ -29,6 +29,7 @@ export type Service = {
 
   // Service page (ServicePageClient.tsx)
   eyebrow: string;
+  keyword: string; // "[service] Cairns", shown as the first line of the H1
   heading: string;
   intro: string;
   priceModel: string;
@@ -54,6 +55,7 @@ export const services: Service[] = [
     short: "Driveways, paths, pool surrounds and hard surfaces.",
     price: "Priced on the area cleaned",
     eyebrow: "PRESSURE CLEANING",
+    keyword: "Pressure Cleaning Cairns", // leads the page H1: what people type into Google
     heading: "Got a driveway that’s gone black?",
     intro:
       "Tell us where it is and roughly how much needs cleaning. We’ll show you how the price is built before you book.",
@@ -138,6 +140,7 @@ export const services: Service[] = [
     short: "Tropical build-up, mould and exterior roof cleaning.",
     price: "Priced on roof size & access",
     eyebrow: "ROOF CLEANING",
+    keyword: "Roof Cleaning Cairns", // leads the page H1: what people type into Google
     heading: "The roof is doing the hard work. Look after it.",
     intro:
       "Cairns roofs cop heat, rain, shade and organic growth. We’ll price the job around the roof, access and what’s actually on it.",
@@ -222,6 +225,7 @@ export const services: Service[] = [
     short: "Residential and commercial bin cleaning in Cairns.",
     price: "From $35.95 recurring",
     eyebrow: "CAIRNS BIN CLEANING",
+    keyword: "Bin Cleaning Cairns", // leads the page H1: what people type into Google
     heading: "Bins are our thing.",
     intro:
       "Pick how often you want them cleaned. Nothing added for your suburb — it’s the one service priced completely on its own.",
@@ -309,6 +313,7 @@ export const services: Service[] = [
     short: "Exterior glass and presentation cleaning.",
     price: "Priced on windows & access",
     eyebrow: "WINDOW CLEANING",
+    keyword: "Window Cleaning Cairns", // leads the page H1: what people type into Google
     heading: "You notice clean glass when you stop noticing the glass.",
     intro:
       "Tell us the property and what you need cleaned. We’ll keep the scope and the price easy to understand.",
@@ -340,6 +345,7 @@ export const services: Service[] = [
     short: "Simple per-panel pricing with your suburb added.",
     price: "From $14.50 per panel",
     eyebrow: "SOLAR PANEL CLEANING",
+    keyword: "Solar Panel Cleaning Cairns", // leads the page H1: what people type into Google
     heading: "Count the panels. We’ll do the rest.",
     intro:
       "$14.50 per panel, plus a flat $50 visit fee. Enter your suburb and panel count below to see the total.",
@@ -402,6 +408,7 @@ export const services: Service[] = [
     short: "Exterior house washing suited to Cairns conditions.",
     price: "Priced on wall area",
     eyebrow: "HOUSE WASHING",
+    keyword: "House Washing Cairns", // leads the page H1: what people type into Google
     heading: "The whole place needs a freshen-up?",
     intro:
       "Start with the suburb and property. We’ll work out what surfaces actually need attention and keep the quote clear.",
@@ -464,6 +471,7 @@ export const services: Service[] = [
     short: "Gutters, edges and exterior maintenance.",
     price: "Priced on roofline length",
     eyebrow: "GUTTER CLEANING",
+    keyword: "Gutter Cleaning Cairns", // leads the page H1: what people type into Google
     heading: "Keep the wet-season water moving.",
     intro:
       "Tell us where the property is. Height, access and gutter size decide the rest of the job.",
@@ -495,6 +503,7 @@ export const services: Service[] = [
     short: "Commercial, strata, body corporate and property work.",
     price: "Site-specific",
     eyebrow: "COMMERCIAL & GOVERNMENT",
+    keyword: "Commercial Cleaning Cairns", // leads the page H1: what people type into Google
     heading: "Need the site looked after without chasing the contractor?",
     intro:
       "Tell us the site and what needs cleaning. Straightforward scope, scheduling and site visits for larger work. We carry $20,000,000 in public liability cover, so procurement sign-off isn’t held up waiting on paperwork.",
