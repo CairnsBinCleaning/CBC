@@ -17,7 +17,7 @@ import {
   type Service,
 } from "../lib/services";
 
-import { findCallout, SOLAR_RATE } from "../lib/pricing";
+import { findCallout, loadingSummary, pct, solarQuote, SOLAR_RATE } from "../lib/pricing";
 
 import {
   bookBinCleaning,
@@ -750,15 +750,13 @@ function BinBookingForm() {
 function SolarExperience() {
   const [suburb, setSuburb] = useState("");
   const [panels, setPanels] = useState(18);
+  const [onBinDay, setOnBinDay] = useState(false);
 
-  const match = useMemo(
-    () => findCallout(suburb),
-    [suburb]
+  /* Same solarQuote() the booking action uses (lib/pricing.ts). */
+  const { subtotal, zone: match, travel, total } = useMemo(
+    () => solarQuote(panels, suburb, onBinDay),
+    [panels, suburb, onBinDay]
   );
-
-  const subtotal = panels * SOLAR_RATE;
-  const total =
-    match?.fee != null ? subtotal + match.fee : null;
 
   const [result, formAction, pending] = useActionState<
     BookSolarCleaningResult | null,
@@ -781,7 +779,9 @@ function SolarExperience() {
         <p>
           $14.50 a panel, flat rate.
           Add your suburb and we’ll
-          work out your visit fee too.
+          add the loading for your area,
+          or nothing at all on your
+          bin-clean day.
         </p>
       </div>
 
@@ -855,18 +855,29 @@ function SolarExperience() {
           </strong>
 
           <small>
-            VISIT FEE
+            {match ? `${match.zone.toUpperCase()} ${pct(match.loading)}` : "SUBURB LOADING"}
           </small>
 
           <strong>
             {suburb === ""
               ? "Enter a suburb"
               : match
-                ? match.fee != null
-                  ? `$${match.fee.toFixed(2)} (${match.zone})`
-                  : `To be confirmed (${match.zone})`
+                ? onBinDay
+                  ? "$0.00 on your bin day"
+                  : `$${(travel ?? 0).toFixed(2)}`
                 : "Outside our loaded list — we’ll check it"}
           </strong>
+
+          <label className="bin-day-toggle">
+            <input
+              type="checkbox"
+              name="binDay"
+              checked={onBinDay}
+              onChange={(event) => setOnBinDay(event.target.checked)}
+            />
+            Do it on my bin-clean day. We&rsquo;re already in your
+            street, so nothing is added for your suburb.
+          </label>
 
           {total != null && (
             <>
@@ -881,9 +892,10 @@ function SolarExperience() {
           )}
 
           <p>
-            Both prices are fixed: $14.50
-            a panel and a flat $50 visit
-            fee anywhere we service.
+            ${SOLAR_RATE.toFixed(2)} a panel, plus
+            the loading for your area
+            ({loadingSummary()}). Nothing
+            added on your bin day.
           </p>
         </div>
 
@@ -1010,7 +1022,7 @@ function CommercialExperience() {
 /* QUOTE REQUEST — window and gutter cleaning.
    Priced per pane and per metre of roofline, so there's no honest instant
    number to show. This takes the job description, shows the one real
-   published figure (the flat visit fee) and creates the Jobber client and
+   published figure (the suburb loading) and creates the Jobber client and
    request, same as every other booking path. */
 
 const QUOTE_REQUEST_COPY: Record<string, { heading: string; intro: string; placeholder: string; name: string }> = {
@@ -1071,9 +1083,7 @@ function QuoteRequestForm({ slug }: { slug: string }) {
         {suburb.trim() !== "" && (
           <p className="quote-request-fee">
             {match
-              ? match.fee != null
-                ? `Visit fee for ${match.suburb}: $${match.fee.toFixed(2)}. The job itself is priced when we reply.`
-                : `${match.suburb} is in our ${match.zone} run.`
+              ? `${match.suburb} is in our ${match.zone} zone: ${pct(match.loading)} on the job price. The job itself is priced when we reply.`
               : "Not on our loaded list yet. Send it anyway and we’ll check."}
           </p>
         )}
