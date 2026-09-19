@@ -30,6 +30,7 @@ import {
 
 import QuoteMeasure from "./QuoteMeasure";
 import ServiceGallery from "./ServiceGallery";
+import ComplianceDocs from "./ComplianceDocs";
 import { useLeadEvent } from "./Analytics";
 import { serviceFaq } from "../lib/serviceFaq";
 import { GOOGLE_REVIEWS } from "../lib/stats";
@@ -69,8 +70,19 @@ export default function ServicePageClient({
     >
       <header className="main-header">
         <Link href="/" className="brand">
-          <strong>CAIRNS</strong>
-          <span>BIN CLEANING</span>
+          {/* Commercial buyers see the property-maintenance lockup; the legal
+              name stays in the footer and the ABN card. */}
+          {service.slug === "commercial-cleaning" ? (
+            <>
+              <strong>CBC</strong>
+              <span>EXTERIOR &amp; PROPERTY MAINTENANCE</span>
+            </>
+          ) : (
+            <>
+              <strong>CAIRNS</strong>
+              <span>BIN CLEANING</span>
+            </>
+          )}
         </Link>
 
         <nav>
@@ -378,7 +390,11 @@ export default function ServicePageClient({
       </section>
 
       <footer className="service-footer">
-        <span>CAIRNS BIN CLEANING</span>
+        <span>
+          {service.slug === "commercial-cleaning"
+            ? "CBC EXTERIOR & PROPERTY MAINTENANCE · CAIRNS BIN CLEANING"
+            : "CAIRNS BIN CLEANING"}
+        </span>
         <nav>
           <Link href="/service-areas">Areas</Link>
           <Link href="/faq">FAQ</Link>
@@ -952,96 +968,15 @@ function CommercialExperience() {
         </h2>
 
         <p>
-          Only current verified
-          documents should ever be
-          connected here.
+          Insurance, WorkCover and our
+          SWMS, ready to download now.
+          No waiting on a reply to get
+          the paperwork.
         </p>
       </div>
 
       <div className="document-grid">
-        <article className="abn-card">
-          <span>
-            LIVE VERIFICATION
-          </span>
-
-          <strong>
-            ABN 36 318 413 406
-          </strong>
-
-          <small>
-            Active · GST registered · trading as Cairns Bin Cleaning
-            (Siezar Dewaal, sole trader)
-          </small>
-
-          <a
-            href="https://abr.business.gov.au/ABN/View?id=36318413406"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="abn-verify-link"
-          >
-            <span className="pulse" />
-            CHECK IT YOURSELF ON THE ABR →
-          </a>
-        </article>
-
-        <article>
-          <span>
-            DOCUMENT
-          </span>
-
-          <strong>
-            PUBLIC LIABILITY
-          </strong>
-
-          <small>
-            Connect verified file
-            before launch
-          </small>
-        </article>
-
-        <article>
-          <span>
-            DOCUMENT
-          </span>
-
-          <strong>
-            WORKCOVER
-          </strong>
-
-          <small>
-            Connect verified file
-            before launch
-          </small>
-        </article>
-
-        <article>
-          <span>
-            DOCUMENT
-          </span>
-
-          <strong>
-            SWMS
-          </strong>
-
-          <small>
-            Current scope-specific
-            documents only
-          </small>
-        </article>
-
-        <article>
-          <span>
-            DOCUMENT
-          </span>
-
-          <strong>
-            CAPABILITY
-          </strong>
-
-          <small>
-            Company capability pack
-          </small>
-        </article>
+        <ComplianceDocs />
       </div>
 
       <div className="document-email">
