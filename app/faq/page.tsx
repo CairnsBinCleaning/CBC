@@ -1,189 +1,120 @@
 import type { Metadata } from "next";
-import type { ReactNode } from "react";
 import Link from "next/link";
-import { loadingSummary } from "../../lib/pricing";
+import { GUTTER, QUOTE_CONFIG, ROOF_MATERIALS, WINDOW_RATES } from "../../lib/quote";
 
 export const metadata: Metadata = {
   title: "FAQ | Cairns Bin Cleaning",
   description:
-    "Suburb fees, bin cleaning prices, solar panel cleaning rates, service areas, cancellation policy and insurance — answered plainly.",
+    "Cairns prices for driveways, roofs, house washing, gutters, windows, solar and bins, plus suburb loadings, areas, cancellations and insurance, answered plainly.",
   alternates: { canonical: "/faq" },
 };
 
-const faqs: { q: string; a: ReactNode }[] = [
+/* One list feeds both the page and the FAQPage schema, so what Google reads
+   is exactly what people read. Every price comes from lib/quote.ts and
+   lib/pricing.ts. */
+const [METAL, TILE] = ROOF_MATERIALS;
+const faqs: { q: string; text: string; link?: { href: string; label: string }; id?: string }[] = [
   {
     q: "What areas does Cairns Bin Cleaning service?",
-    a: (
-      <>
-        Cairns City and the central suburbs, the Northern Beaches from
-        Machans Beach up to Ellis Beach, and the southside through to
-        Gordonvale. See the full suburb list on{" "}
-        <Link href="/service-areas">Service Areas</Link>.
-      </>
-    ),
+    text: "Cairns City and the central suburbs, the Northern Beaches from Machans Beach up to Ellis Beach, and the southside through to Gordonvale.",
+    link: { href: "/service-areas", label: "See the full suburb list" },
   },
   {
     q: "Is there an extra fee for my suburb?",
-    a: (
-      <>
-        Every service except bin cleaning adds a small percentage to the job
-        price for the drive to your suburb: {loadingSummary()}. Bin cleaning
-        has nothing added at all, and solar booked on your bin-clean day
-        has nothing added either.
-      </>
-    ),
+    text: "No call-out fee. Prices are adjusted a little for how far your suburb is from our base: a few percent, least on the southside and most on the Northern Beaches. The instant quote and calculators include it, so the price you see for your address is the price you pay. Bins cost the same everywhere, and solar costs less when it's booked on your bin-clean day.",
+    link: { href: "/terms", label: "Full detail in our terms" },
+  },
+  {
+    q: "Is there a minimum charge?",
+    text: `Every job starts from $${QUOTE_CONFIG.minTotal}, GST included. Bin cleaning has its own prices and isn't affected.`,
   },
   {
     q: "How much does bin cleaning cost?",
-    a: (
-      <>
-        Two standard 240L bins: $35.95 fortnightly, $39.95 every four weeks,
-        or $74.95 for a one-off clean. Recurring plans run on a
-        three-service minimum. See{" "}
-        <Link href="/bin-cleaning">Bin Cleaning</Link> to book online.
-      </>
-    ),
+    text: "Two standard 240L bins: $35.95 fortnightly, $39.95 every four weeks, or $74.95 for a one-off clean. Recurring plans run on a three-service minimum.",
+    link: { href: "/bin-cleaning", label: "Book bin cleaning online" },
+  },
+  {
+    q: "How much does driveway or pressure cleaning cost?",
+    text: `Driveways and concrete are $2.95/m² ($2.45/m² past 200 m²), patios and pool surrounds $3.45/m². A 100 m² driveway is $295. Mould inhibitor is $${QUOTE_CONFIG.inhibitorPerM2.toFixed(2)}/m² extra if you want it.`,
+    link: { href: "/instant-quote", label: "Measure yours for an instant price" },
+  },
+  {
+    q: "How much does roof cleaning cost?",
+    text: `We soft wash roofs. Metal is $${METAL.rate.toFixed(2)}/m² (from $${METAL.min}), tile $${TILE.rate.toFixed(2)}/m² (from $${TILE.min}), priced on the real roof area with the slope added. Older fibro roofs get looked at before we quote.`,
+    link: { href: "/roof-cleaning", label: "Measure your roof" },
+  },
+  {
+    q: "How much does house washing cost?",
+    text: "$3.30/m² of wall ($2.40/m² past 150 m²). A single-storey house starts at $429; double storey is usually $650 to $800.",
+    link: { href: "/house-washing", label: "Measure your house" },
+  },
+  {
+    q: "How much does gutter cleaning cost?",
+    text: `$${GUTTER.base[1]} single storey or $${GUTTER.base[2]} double storey for the first ${GUTTER.includedM} m of gutter, then $${GUTTER.perExtraM} a metre. Downpipes flushed, included.`,
+    link: { href: "/gutter-cleaning", label: "Measure your gutters" },
+  },
+  {
+    q: "How much does window cleaning cost?",
+    text: `$${WINDOW_RATES.outside.toFixed(2)} a pane outside only, or $${WINDOW_RATES.both.toFixed(2)} a pane inside and out.`,
+    link: { href: "/window-cleaning", label: "Count your panes for a price" },
   },
   {
     q: "How much does solar panel cleaning cost?",
-    a: (
-      <>
-        $14.50 per panel, plus your suburb&rsquo;s loading (nothing on your
-        bin-clean day). Enter your panel count on the{" "}
-        <Link href="/solar-panel-cleaning">Solar Panel Cleaning</Link> page
-        for an instant subtotal.
-      </>
-    ),
+    text: "$14.50 per panel, jobs from $179. Enter your suburb for your exact price; it costs less when it's booked on your bin-clean day.",
+    link: { href: "/solar-panel-cleaning", label: "Enter your panel count" },
   },
   {
-    q: "What’s your cancellation policy?",
-    a: (
-      <>
-        We ask for at least 24 hours’ notice to cancel or reschedule. Less
-        notice than that, or a missed appointment, may incur a fee for the
-        wasted visit — we’ll always discuss it with you first. Full detail on{" "}
-        <Link href="/terms">Terms &amp; Cancellation</Link>.
-      </>
-    ),
+    q: "What's your cancellation policy?",
+    text: "We ask for at least 24 hours' notice to cancel or reschedule. Less notice than that, or a missed appointment, may incur a fee for the wasted visit. We'll always discuss it with you first.",
+    link: { href: "/terms", label: "Terms & cancellation" },
   },
   {
     q: "Are you insured?",
-    a: (
-      <>
-        Yes. Cairns Bin Cleaning carries public liability insurance and
-        operates under ABN 36 318 413 406.
-      </>
-    ),
+    text: "Yes. $20 million public liability, WorkCover Queensland, and a written safe work method statement. ABN 36 318 413 406. Commercial clients can download the certificates.",
+    link: { href: "/commercial-cleaning", label: "See the documents" },
   },
   {
     q: "Do you work with strata, body corporate and government sites?",
-    a: (
-      <>
-        Yes — strata and body corporate maintenance, and government or
-        council procurement work. See{" "}
-        <Link href="/strata">Strata &amp; Body Corporate</Link> or{" "}
-        <Link href="/government">Government &amp; Procurement</Link>.
-      </>
-    ),
+    text: "Yes: strata and body corporate maintenance, and government or council procurement work.",
+    link: { href: "/strata", label: "Strata & body corporate" },
   },
   {
     q: "What happens if it rains on my booking day?",
-    a: (
-      <>
-        If wet season conditions make a job unsafe or pointless, we
-        reschedule at no extra cost — that’s on us, not you.
-      </>
-    ),
+    text: "If wet season conditions make a job unsafe or pointless, we reschedule at no extra cost. That's on us, not you.",
+  },
+  {
+    q: "Who built this website?",
+    text: "Siezar DeWaal, who owns and runs Cairns Bin Cleaning, designed and built it: the instant quote map that measures your driveway or roof from aerial photos, the typo-proof Cairns address search, online booking straight into our job system, and every page you're reading. Siezar also builds, fixes and streamlines websites, booking systems and quoting tools for other local businesses. If you want something like this for yours, call 0434 052 755.",
+    id: "siezar-dewaal",
   },
   {
     q: "How do I book?",
-    a: (
-      <>
-        Call <a href="tel:+61434052755">0434 052 755</a>, or book bin
-        cleaning and get a solar estimate directly online from their
-        service pages.
-      </>
-    ),
+    text: "Bins and solar book online on their pages. Driveways, roofs, houses and gutters: measure it on the instant quote map and accept the price. Windows: count your panes on the window page. Or call 0434 052 755.",
+    link: { href: "/instant-quote", label: "Open the instant quote" },
   },
 ];
+
+/* So a search for Siezar's name finds him, and what he built. */
+const personJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: "Siezar DeWaal",
+  jobTitle: "Owner, Cairns Bin Cleaning; website and booking-system developer",
+  worksFor: { "@type": "LocalBusiness", name: "Cairns Bin Cleaning", url: "https://www.cairnsbincleaning.com.au" },
+  address: { "@type": "PostalAddress", addressLocality: "Cairns", addressRegion: "QLD", addressCountry: "AU" },
+  telephone: "+61434052755",
+  url: "https://www.cairnsbincleaning.com.au/faq#siezar-dewaal",
+  knowsAbout: ["Web development", "Next.js", "Booking systems", "Online quoting tools", "Local SEO", "Exterior cleaning"],
+};
 
 const faqJsonLd = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
-  mainEntity: [
-    {
-      "@type": "Question",
-      name: "What areas does Cairns Bin Cleaning service?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Cairns City and the central suburbs, the Northern Beaches from Machans Beach up to Ellis Beach, and the southside through to Gordonvale.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "Is there an extra fee for my suburb?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: `Every service except bin cleaning adds a small percentage to the job price for the drive to your suburb: ${loadingSummary()}. Bin cleaning has nothing added at all, and solar booked on your bin-clean day has nothing added either.`,
-      },
-    },
-    {
-      "@type": "Question",
-      name: "How much does bin cleaning cost?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Two standard 240L bins: $35.95 fortnightly, $39.95 every four weeks, or $74.95 for a one-off clean. Recurring plans run on a three-service minimum.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "How much does solar panel cleaning cost?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "$14.50 per panel, plus your suburb’s loading, or nothing added when it’s booked on your bin-clean day.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "What’s your cancellation policy?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "We ask for at least 24 hours’ notice to cancel or reschedule a booked visit. Less notice may incur a fee for the wasted visit.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "Are you insured?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Yes. Cairns Bin Cleaning carries public liability insurance and operates under ABN 36 318 413 406.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "Do you work with strata, body corporate and government sites?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Yes — strata and body corporate maintenance, and government or council procurement work.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "What happens if it rains on my booking day?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "If wet season conditions make a job unsafe or pointless, we reschedule at no extra cost.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "How do I book?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Call 0434 052 755, or book bin cleaning and get a solar estimate directly online from their service pages.",
-      },
-    },
-  ],
+  mainEntity: faqs.map((f) => ({
+    "@type": "Question",
+    name: f.q,
+    acceptedAnswer: { "@type": "Answer", text: f.text },
+  })),
 };
 
 export default function FAQ() {
@@ -193,6 +124,12 @@ export default function FAQ() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(faqJsonLd).replace(/</g, "\\u003c"),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(personJsonLd).replace(/</g, "\\u003c"),
         }}
       />
 
@@ -211,16 +148,24 @@ export default function FAQ() {
         <p className="eyebrow dark">QUESTIONS, ANSWERED PLAINLY</p>
         <h1>FAQ.</h1>
         <p>
-          The things people actually ask before booking — suburb fees,
-          prices, areas and what happens if the weather doesn’t cooperate.
+          The things people actually ask before booking: prices, areas,
+          insurance and what happens if the weather doesn’t cooperate.
         </p>
       </section>
 
       <section className="faq-list">
         {faqs.map((item) => (
-          <details key={item.q} className="faq-item">
+          <details key={item.q} className="faq-item" id={item.id}>
             <summary>{item.q}</summary>
-            <p>{item.a}</p>
+            <p>
+              {item.text}
+              {item.link && (
+                <>
+                  {" "}
+                  <Link href={item.link.href}>{item.link.label} →</Link>
+                </>
+              )}
+            </p>
           </details>
         ))}
       </section>
@@ -232,7 +177,7 @@ export default function FAQ() {
           <Link href="/prices">Prices</Link>
           <Link href="/service-areas">Areas</Link>
         </nav>
-      <small className="madeBy">Created by Siezar DeWaal</small></footer>
+      <small className="madeBy">Created by <a href="/faq#siezar-dewaal">Siezar DeWaal</a></small></footer>
     </main>
   );
 }
