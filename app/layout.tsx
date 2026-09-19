@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import SeasonalBanner from "../components/SeasonalBanner";
 import { AnalyticsListener } from "../components/Analytics";
+import Assistant from "../components/Assistant";
+import { ASSISTANT_ENABLED } from "../lib/assistant";
 import "./globals.css";
 
 // TODO: once the new domain is chosen, set NEXT_PUBLIC_SITE_URL in .env.local
@@ -123,6 +125,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <AnalyticsListener />
         <SeasonalBanner />
         {children}
+        {/* Website assistant: shows only once ANTHROPIC_API_KEY is set. */}
+        {ASSISTANT_ENABLED() && <Assistant />}
         {gaId && (
           <>
             <Script
