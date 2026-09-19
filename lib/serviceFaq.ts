@@ -8,7 +8,7 @@
  * claimed here. Change a fact at its source and this follows.
  */
 
-import { calloutZones } from "./pricing";
+import { calloutZones, loadingSummary } from "./pricing";
 import type { Service } from "./services";
 
 export type QA = { q: string; a: string };
@@ -30,11 +30,10 @@ function areasAnswer() {
 
 function priceAnswer(s: Service) {
   if (s.slug === "bin-cleaning") return s.priceDetail + " Nothing is added for your suburb.";
-  if (s.slug === "solar-panel-cleaning") return s.priceDetail;
-  const fee = calloutZones[0]?.fee;
   return (
     s.priceDetail +
-    (fee != null ? ` A flat $${fee} visit fee applies anywhere we service in Cairns.` : "")
+    ` Your suburb adds a small percentage to the job price for the drive out: ${loadingSummary()}.` +
+    (s.slug === "solar-panel-cleaning" ? " Book it on your bin-clean day and nothing is added." : "")
   );
 }
 
