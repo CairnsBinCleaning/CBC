@@ -38,12 +38,28 @@ export function track(name: string, params: Params = {}) {
   window.gtag("event", name, clean);
 }
 
+/* Google Ads "Submit lead form" conversion (primary goal, count one per
+   click). The label comes from Google Ads > Goals > Conversions and was
+   checked character by character on 19 Sept. The account ID is the same
+   NEXT_PUBLIC_ADS_ID that loads the Ads tag in app/layout.tsx. */
+const ADS_ID = process.env.NEXT_PUBLIC_ADS_ID;
+const ADS_LEAD_LABEL = "Bp7WCKWGhP0cEIepm6c-";
+
 /** A real lead — someone asked us to do work. This is the event that
- *  cost-per-lead is calculated from, so only fire it on genuine success. */
+ *  cost-per-lead is calculated from, so only fire it on genuine success.
+ *  It goes to GA4 as generate_lead and to Google Ads as the lead conversion. */
 export function trackLead(service: string, value?: number) {
+  const rounded = value != null ? Math.round(value * 100) / 100 : undefined;
   track(EVENTS.lead, {
     service,
-    value: value != null ? Math.round(value * 100) / 100 : undefined,
-    currency: value != null ? "AUD" : undefined,
+    value: rounded,
+    currency: rounded != null ? "AUD" : undefined,
   });
+  if (ADS_ID) {
+    track("conversion", {
+      send_to: `${ADS_ID}/${ADS_LEAD_LABEL}`,
+      value: rounded ?? 1.0,
+      currency: "AUD",
+    });
+  }
 }
