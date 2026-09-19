@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { loadingSummary } from "../../lib/pricing";
 
 export const metadata: Metadata = {
   title: "About | Cairns Bin Cleaning",
@@ -53,8 +52,8 @@ export default function About() {
         <h2>Why the pricing is built the way it is</h2>
         <p>
           Bin cleaning is priced completely on its own, with nothing added.
-          Every other service is the job price plus a small percentage for
-          the drive to your suburb ({loadingSummary()}). No number gets guessed on the phone and changed later; see{" "}
+          Every other service is priced on the job, adjusted a little for the
+          drive to your suburb, with no call-out fee. No number gets guessed on the phone and changed later; see{" "}
           <Link href="/faq">FAQ</Link> and{" "}
           <Link href="/service-areas">Service Areas</Link> for exactly how
           that works.
@@ -86,7 +85,7 @@ export default function About() {
           <Link href="/prices">Prices</Link>
           <Link href="/faq">FAQ</Link>
         </nav>
-      <small className="madeBy">Created by Siezar DeWaal</small></footer>
+      <small className="madeBy">Created by <a href="/faq#siezar-dewaal">Siezar DeWaal</a></small></footer>
     </main>
   );
 }
