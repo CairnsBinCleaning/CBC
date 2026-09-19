@@ -45,10 +45,6 @@ export type LatLng = { lat: number; lng: number };
 /* ---------------------------------------------------------------- config */
 
 export const QUOTE_CONFIG = {
-  /* Charged ONCE per quote no matter how many areas are measured — we're
-     already on site. Matches calloutZones in lib/pricing.ts. */
-  callOutFee: 50,
-
   /* Absolute floor; per-service minimums below are what normally bind. */
   minTotal: 50,
 
@@ -72,8 +68,8 @@ export const QUOTE_CONFIG = {
      looked at is how you end up doing $4,000 of work for $2,000 of value. */
   autoQuoteCeiling: { total: 2500, singleAreaM2: 1200 },
 
-  /* PLACEHOLDER discounts. The discount comes off the cleaning, never off the
-     call-out — turning up is a real cost. */
+  /* PLACEHOLDER discounts. The suburb travel loading is worked out on the
+     price after the discount. */
   plans: [
     { id: "once", label: "One-off", discount: 0, blurb: "this time" },
     { id: "6m", label: "6-monthly", discount: 0.1, blurb: "save 10%" },
@@ -107,7 +103,7 @@ export const QUOTE_SERVICES: QuoteService[] = [
     name: "Driveway & concrete",
     mode: "area",
     hint: "Trace the edge of the concrete.",
-    // 50 m² double driveway → $190 + $50 = $240, mid the $150–300 market band.
+    // 50 m² double driveway → $190 before the suburb loading, mid the $150–300 market band.
     tiers: [
       { upTo: 60, rate: 3.8 },
       { upTo: 200, rate: 3.0 },
@@ -386,7 +382,11 @@ export function explainLine(line: QuoteLine): string {
 
 export type QuoteTotals = {
   work: number;
-  callout: number;
+  /* Suburb travel loading in dollars (lib/pricing.ts). null when the
+     address isn't known yet, so no loading has been worked out. */
+  travel: number | null;
+  loading: number | null;
+  zone: string | null;
   saving: number;
   grand: number;
   plan: (typeof QUOTE_CONFIG.plans)[number];
@@ -399,12 +399,16 @@ export type QuoteTotals = {
   siteVisitReason: string | null;
 };
 
-export function quoteTotals(lines: QuoteLine[], planId: string): QuoteTotals {
+export function quoteTotals(
+  lines: QuoteLine[],
+  planId: string,
+  zone: { zone: string; loading: number } | null = null
+): QuoteTotals {
   const plan = QUOTE_CONFIG.plans.find((p) => p.id === planId) ?? QUOTE_CONFIG.plans[0];
   const work = lines.reduce((n, l) => n + l.amount, 0);
-  const callout = lines.length ? QUOTE_CONFIG.callOutFee : 0;
   const saving = Math.round(work * plan.discount);
-  const grand = lines.length ? Math.max(work - saving + callout, QUOTE_CONFIG.minTotal) : 0;
+  const travel = lines.length && zone ? Math.round((work - saving) * zone.loading) : lines.length ? null : 0;
+  const grand = lines.length ? Math.max(work - saving + (travel ?? 0), QUOTE_CONFIG.minTotal) : 0;
 
   const hours = lines.reduce((n, l) => n + l.hours, 0) + (lines.length ? QUOTE_CONFIG.setupHours : 0);
   const effectiveHourly = hours > 0 ? grand / hours : 0;
@@ -425,7 +429,9 @@ export function quoteTotals(lines: QuoteLine[], planId: string): QuoteTotals {
 
   return {
     work,
-    callout,
+    travel,
+    loading: zone?.loading ?? null,
+    zone: zone?.zone ?? null,
     saving,
     grand,
     plan,
