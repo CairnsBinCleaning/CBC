@@ -1,4 +1,5 @@
 export const SOLAR_RATE = 14.5;
+export const SOLAR_MIN = 179;
 
 /* Suburb travel loading (set by Siezar 19 Sept 2026, replacing the flat $50
    visit fee). The job price goes up by a percentage that grows with the drive
@@ -27,6 +28,13 @@ export const calloutZones = [
       "Kewarra Beach","Clifton Beach","Palm Cove","Ellis Beach"
     ],
     loading: 0.15,
+  },
+  {
+    /* Set by Siezar 19 Sept: its own sector, between central and the
+       Northern Beaches. */
+    name: "Redlynch",
+    suburbs: ["Redlynch"],
+    loading: 0.1,
   },
   {
     name: "Southside",
@@ -102,9 +110,16 @@ export function zoneFromAddress(label: string): ZoneMatch | null {
    never disagree. Booked on the customer's bin-clean day, we're already in
    the street, so the suburb loading comes off. */
 export function solarQuote(panels: number, suburb: string, onBinDay: boolean) {
-  const subtotal = Math.round(panels * SOLAR_RATE * 100) / 100;
+  /* Every job from $179 (lib/quote.ts QUOTE_CONFIG.minTotal). */
+  const subtotal = Math.max(Math.round(panels * SOLAR_RATE * 100) / 100, SOLAR_MIN);
   const zone = findCallout(suburb);
   const travel = zone ? (onBinDay ? 0 : travelLoading(subtotal, zone.loading)) : null;
   const total = travel != null ? Math.round((subtotal + travel) * 100) / 100 : null;
   return { subtotal, zone, travel, total };
 }
+
+/* What customers are told about the suburb adjustment. The percentages stay
+   behind the scenes (Siezar, 19 Sept); the calculators fold them into the
+   price once the suburb or address is known. /terms keeps the full detail. */
+export const SUBURB_NOTE =
+  "Prices vary a little by suburb to cover the drive. There’s no call-out fee, and the price shown for your address is the price you pay.";
