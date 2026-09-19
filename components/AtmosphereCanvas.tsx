@@ -54,6 +54,10 @@ export default function AtmosphereCanvas() {
 
     const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduced) return; // CSS also hides the canvas's parent video etc.
+    /* Phones and tablets skip the rain: a frame loop running under someone's
+       thumb costs battery and scroll smoothness, and on a small screen it
+       barely shows. Desktop keeps it. */
+    if (matchMedia("(max-width: 850px), (pointer: coarse)").matches) return;
 
     const sprite = buildDropSprite();
 
