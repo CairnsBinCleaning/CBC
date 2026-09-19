@@ -27,8 +27,8 @@ export default function Prices() {
         <p className="eyebrow dark">SKIP THE FLUFF</p>
         <h1>Prices.</h1>
         <p>
-          What we can price simply, we show simply. Where access, area or
-          site conditions matter, we tell you that too.
+          Real numbers, GST included. Every job starts from $179, and the
+          instant quote shows you the exact figure for your place.
         </p>
       </section>
       <section className="priceRows">
@@ -64,7 +64,15 @@ export default function Prices() {
           </p>
         </div>
         <div>
-          <h3>Driveways, roofs and patios: measure it yourself</h3>
+          <h3>Every job from $179</h3>
+          <p>
+            A 20-minute job still means the drive, the set-up and the pack-down,
+            so small jobs start from $179. Bin cleaning has its own prices
+            below and isn&rsquo;t affected.
+          </p>
+        </div>
+        <div>
+          <h3>Driveways, roofs, houses and gutters: measure it yourself</h3>
           <p>
             For jobs priced on area, the <Link href="/instant-quote">instant quote</Link>{" "}
             lets you find your place on the aerial map, tap the corners of the
@@ -73,20 +81,27 @@ export default function Prices() {
           </p>
         </div>
         <div>
-          <h3>Everything else: confirmed before we book</h3>
+          <h3>Windows: count the panes</h3>
           <p>
-            Windows, gutters and commercial sites depend on access, height and
-            what&rsquo;s there. Send the details from the service page or call
-            0434 052 755, and we confirm the price with you before anything is
-            booked in. Prices include GST.
+            $9.95 a pane outside only, $14.95 inside and out. Enter the pane
+            count on the <Link href="/window-cleaning">window cleaning</Link>{" "}
+            page for your price.
+          </p>
+        </div>
+        <div>
+          <h3>Commercial sites: scoped properly</h3>
+          <p>
+            Car parks and hardstand get an indicative price on the map; larger
+            or recurring sites get a site visit. Call 0434 052 755.
           </p>
         </div>
       </section>
       <p className="priceNote">
-        Solar is $14.50 per panel plus your suburb&rsquo;s
-        loading, or nothing added on your bin-clean day. Bin
-        cleaning has nothing added. Every other job is confirmed
-        with you before we book anything in.
+        All prices include GST. Solar is $14.50 per panel plus
+        your suburb&rsquo;s loading, or nothing added on your
+        bin-clean day. Bin cleaning has nothing added. Big or
+        unusual jobs (over $2,500, over 1,200 m² or 3+ storeys)
+        get a site visit before a price is locked in.
       </p>
 
       <footer className="service-footer">
