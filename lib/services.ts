@@ -1,3 +1,4 @@
+import { loadingSummary } from "./pricing";
 // Single source of truth for every service on the site.
 // One shape, used by the homepage list, the service pages, the prices page
 // and page metadata — so there is only ever one place to update a price,
@@ -125,7 +126,7 @@ export const services: Service[] = [
       "Cairns concrete copes with a lot — heat, heavy rain, shade and the organic growth that comes with all three. Pressure cleaning lifts what’s built up without smashing the surface itself, which matters on older or softer concrete.",
       "We scope the job by area and access, not by guesswork. If a surface needs a gentler pass or a pre-treatment first, we’ll say so before we start, not after.",
       "Searching for pressure washing near me in Cairns? Pressure washing and pressure cleaning are the same job here — we’re a local crew, not a lead-gen middleman, so the person who quotes it is the person who does it.",
-      "Driveway cleaning, concrete cleaning, paths, patios and pool surrounds: whether you call it pressure washing, high-pressure cleaning or jet washing, it’s the same job. We work across Cairns central, the Northern Beaches from Machans Beach to Ellis Beach, and the southside through to Gordonvale, with the same flat $50 visit fee in every suburb.",
+      `Driveway cleaning, concrete cleaning, paths, patios and pool surrounds: whether you call it pressure washing, high-pressure cleaning or jet washing, it’s the same job. We work across Cairns central, the Northern Beaches from Machans Beach to Ellis Beach, and the southside through to Gordonvale, plus a small loading on the job price for your suburb (${loadingSummary()}).`,
     ],
     related: ["house-washing", "roof-cleaning", "commercial-cleaning"],
     seoTitle: "Pressure Washing Cairns | Pressure Cleaning for Driveways & Concrete",
@@ -211,7 +212,7 @@ export const services: Service[] = [
       "Wet season doesn’t take a break, and neither does the mould, algae and organic staining it leaves on a Cairns roof. Left long enough it holds moisture against the roof sheeting itself.",
       "Access and pitch decide most of the job. We’ll always tell you plainly if something’s outside what we can safely do rather than take a risk we’re not equipped for.",
       "Looking for roof cleaning near me in Cairns? We quote it and we climb it — no subcontractor, no middleman marking up the job.",
-      "Roof cleaning, roof mould removal and roof soft washing across Cairns: from Palm Cove and Trinity Beach through Edge Hill and Whitfield and out to Gordonvale. The price is built on the roof itself, plus the same flat $50 visit fee in every suburb we service.",
+      `Roof cleaning, roof mould removal and roof soft washing across Cairns: from Palm Cove and Trinity Beach through Edge Hill and Whitfield and out to Gordonvale. The price is built on the roof itself, plus a small loading on the job price for your suburb (${loadingSummary()}).`,
     ],
     related: ["solar-panel-cleaning", "gutter-cleaning", "house-washing"],
     seoTitle: "Roof Cleaning Cairns | Tropical Roof Maintenance",
@@ -300,7 +301,7 @@ export const services: Service[] = [
     seoParagraphs: [
       "Heat and humidity turn a dirty bin into a smell and a hygiene problem fast — the reason bin cleaning is its own business here, not an add-on.",
       "Every wash uses a hydraulic tip and a four-stage filtration system before the water goes back into the tank for the next clean. That process is specific to bin cleaning — it isn’t how our other services handle wastewater.",
-      "Searching for bin cleaning near me or wheelie bin cleaning in Cairns? We clean household 240L bins fortnightly, every four weeks or as a one-off, across Cairns central, the Northern Beaches and the southside through to Gordonvale. Bin cleaning has no visit fee added in any suburb.",
+      "Searching for bin cleaning near me or wheelie bin cleaning in Cairns? We clean household 240L bins fortnightly, every four weeks or as a one-off, across Cairns central, the Northern Beaches and the southside through to Gordonvale. Bin cleaning has nothing added for your suburb, wherever you are.",
     ],
     related: ["pressure-cleaning", "commercial-cleaning"],
     seoTitle: "Bin Cleaning Cairns | Residential & Commercial Bins",
@@ -334,7 +335,7 @@ export const services: Service[] = [
       "Coastal air, road dust and wet-season rain all leave their mark on glass differently — streaking, spotting or a dull film that regular rain doesn’t shift on its own.",
       "We clean the glass you can see from the street and the glass you actually look through — the difference matters more than people expect.",
       "If you’re searching for window cleaning near me in Cairns, we handle the booking, the quote and the job ourselves — no call centre and no subcontractor in between.",
-      "Window washing and glass cleaning for Cairns homes and businesses, from Palm Cove to Gordonvale. The price is built on how many windows, how high they are and how easy they are to reach, plus the same flat $50 visit fee in every suburb we service.",
+      `Window washing and glass cleaning for Cairns homes and businesses, from Palm Cove to Gordonvale. The price is built on how many windows, how high they are and how easy they are to reach, plus a small loading on the job price for your suburb (${loadingSummary()}).`,
     ],
     related: ["house-washing", "solar-panel-cleaning"],
     seoTitle: "Window Cleaning Cairns | Residential & Commercial Glass",
@@ -352,10 +353,10 @@ export const services: Service[] = [
     keyword: "Solar Panel Cleaning Cairns", // leads the page H1: what people type into Google
     heading: "Count the panels. We’ll do the rest.",
     intro:
-      "$14.50 per panel, plus a flat $50 visit fee. Enter your suburb and panel count below to see the total.",
+      "$14.50 per panel, plus a small loading for your suburb, or nothing added on your bin-clean day. Enter your suburb and panel count below to see the total.",
     priceModel: "$14.50 a panel, simple as that",
     priceDetail:
-      "$14.50 per panel, no matter the roof shape, plus a flat $50 visit fee anywhere we service in Cairns.",
+      `$14.50 per panel, no matter the roof shape, plus a small loading for your suburb (${loadingSummary()}). Book it on your bin-clean day and nothing is added.`,
     mediaCaption: "Harnessed up, soft brush, nobody standing on the panels.",
     gallery: [
       {
@@ -397,12 +398,12 @@ export const services: Service[] = [
       "Dust, pollen and the film that builds up in the wet season all cut into how much a panel actually generates — often more than people expect for something that looks only lightly dusty.",
       "Pricing is deliberately simple: a flat rate per panel, plus what it costs us to get to your suburb. No package tiers to decode.",
       "Searching for solar panel cleaning near me in Cairns? Same crew, same flat per-panel rate — no franchise call centre routing the job to whoever’s available.",
-      "Solar panel washing for homes from Ellis Beach to Gordonvale: the same $14.50 a panel whatever the roof, plus the flat $50 visit fee. Count your panels, enter your suburb on this page and the total is there before you book.",
+      "Solar panel washing for homes from Ellis Beach to Gordonvale: the same $14.50 a panel whatever the roof, plus a small suburb loading, or nothing added on your bin-clean day. Count your panels, enter your suburb on this page and the total is there before you book.",
     ],
     related: ["roof-cleaning", "gutter-cleaning", "window-cleaning"],
     seoTitle: "Solar Panel Cleaning Cairns | From $14.50 Per Panel",
     seoDescription:
-      "Solar panel cleaning in Cairns. $14.50 per panel plus a flat $50 visit fee. Harnessed, soft brush, no standing on panels.",
+      "Solar panel cleaning in Cairns. $14.50 per panel, nothing added on your bin-clean day. Harnessed, soft brush, no standing on panels.",
   },
   {
     slug: "house-washing",
@@ -462,7 +463,7 @@ export const services: Service[] = [
       "That's why house washing here is a Soft Washing job, not a pressure job: a low-pressure chemical treatment that lifts mould and algae off the surface instead of blasting it — and the paint — off the wall.",
       "We match the method to the surface rather than running one setting on every wall.",
       "Searching for house washing near me or exterior house cleaning in Cairns? Same job, same local crew — the person who quotes it is the person who shows up and does it.",
-      "Exterior house washing, soft washing and mould removal for render, cladding and weatherboard homes across Cairns central, the Northern Beaches and the southside through to Gordonvale, with the same flat $50 visit fee in every suburb.",
+      `Exterior house washing, soft washing and mould removal for render, cladding and weatherboard homes across Cairns central, the Northern Beaches and the southside through to Gordonvale, plus a small loading on the job price for your suburb (${loadingSummary()}).`,
     ],
     related: ["window-cleaning", "roof-cleaning", "pressure-cleaning"],
     seoTitle: "House Washing Cairns | Exterior House Cleaning",
@@ -495,7 +496,7 @@ export const services: Service[] = [
       "Blocked gutters in a Cairns downpour don’t just overflow — they push water somewhere it isn’t supposed to go, close to the roofline or the foundations.",
       "Best done before the wet season builds, not after the first big storm finds the blockage for you.",
       "If you’re after gutter cleaning near me in Cairns, that’s us — a local crew, not a lead-gen number that passes your details on to whoever’s cheapest that week.",
-      "We clear gutters with a gutter vacuum system, so the leaf litter and muck come out through the hose and into the machine. Gutter cleaning is available across Cairns central, the Northern Beaches and the southside through to Gordonvale, with the same flat $50 visit fee in every suburb.",
+      `We clear gutters with a gutter vacuum system, so the leaf litter and muck come out through the hose and into the machine. Gutter cleaning is available across Cairns central, the Northern Beaches and the southside through to Gordonvale, plus a small loading on the job price for your suburb (${loadingSummary()}).`,
     ],
     related: ["roof-cleaning", "solar-panel-cleaning", "house-washing"],
     seoTitle: "Gutter Cleaning Cairns | Residential & Commercial",
