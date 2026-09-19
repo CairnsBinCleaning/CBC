@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { services } from "../../lib/services";
-import { loadingSummary } from "../../lib/pricing";
+import { SUBURB_NOTE } from "../../lib/pricing";
 
 export const metadata: Metadata = {
   title: "Prices | Cairns Bin Cleaning",
@@ -47,12 +47,10 @@ export default function Prices() {
       <section className="priceHow">
         <h2>How our prices work.</h2>
         <div>
-          <h3>A small loading for your suburb</h3>
+          <h3>No call-out fee</h3>
           <p>
-            The job price goes up by a percentage for the drive out:{" "}
-            {loadingSummary()}. Bin cleaning is the exception: nothing is added
-            for your suburb. Solar booked on your bin-clean day has nothing
-            added either.
+            {SUBURB_NOTE} Bins cost the same everywhere, and solar costs less
+            when it&rsquo;s booked on your bin-clean day.
           </p>
         </div>
         <div>
@@ -97,9 +95,9 @@ export default function Prices() {
         </div>
       </section>
       <p className="priceNote">
-        All prices include GST. Solar is $14.50 per panel plus
-        your suburb&rsquo;s loading, or nothing added on your
-        bin-clean day. Bin cleaning has nothing added. Big or
+        All prices include GST and vary a little by suburb; the
+        calculators show your exact price. Bins cost the same
+        everywhere. Big or
         unusual jobs (over $2,500, over 1,200 m² or 3+ storeys)
         get a site visit before a price is locked in.
       </p>
@@ -113,7 +111,7 @@ export default function Prices() {
           <Link href="/privacy">Privacy</Link>
           <Link href="/terms">Terms</Link>
         </nav>
-      <small className="madeBy">Created by Siezar DeWaal</small></footer>
+      <small className="madeBy">Created by <a href="/faq#siezar-dewaal">Siezar DeWaal</a></small></footer>
     </main>
   );
 }
