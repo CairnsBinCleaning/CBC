@@ -16,6 +16,12 @@ export const metadata: Metadata = {
     description:
       "Tap the corners of your driveway or roof on the map and the price appears. Cairns and the northern beaches.",
     url: "/instant-quote",
+    images: [
+      {
+        url: "/media/driveway-mid-clean-split-line-edmonton.jpg",
+        alt: "Driveway half cleaned, showing the clean line, Edmonton, Cairns",
+      },
+    ],
   },
 };
 
@@ -71,6 +77,7 @@ export default function InstantQuotePage() {
 
         <QuoteMeasure
           defaultService="driveway"
+          asPageTitle
           heading="Measure it yourself. Get the price now."
           intro="Find your place on the satellite map, tap the corners of the driveway, roof, patio or car park, and the price appears as you draw. Accept it and we'll text you to lock in the day."
         />
