@@ -75,7 +75,7 @@ export const commercialPages: CommercialPage[] = [
       { q: "Are you insured for commercial sites?", a: INSURED },
     ],
     needs: ["Car park", "Ramps / entries", "Loading dock", "Oil stains", "Driveways"],
-    seoTitle: "Car Park Cleaning Cairns | Commercial Car Park & Loading Dock Pressure Cleaning",
+    seoTitle: "Car Park Cleaning Cairns | Loading Docks & Ramps",
     seoDescription:
       "Car park, ramp, loading dock and driveway pressure cleaning in Cairns for shops, offices, strata and warehouses. Insured, scheduled around trading hours.",
   },
@@ -126,7 +126,7 @@ export const commercialPages: CommercialPage[] = [
       { q: "Are you insured for strata and commercial sites?", a: INSURED },
     ],
     needs: ["Refuse chute", "Bin room / bin bay", "Commercial wheelie bins", "Bulk bins", "Recurring schedule"],
-    seoTitle: "Bin Room & Refuse Chute Cleaning Cairns | Commercial Bin Cleaning",
+    seoTitle: "Bin Room & Refuse Chute Cleaning Cairns",
     seoDescription:
       "Refuse chute, bin room, bin bay and commercial bin cleaning in Cairns for strata complexes, restaurants, shopping centres and offices. Insured, recurring schedules.",
   },
@@ -163,7 +163,7 @@ export const commercialPages: CommercialPage[] = [
       { q: "How is it priced?", a: HOW_PRICED },
     ],
     needs: ["Footpath / entry", "Gum removal", "Shopfront / awning", "Windows inside & out", "Outdoor dining area"],
-    seoTitle: "Shopfront & Footpath Cleaning Cairns | Gum Removal & Commercial Windows",
+    seoTitle: "Shopfront & Footpath Cleaning Cairns | Gum Removal",
     seoDescription:
       "Shopfront, footpath, awning and entry cleaning in Cairns, with chewing gum removal and windows inside and out. Scheduled before you open.",
   },
@@ -207,7 +207,7 @@ export const commercialPages: CommercialPage[] = [
       { q: "Are you insured?", a: INSURED },
     ],
     needs: ["Building exterior", "Roof", "Signage", "Timber revitalising", "Gutters"],
-    seoTitle: "Commercial Building Washing Cairns | Soft Washing, Roofs & Timber Revitalising",
+    seoTitle: "Commercial Building Washing Cairns | Soft Wash",
     seoDescription:
       "Commercial building soft washing in Cairns: exteriors, cladding, warehouse roofs, signage and timber revitalising. Insured, SWMS on file.",
   },
@@ -274,7 +274,7 @@ export const commercialPages: CommercialPage[] = [
       { q: "Are you insured?", a: INSURED },
     ],
     needs: ["Full kitchen deep clean", "Canopies / filters", "Exhaust fans / ducts", "Fryers / ovens / grills", "Cool rooms", "Floors / walls / drains", "Grease trap", "Bin area out back"],
-    seoTitle: "Commercial Kitchen Cleaning Cairns | Canopy, Exhaust & Deep Cleans",
+    seoTitle: "Commercial Kitchen Cleaning Cairns | Canopies & Exhaust",
     seoDescription:
       "Commercial kitchen deep cleaning in Cairns by an ex-chef: exhaust canopies, filters, fans, fryers, ovens, cool rooms, floors and drains. After close. Insured.",
   },
@@ -302,7 +302,7 @@ export const commercialPages: CommercialPage[] = [
       { q: "Are you insured?", a: INSURED },
     ],
     needs: ["Ovens / combi ovens", "Fryers / grills", "Dishwasher descale", "Glasswasher descale", "Stainless steel", "Full kitchen deep clean"],
-    seoTitle: "Commercial Oven & Dishwasher Cleaning Cairns | Descaling & Stainless Steel",
+    seoTitle: "Commercial Oven & Dishwasher Cleaning Cairns | Descaling",
     seoDescription:
       "Commercial oven, fryer and grill deep cleaning, dishwasher and glasswasher descaling, and stainless steel revitalising in Cairns. After close. Insured.",
   },
@@ -331,7 +331,7 @@ export const commercialPages: CommercialPage[] = [
       { q: "Are you insured?", a: INSURED },
     ],
     needs: ["Floors", "Walls / doors", "Kitchen / staff room", "Windows", "Bin area / back-of-house", "Outside areas"],
-    seoTitle: "Commercial Deep Cleaning Cairns | End of Lease, Pre-Inspection & Post Fit-Out",
+    seoTitle: "Commercial Deep Cleaning Cairns | End of Lease & Fit-Out",
     seoDescription:
       "Commercial and industrial deep cleaning in Cairns: floors, walls, kitchens, windows, bin areas and outside areas. End of lease, pre-inspection and post fit-out. Insured.",
   },
@@ -368,7 +368,7 @@ export const commercialPages: CommercialPage[] = [
       { q: "Are you insured for industrial sites?", a: INSURED },
     ],
     needs: ["Hardstand / yard", "Warehouse floor", "Oil stains", "Bulk bins / bin bay", "Building / roof", "Gutters / windows"],
-    seoTitle: "Industrial Cleaning Cairns | Warehouses, Workshops, Hardstands & Yards",
+    seoTitle: "Industrial Cleaning Cairns | Warehouses, Workshops, Yards",
     seoDescription:
       "Industrial pressure cleaning and deep cleaning in Cairns: warehouses, workshops, hardstands, loading docks, bulk bins and building exteriors. Insured, SWMS on file.",
   },
@@ -405,7 +405,7 @@ export const commercialPages: CommercialPage[] = [
       { q: "How is it priced?", a: HOW_PRICED },
     ],
     needs: ["Metal roof", "Tile roof", "Roof with solar", "Gutters", "Walls / exterior"],
-    seoTitle: "Commercial Roof Cleaning Cairns | School, Warehouse & Strata Roof Soft Washing",
+    seoTitle: "Commercial & School Roof Cleaning Cairns | Soft Wash",
     seoDescription:
       "Commercial roof soft washing in Cairns for schools, warehouses, offices and strata: metal and tile roofs, gutters on the same visit. No asbestos. Insured, SWMS on file.",
   },
@@ -433,7 +433,7 @@ export const commercialPages: CommercialPage[] = [
       { q: "Are you insured?", a: INSURED },
     ],
     needs: ["Shopfront glass", "Office windows", "Glass doors / balustrades", "Frames / tracks", "Regular schedule"],
-    seoTitle: "Commercial Window Cleaning Cairns | Shopfront & Office Windows Inside and Out",
+    seoTitle: "Commercial Window Cleaning Cairns | Inside and Out",
     seoDescription:
       "Commercial window cleaning in Cairns: shopfront and office glass inside and out, frames, tracks, doors and balustrades. Scheduled around trading hours.",
   },
@@ -461,7 +461,7 @@ export const commercialPages: CommercialPage[] = [
       { q: "Are you insured?", a: INSURED },
     ],
     needs: ["Deck / boardwalk", "Screens / battens", "Pergola", "Timber facade"],
-    seoTitle: "Timber Deck Restoration Cairns | Deck, Boardwalk & Timber Revitalising",
+    seoTitle: "Timber Deck Restoration Cairns | Decks & Boardwalks",
     seoDescription:
       "Timber deck, boardwalk, screen and pergola cleaning and revitalising in Cairns for businesses and homes. Mould and slippery timber made safe. Insured.",
   },
