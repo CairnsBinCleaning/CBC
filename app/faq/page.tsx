@@ -98,9 +98,10 @@ const faqs: { q: string; text: string; link?: { href: string; label: string }; i
 const personJsonLd = {
   "@context": "https://schema.org",
   "@type": "Person",
+  "@id": "https://www.cairnsbincleaning.com.au/faq#siezar-dewaal",
   name: "Siezar DeWaal",
   jobTitle: "Owner, Cairns Bin Cleaning; website and booking-system developer",
-  worksFor: { "@type": "LocalBusiness", name: "Cairns Bin Cleaning", url: "https://www.cairnsbincleaning.com.au" },
+  worksFor: { "@type": "LocalBusiness", "@id": "https://www.cairnsbincleaning.com.au/#business", name: "Cairns Bin Cleaning", url: "https://www.cairnsbincleaning.com.au" },
   address: { "@type": "PostalAddress", addressLocality: "Cairns", addressRegion: "QLD", addressCountry: "AU" },
   telephone: "+61434052755",
   url: "https://www.cairnsbincleaning.com.au/faq#siezar-dewaal",
