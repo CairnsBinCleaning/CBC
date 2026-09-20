@@ -278,6 +278,193 @@ export const commercialPages: CommercialPage[] = [
     seoDescription:
       "Commercial kitchen deep cleaning in Cairns by an ex-chef: exhaust canopies, filters, fans, fryers, ovens, cool rooms, floors and drains. After close. Insured.",
   },
+  {
+    slug: "commercial-equipment-cleaning",
+    name: "Kitchen equipment deep cleans & descaling",
+    keyword: "Commercial Oven & Dishwasher Cleaning Cairns",
+    heading: "Ovens, dishwashers and stainless, back to working order.",
+    intro:
+      "Baked-on grease cuts oven efficiency and scale chokes dishwashers. We deep clean commercial ovens and cooking equipment, descale dishwashers and glasswashers, and bring tired stainless steel back up. Siezar was a chef for 13 years, so it all goes back ready for service.",
+    who: "Restaurants, cafés, pubs, clubs, hotels, bakeries, school and aged care kitchens, and food production sites.",
+    covers: [
+      "Commercial ovens, combi ovens and grills degreased",
+      "Fryers, ranges and cooktops",
+      "Commercial dishwashers and glasswashers descaled",
+      "Stainless steel benches, splashbacks and doors revitalised",
+      "Equipment pulled out, cleaned behind and put back",
+    ],
+    searches:
+      "Also searched as commercial oven cleaning, combi oven cleaning, dishwasher descaling, glasswasher descaling, stainless steel restoration, kitchen equipment cleaning and restaurant equipment deep clean in Cairns.",
+    photos: [],
+    faq: [
+      { q: "Can you do it after we close?", a: "Yes. We work after close or before you open, so the kitchen is ready for the next service." },
+      { q: "How is it priced?", a: HOW_PRICED },
+      { q: "Are you insured?", a: INSURED },
+    ],
+    needs: ["Ovens / combi ovens", "Fryers / grills", "Dishwasher descale", "Glasswasher descale", "Stainless steel", "Full kitchen deep clean"],
+    seoTitle: "Commercial Oven & Dishwasher Cleaning Cairns | Descaling & Stainless Steel",
+    seoDescription:
+      "Commercial oven, fryer and grill deep cleaning, dishwasher and glasswasher descaling, and stainless steel revitalising in Cairns. After close. Insured.",
+  },
+  {
+    slug: "commercial-deep-cleaning",
+    name: "Commercial space deep cleans",
+    keyword: "Commercial Deep Cleaning Cairns",
+    heading: "One deep clean that resets the whole site.",
+    intro:
+      "Before an inspection, after a fit-out, at the end of a lease or just because it has got away from you. We deep clean commercial spaces top to bottom, inside and out, and leave it ready to trade.",
+    who: "Shops, offices, warehouses, food businesses, clubs, schools and property managers handing over a site.",
+    covers: [
+      "Hard floors scrubbed, degreased and rinsed",
+      "Walls, doors and high-touch areas",
+      "Kitchens and staff rooms",
+      "Windows inside and out",
+      "Bin areas, loading docks and back-of-house",
+      "Outside: entries, footpaths, car parks and building exterior",
+    ],
+    searches:
+      "Also searched as commercial deep clean, end of lease commercial cleaning, pre-inspection clean, post fit-out cleaning, warehouse deep clean, shop deep clean and industrial deep cleaning in Cairns.",
+    photos: [],
+    faq: [
+      { q: "Can you work around our trading hours?", a: HOURS },
+      { q: "How is it priced?", a: HOW_PRICED },
+      { q: "Are you insured?", a: INSURED },
+    ],
+    needs: ["Floors", "Walls / doors", "Kitchen / staff room", "Windows", "Bin area / back-of-house", "Outside areas"],
+    seoTitle: "Commercial Deep Cleaning Cairns | End of Lease, Pre-Inspection & Post Fit-Out",
+    seoDescription:
+      "Commercial and industrial deep cleaning in Cairns: floors, walls, kitchens, windows, bin areas and outside areas. End of lease, pre-inspection and post fit-out. Insured.",
+  },
+  {
+    slug: "industrial-cleaning",
+    name: "Industrial cleaning",
+    keyword: "Industrial Cleaning Cairns",
+    heading: "Industrial sites, cleaned by one contractor.",
+    intro:
+      "Warehouses, workshops, yards and depots collect oil, grime, mould and rubbish in places nobody wants to deal with. We pressure clean and deep clean industrial sites across Cairns, from the hardstand to the roof.",
+    who: "Warehouses, workshops, depots, industrial estates, transport yards and food production sites, including Portsmith, Bungalow and the southside.",
+    covers: [
+      "Hardstands, yards and loading docks",
+      "Warehouse and workshop floors",
+      "Oil and grease stains on concrete",
+      "Bulk bins, bin bays and refuse areas",
+      "Building exteriors, walls and roofs (no asbestos or fibro)",
+      "Gutters, signage and windows",
+    ],
+    searches:
+      "Also searched as industrial pressure cleaning, warehouse cleaning, workshop floor cleaning, hardstand cleaning, factory cleaning, degreasing concrete and industrial cleaners in Cairns.",
+    photos: [
+      {
+        src: "/media/commercial-bulk-bins-portsmith.jpg",
+        alt: "Bulk commercial bins cleaned at an industrial site in Portsmith",
+        suburb: "Portsmith",
+        width: 1200,
+        height: 1600,
+      },
+    ],
+    faq: [
+      { q: "How is industrial cleaning priced?", a: HOW_PRICED },
+      { q: "Can you work around shifts and deliveries?", a: HOURS },
+      { q: "Are you insured for industrial sites?", a: INSURED },
+    ],
+    needs: ["Hardstand / yard", "Warehouse floor", "Oil stains", "Bulk bins / bin bay", "Building / roof", "Gutters / windows"],
+    seoTitle: "Industrial Cleaning Cairns | Warehouses, Workshops, Hardstands & Yards",
+    seoDescription:
+      "Industrial pressure cleaning and deep cleaning in Cairns: warehouses, workshops, hardstands, loading docks, bulk bins and building exteriors. Insured, SWMS on file.",
+  },
+  {
+    slug: "commercial-roof-cleaning",
+    name: "Commercial & school roof cleaning",
+    keyword: "Commercial Roof Cleaning Cairns",
+    heading: "Big roofs, soft washed without damage.",
+    intro:
+      "Mould and lichen on a large roof hold water, stain and look neglected from the street. We soft wash metal and tile roofs on schools, warehouses, offices and strata buildings, with a crew, harnesses and a safe work method statement on file.",
+    who: "Schools, warehouses, offices, churches, clubs and strata complexes.",
+    covers: [
+      "Metal (Colorbond) roofs",
+      "Tile roofs",
+      "Curved and multi-level roofs",
+      "Roofs with solar panels",
+      "Gutters cleared on the same visit",
+      "No asbestos or fibro roofs",
+    ],
+    searches:
+      "Also searched as commercial roof soft washing, school roof cleaning, warehouse roof cleaning, roof mould removal, Colorbond roof cleaning and roof lichen removal in Cairns.",
+    photos: [
+      {
+        src: "/media/IMG_3156.jpg",
+        alt: "School roof in Brinsmead after a roof soft wash, ranges behind",
+        suburb: "Brinsmead",
+        width: 2400,
+        height: 1800,
+      },
+    ],
+    faq: [
+      { q: "Do you clean asbestos or fibro roofs?", a: "No. We clean metal and tile roofs only." },
+      { q: "Can you work around school hours?", a: "Yes. We plan the work around the school, sign in on your contractor system, and keep our insurance and WorkCover on file with you." },
+      { q: "How is it priced?", a: HOW_PRICED },
+    ],
+    needs: ["Metal roof", "Tile roof", "Roof with solar", "Gutters", "Walls / exterior"],
+    seoTitle: "Commercial Roof Cleaning Cairns | School, Warehouse & Strata Roof Soft Washing",
+    seoDescription:
+      "Commercial roof soft washing in Cairns for schools, warehouses, offices and strata: metal and tile roofs, gutters on the same visit. No asbestos. Insured, SWMS on file.",
+  },
+  {
+    slug: "commercial-window-cleaning",
+    name: "Commercial windows, inside & out",
+    keyword: "Commercial Window Cleaning Cairns",
+    heading: "Clear glass, inside and out.",
+    intro:
+      "Salt, dust and wet-season spotting build up fast on Cairns glass. We clean shopfront and office windows inside and out, with frames, tracks and sills done on the same visit.",
+    who: "Shops, offices, cafés, clubs, strata foyers and showrooms.",
+    covers: [
+      "Shopfront glass inside and out",
+      "Office and foyer windows",
+      "Frames, tracks and sills",
+      "Glass doors and balustrades",
+      "Regular schedules or one-off cleans",
+    ],
+    searches:
+      "Also searched as shopfront window cleaning, office window cleaning, commercial glass cleaning and window cleaners for businesses in Cairns.",
+    photos: [],
+    faq: [
+      { q: "Can you do them before we open?", a: HOURS },
+      { q: "How is it priced?", a: HOW_PRICED },
+      { q: "Are you insured?", a: INSURED },
+    ],
+    needs: ["Shopfront glass", "Office windows", "Glass doors / balustrades", "Frames / tracks", "Regular schedule"],
+    seoTitle: "Commercial Window Cleaning Cairns | Shopfront & Office Windows Inside and Out",
+    seoDescription:
+      "Commercial window cleaning in Cairns: shopfront and office glass inside and out, frames, tracks, doors and balustrades. Scheduled around trading hours.",
+  },
+  {
+    slug: "timber-restoration",
+    name: "Timber revitalising",
+    keyword: "Timber Deck Restoration Cairns",
+    heading: "Grey, mouldy timber brought back.",
+    intro:
+      "Cairns sun and humidity turn timber grey, green and slippery. We clean and revitalise decks, boardwalks, screens, pergolas and timber facades on commercial sites and homes.",
+    who: "Cafés and restaurants with timber decks, resorts, clubs, strata complexes and homeowners.",
+    covers: [
+      "Decks and boardwalks",
+      "Timber screens and battens",
+      "Pergolas and outdoor furniture areas",
+      "Timber facades and cladding",
+      "Mould and slippery surfaces made safe",
+    ],
+    searches:
+      "Also searched as deck cleaning, deck restoration, timber cleaning, boardwalk cleaning, deck revitalising and timber mould removal in Cairns.",
+    photos: [],
+    faq: [
+      { q: "How is it priced?", a: HOW_PRICED },
+      { q: "Can you work around our trading hours?", a: HOURS },
+      { q: "Are you insured?", a: INSURED },
+    ],
+    needs: ["Deck / boardwalk", "Screens / battens", "Pergola", "Timber facade"],
+    seoTitle: "Timber Deck Restoration Cairns | Deck, Boardwalk & Timber Revitalising",
+    seoDescription:
+      "Timber deck, boardwalk, screen and pergola cleaning and revitalising in Cairns for businesses and homes. Mould and slippery timber made safe. Insured.",
+  },
 ];
 
 export const getCommercialPage = (slug: string) => commercialPages.find((p) => p.slug === slug);
