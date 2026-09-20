@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { services } from "../lib/services";
 import { suburbPages } from "../lib/suburbs";
+import { commercialPages } from "../lib/commercial";
 
 const siteUrl =
   process.env.NEXT_PUBLIC_SITE_URL || "https://www.zacsbinandpressurecleaning.com.au";
@@ -12,6 +13,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${siteUrl}/prices`, changeFrequency: "monthly", priority: 0.8 },
     { url: `${siteUrl}/service-areas`, changeFrequency: "monthly", priority: 0.8 },
     { url: `${siteUrl}/faq`, changeFrequency: "monthly", priority: 0.8 },
+    { url: `${siteUrl}/commercial`, changeFrequency: "monthly", priority: 0.8 },
     { url: `${siteUrl}/strata`, changeFrequency: "monthly", priority: 0.7 },
     { url: `${siteUrl}/government`, changeFrequency: "monthly", priority: 0.7 },
     { url: `${siteUrl}/about`, changeFrequency: "monthly", priority: 0.6 },
@@ -31,5 +33,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.6,
   }));
 
-  return [...staticRoutes, ...serviceRoutes, ...suburbRoutes];
+  const commercialRoutes: MetadataRoute.Sitemap = commercialPages.map((p) => ({
+    url: `${siteUrl}/commercial/${p.slug}`,
+    changeFrequency: "monthly",
+    priority: 0.8,
+  }));
+
+  return [...staticRoutes, ...serviceRoutes, ...commercialRoutes, ...suburbRoutes];
 }
