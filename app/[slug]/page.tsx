@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { services, getService, type Service } from "../../lib/services";
 import ServicePageClient from "../../components/ServicePageClient";
+import SiteFooter from "../../components/SiteFooter";
+import Crumbs from "../../components/Crumbs";
 import { faqJsonLd } from "../../lib/serviceFaq";
 import { GUTTER, ROOF_MATERIALS, WINDOW_RATES } from "../../lib/quote";
 
@@ -217,7 +219,8 @@ export default async function Page({
         />
       ))}
 
-      <ServicePageClient service={service} />
+      <Crumbs trail={[[service.name, `/${service.slug}`]]} />
+      <ServicePageClient service={service} footer={<SiteFooter commercial={service.slug === "commercial-cleaning"} />} />
     </>
   );
 }
