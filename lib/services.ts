@@ -155,7 +155,7 @@ export const services: Service[] = [
       "Cairns roofs cop heat, rain, shade and organic growth. We’ll price the job around the roof, access and what’s actually on it.",
     priceModel: "One price for the roof",
     priceDetail:
-      `Soft wash. Metal roofs ${$(METAL.rate)}/m² (from ${$(METAL.min)}), tile ${$(TILE.rate)}/m² (from ${$(TILE.min)}), on the real roof area with the slope added. Older fibro roofs get looked at before we quote.`,
+      `Soft wash. Metal roofs ${$(METAL.rate)}/m² (from ${$(METAL.min)}), tile ${$(TILE.rate)}/m² (from ${$(TILE.min)}), on the real roof area with the slope added. We don’t clean asbestos or fibro roofs.`,
     mediaCaption: "Mid-pass on a Whitfield roof. Left untouched, right done.",
     gallery: [
       {
