@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Crumbs from "../../components/Crumbs";
 import Link from "next/link";
 import { services } from "../../lib/services";
 import { SUBURB_NOTE } from "../../lib/pricing";
@@ -7,9 +8,9 @@ import SiteHeader from "../../components/SiteHeader";
 import SiteFooter from "../../components/SiteFooter";
 
 export const metadata: Metadata = {
-  title: "Prices | Cairns Bin Cleaning",
+  title: "Cleaning Prices Cairns | Every Price in One List",
   description:
-    "Every Cairns Bin Cleaning price in one plain list — pressure cleaning, bin cleaning, roof cleaning, solar and more.",
+    "Every Cairns Bin Cleaning price in one plain list: pressure cleaning from $2.95/m², bins from $35.95, roofs, solar, windows and gutters. GST included.",
   alternates: { canonical: "/prices" },
 };
 
@@ -17,6 +18,7 @@ export default function Prices() {
   return (
     <main className="pricesPage">
       <SiteHeader />
+      <Crumbs trail={[["Prices", "/prices"]]} />
       <section className="pricesHead">
         <p className="eyebrow dark">SKIP THE FLUFF</p>
         <h1>Prices.</h1>
