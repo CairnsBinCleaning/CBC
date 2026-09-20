@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
+import Crumbs from "../../components/Crumbs";
 import Link from "next/link";
 import { GUTTER, QUOTE_CONFIG, ROOF_MATERIALS, WINDOW_RATES } from "../../lib/quote";
 import SiteHeader from "../../components/SiteHeader";
 import SiteFooter from "../../components/SiteFooter";
 
 export const metadata: Metadata = {
-  title: "FAQ | Cairns Bin Cleaning",
+  title: "Cleaning Questions Answered | Cairns Bin Cleaning FAQ",
   description:
     "Cairns prices for driveways, roofs, house washing, gutters, windows, solar and bins, one price in every suburb, areas, cancellations and insurance, answered plainly.",
   alternates: { canonical: "/faq" },
@@ -146,6 +147,7 @@ export default function FAQ() {
       />
 
       <SiteHeader />
+      <Crumbs trail={[["FAQ", "/faq"]]} />
 
       <section className="legalHead">
         <p className="eyebrow dark">QUESTIONS, ANSWERED PLAINLY</p>
