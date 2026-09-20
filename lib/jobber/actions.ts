@@ -378,7 +378,9 @@ export async function requestServiceQuote(
     if (clientId) {
       await createJobberRequest(
         clientId,
-        `${serviceName || "Service"} quote request — ${suburb}${winLabel ? ` (${winLabel}, est. $${winTotal!.toFixed(2)}${winLoading == null ? " before suburb" : ""})` : ""}`
+        `${serviceName || "Service"} quote request — ${suburb}${winLabel ? ` (${winLabel}, est. $${winTotal!.toFixed(2)}${winLoading == null ? " before suburb" : ""})` : ""}` +
+          /* What they typed about the job, so it's in Jobber, not just the logs. */
+          (scope ? ` | ${scope.slice(0, 240)}` : "")
       );
     }
 
