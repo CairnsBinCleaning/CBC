@@ -56,7 +56,7 @@ ${zones}
 - [Service areas](${SITE}/service-areas)
 - [FAQ](${SITE}/faq)
 - [About](${SITE}/about)
-- [Commercial exterior cleaning](${SITE}/commercial): car parks, bin rooms and refuse chutes, shopfronts and footpaths, building and roof washes, graffiti removal, commercial kitchens and exhaust fans
+- [Commercial exterior cleaning](${SITE}/commercial): car parks, bin rooms and refuse chutes, shopfronts and footpaths, building and roof washes, graffiti removal, commercial kitchens, exhaust canopies, oven and dishwasher deep cleans and descaling, commercial deep cleans, industrial sites, commercial roofs, commercial windows and timber revitalising
 - [Strata and body corporate](${SITE}/strata)
 - [Government and council](${SITE}/government)
 - [Booking terms](${SITE}/terms)
