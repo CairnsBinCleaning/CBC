@@ -483,3 +483,20 @@ a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid #4f7d
 .walk-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 18px;margin:18px 0 6px}.walk-grid label{display:grid;gap:6px;font-size:12px;letter-spacing:.12em;font-weight:700}.walk-grid input{padding:13px 14px;border:1px solid #bbb;border-radius:10px;font:inherit;font-size:16px;letter-spacing:0;font-weight:400;background:#fff;min-width:0}.walk-times{margin:14px 0}.walk-needs{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 16px}.walk-needs label{display:flex;align-items:center;gap:8px;padding:9px 13px;border:1px solid #bbb;border-radius:999px;background:#fff;font-size:14px;cursor:pointer}.walk-needs label.on{border-color:#4f7d18;background:#e6f0d6}.walk-needs input{accent-color:#4f7d18}@media(max-width:600px){.walk-grid{grid-template-columns:1fr}}
 
 .commercial-photos{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;max-width:1100px;margin:0 auto 28px;padding:0 20px}.commercial-photos figure{margin:0}.commercial-photos img{width:100%;height:260px;object-fit:cover;border-radius:14px;display:block}.commercial-photos figcaption{font-size:12px;opacity:.7;margin-top:6px}
+
+/* Home hero on phones (20 Sept): one job per element. The header button becomes
+   the phone number, the hero keeps two buttons, the slogan strip hides (holiday
+   banners still show). */
+@media(max-width:850px){
+ .seasonal-banner[data-banner=default]{display:none}
+ .heroScene .nav nav a.nav-call{display:inline-flex;align-items:center;padding:10px 16px;border-radius:999px;background:#79c51d;color:#0d1410;font-weight:900;letter-spacing:.08em;font-size:11px}
+ .heroScene .nav nav .nav-book-btn{display:none}
+ .heroCopy{bottom:9vh}
+ .heroCopy .eyebrow{font-size:10px;letter-spacing:.16em;margin-bottom:14px}
+ .heroCopy h1{font-size:58px}
+ .heroCopy .leadHook{display:none}
+ .heroCopy .lead{margin:20px 0 26px}
+ .heroActions .heroCall,.heroActions .heroJump{display:none}
+ .heroActions{display:grid;grid-template-columns:1fr;gap:10px}
+ .scrollCue{display:none}
+}
