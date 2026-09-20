@@ -14,6 +14,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${siteUrl}/service-areas`, changeFrequency: "monthly", priority: 0.8 },
     { url: `${siteUrl}/faq`, changeFrequency: "monthly", priority: 0.8 },
     { url: `${siteUrl}/commercial`, changeFrequency: "monthly", priority: 0.8 },
+    { url: `${siteUrl}/local-work`, changeFrequency: "monthly", priority: 0.6 },
     { url: `${siteUrl}/strata`, changeFrequency: "monthly", priority: 0.7 },
     { url: `${siteUrl}/government`, changeFrequency: "monthly", priority: 0.7 },
     { url: `${siteUrl}/about`, changeFrequency: "monthly", priority: 0.6 },
