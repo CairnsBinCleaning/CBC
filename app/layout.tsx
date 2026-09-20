@@ -12,7 +12,7 @@ import "./globals.css";
 // and swap the fallback below. Using the current live legacy domain as a
 // placeholder for now since it's the only real domain this business owns.
 const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://www.zacsbinandpressurecleaning.com.au";
+  process.env.NEXT_PUBLIC_SITE_URL || "https://www.cairnsbincleaning.com.au";
 
 // Set NEXT_PUBLIC_GA_ID in .env.local once you have a real GA4 measurement
 // ID (looks like G-XXXXXXXXXX). Nothing loads or tracks until it's set —
