@@ -106,7 +106,13 @@ const localBusinessJsonLd = {
   },
   /* Links this site to the Google Business Profile, so they're read as
      the same business. */
-  sameAs: [GOOGLE_REVIEWS.url],
+  sameAs: [
+    GOOGLE_REVIEWS.url,
+    // The same social profiles listed on the Google Business Profile.
+    "https://www.facebook.com/profile.php?id=61563802126667",
+    "https://www.instagram.com/zacsbinandpressurecleaning/",
+    "https://www.youtube.com/@zacsbinandpressurecleaning",
+  ],
   founder: { "@type": "Person", "@id": `${siteUrl}/faq#siezar-dewaal`, name: "Siezar DeWaal" },
   // Character-for-character match with the "Service area" list on the real
   // Google Business Profile listing (checked 2026-09-17, Location tab).
