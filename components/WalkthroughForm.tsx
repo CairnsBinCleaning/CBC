@@ -40,6 +40,8 @@ export default function WalkthroughForm({
   const [site, setSite] = useState("");
   const [units, setUnits] = useState("");
   const match = useMemo(() => findCallout(suburb), [suburb]);
+  /* Strata and government keep units/lots; commercial sites are sized by area. */
+  const isStrata = audience !== "Commercial";
   const [result, formAction, pending] = useActionState<RequestServiceQuoteResult | null, FormData>(
     requestServiceQuote,
     null
@@ -52,7 +54,7 @@ export default function WalkthroughForm({
   const serviceName = `${audience} site walkthrough${when ? ` (prefers ${when}, ${time.toLowerCase()})` : ""}`;
   const scope = [
     site && `Site: ${site}`,
-    units && `Units/lots: ${units}`,
+    units && `${isStrata ? "Units/lots" : "Size"}: ${units}`,
     needs.length ? `Needs: ${needs.join(", ")}` : "",
     when && `Preferred: ${when}, ${time}`,
   ]
@@ -74,16 +76,16 @@ export default function WalkthroughForm({
 
         <div className="walk-grid">
           <label>
-            SITE OR COMPLEX NAME
-            <input value={site} onChange={(e) => setSite(e.target.value)} placeholder="e.g. Palm Court Apartments" />
+            {isStrata ? "SITE OR COMPLEX NAME" : "BUSINESS OR SITE NAME"}
+            <input value={site} onChange={(e) => setSite(e.target.value)} placeholder={isStrata ? "e.g. Palm Court Apartments" : "e.g. Smithfield shopping centre"} />
           </label>
           <label>
             SUBURB
             <input name="suburb" value={suburb} onChange={(e) => setSuburb(e.target.value)} placeholder="e.g. Edge Hill" required />
           </label>
           <label>
-            UNITS / LOTS (ROUGHLY)
-            <input inputMode="numeric" value={units} onChange={(e) => setUnits(e.target.value)} placeholder="e.g. 24" />
+            {isStrata ? "UNITS / LOTS (ROUGHLY)" : "HOW BIG (ROUGHLY)"}
+            <input inputMode={isStrata ? "numeric" : "text"} value={units} onChange={(e) => setUnits(e.target.value)} placeholder={isStrata ? "e.g. 24" : "e.g. 40 car parks, 3 bin rooms"} />
           </label>
           <label>
             PREFERRED DAY
