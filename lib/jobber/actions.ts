@@ -161,7 +161,12 @@ export async function bookBinCleaning(
     const label = FREQUENCY_LABEL[frequency] ?? frequency;
 
     if (clientId) {
-      await createJobberRequest(clientId, `Bin cleaning — ${label} plan, ${suburb}`);
+      /* The driveway add-on rides in the Request title so it's the first
+         thing seen in Jobber, not buried in the Vercel logs. */
+      await createJobberRequest(
+        clientId,
+        `Bin cleaning — ${label} plan, ${suburb}${wantsDrivewayAddOn ? " + WANTS DRIVEWAY QUOTE" : ""}`
+      );
     }
 
     // The client (and now the Request) exist for real in Jobber. The
