@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import QuoteMeasure from "../../components/QuoteMeasure";
+import SiteHeader from "../../components/SiteHeader";
+import SiteFooter from "../../components/SiteFooter";
 
 const siteUrl =
   process.env.NEXT_PUBLIC_SITE_URL || "https://www.zacsbinandpressurecleaning.com.au";
@@ -60,21 +62,7 @@ export default function InstantQuotePage() {
           (statusBarStyle black-translucent), so the header needs to clear the
           notch. In a normal browser tab the inset is 0 and this does nothing. */}
       <main className="service-page" style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}>
-        <header className="main-header">
-          <Link href="/" className="brand">
-            <strong>CAIRNS</strong>
-            <span>BIN CLEANING</span>
-          </Link>
-
-          <nav>
-            <Link href="/">SERVICES</Link>
-            <Link href="/prices">PRICES</Link>
-            <a href="tel:+61434052755">0434 052 755</a>
-            <a href="#instant-quote" className="nav-book-btn">
-              START
-            </a>
-          </nav>
-        </header>
+        <SiteHeader cta={null} />
 
         <QuoteMeasure
           defaultService="driveway"
@@ -83,17 +71,7 @@ export default function InstantQuotePage() {
           intro="Find your place on the satellite map, tap the corners of the driveway, roof, patio or car park, and the price appears as you draw. Accept it and we'll text you to lock in the day."
         />
 
-        <footer className="service-footer">
-          <span>CAIRNS BIN CLEANING</span>
-          <nav>
-            <Link href="/service-areas">Areas</Link>
-            <Link href="/faq">FAQ</Link>
-            <Link href="/about">About</Link>
-            <Link href="/prices">Prices</Link>
-            <Link href="/privacy">Privacy</Link>
-            <Link href="/terms">Terms</Link>
-          </nav>
-        <small className="madeBy">Created by <a href="/faq#siezar-dewaal">Siezar DeWaal</a></small></footer>
+        <SiteFooter />
       </main>
     </>
   );
