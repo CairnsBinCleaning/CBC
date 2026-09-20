@@ -86,6 +86,7 @@ export default function Strata() {
               {s.name}
             </Link>
           ))}
+          <Link href="/commercial">All commercial work</Link>
         </div>
       </section>
 
