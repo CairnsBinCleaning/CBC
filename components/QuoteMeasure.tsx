@@ -1354,7 +1354,7 @@ export default function QuoteMeasure({
               {result && !result.ok && <p className={styles.err}>{result.message}</p>}
 
               <p className={styles.note}>
-                You&apos;re not charged now. We confirm the day by text, then the job lands in our system.
+                You&apos;re not charged now, you pay after the job. We confirm the day by text. Your details only go to us and are never sold or shared.
               </p>
             </div>
           </form>
