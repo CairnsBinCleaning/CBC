@@ -4,6 +4,8 @@ import SeasonalBanner from "../components/SeasonalBanner";
 import { AnalyticsListener } from "../components/Analytics";
 import Assistant from "../components/Assistant";
 import { ASSISTANT_ENABLED } from "../lib/assistant";
+import { QUOTE_CONFIG } from "../lib/quote";
+import { GOOGLE_REVIEWS } from "../lib/stats";
 import "./globals.css";
 
 // TODO: once the new domain is chosen, set NEXT_PUBLIC_SITE_URL in .env.local
@@ -78,9 +80,34 @@ export const viewport: Viewport = {
 const localBusinessJsonLd = {
   "@context": "https://schema.org",
   "@type": "LocalBusiness",
+  /* One ID for the business, so every page's schema points at the same
+     entity instead of Google/AI tools guessing they're related. */
+  "@id": `${siteUrl}/#business`,
   name: "Cairns Bin Cleaning",
+  alternateName: ["CBC Exterior & Property Maintenance", "CBC"],
   telephone: "+61434052755",
+  email: "zacsbincleaning@gmail.com",
   url: siteUrl,
+  image: `${siteUrl}/media/IMG_3027.jpg`,
+  priceRange: `From $${QUOTE_CONFIG.minTotal}`,
+  /* Service-area business: suburb only, never the home address. */
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Cairns",
+    addressRegion: "QLD",
+    postalCode: "4870",
+    addressCountry: "AU",
+  },
+  openingHoursSpecification: {
+    "@type": "OpeningHoursSpecification",
+    dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+    opens: "07:30",
+    closes: "17:30",
+  },
+  /* Links this site to the Google Business Profile, so they're read as
+     the same business. */
+  sameAs: [GOOGLE_REVIEWS.url],
+  founder: { "@type": "Person", "@id": `${siteUrl}/faq#siezar-dewaal`, name: "Siezar DeWaal" },
   // Character-for-character match with the "Service area" list on the real
   // Google Business Profile listing (checked 2026-09-17, Location tab).
   // Keep this list and the one in app/[slug]/page.tsx in sync with GBP —
