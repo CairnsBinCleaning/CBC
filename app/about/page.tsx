@@ -4,7 +4,9 @@ import SiteHeader from "../../components/SiteHeader";
 import SiteFooter from "../../components/SiteFooter";
 import TrustBar from "../../components/TrustBar";
 import OwnerNote from "../../components/OwnerNote";
+import ComplianceDocs from "../../components/ComplianceDocs";
 import { crumbs } from "../../lib/breadcrumbs";
+import { GOOGLE_REVIEWS } from "../../lib/stats";
 
 export const metadata: Metadata = {
   title: "About Us | Local Cairns Cleaning, Owner Siezar DeWaal",
@@ -37,6 +39,22 @@ export default function About() {
       </section>
 
       <OwnerNote full />
+
+      <section className="check-us" id="check-us" aria-labelledby="check-us-title">
+        <p className="eyebrow dark">DON&rsquo;T TAKE OUR WORD FOR IT</p>
+        <h2 id="check-us-title">Check us for yourself.</h2>
+        <p>
+          Our ABN, insurance and WorkCover are real and current. Look up the
+          ABN on the government register, open the certificates, or read all{" "}
+          <a href={GOOGLE_REVIEWS.url} target="_blank" rel="noopener noreferrer">
+            {GOOGLE_REVIEWS.count} Google reviews
+          </a>{" "}
+          from Cairns customers.
+        </p>
+        <div className="document-grid">
+          <ComplianceDocs />
+        </div>
+      </section>
 
       <section className="legalBody">
         <h2>Who you&rsquo;re dealing with</h2>
