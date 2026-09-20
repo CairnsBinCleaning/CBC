@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { loadingSummary } from "../../lib/pricing";
 import SiteHeader from "../../components/SiteHeader";
 import SiteFooter from "../../components/SiteFooter";
 
@@ -30,11 +29,10 @@ export default function Terms() {
       <section className="legalBody">
         <h2>How pricing works</h2>
         <p>
-          Bin cleaning is priced as a fixed fee — nothing added.
-          Every other service on this site is priced as the job itself plus
-          a percentage for your suburb ({loadingSummary()}). Solar panel
-          cleaning is $14.50 per panel plus the same loading, or nothing added
-          when it&rsquo;s booked on your bin-clean day. Any price shown on this site is an
+          Bin cleaning is priced as a fixed fee. Every other service is
+          priced on the job itself, at the same rates in every suburb we
+          cover, with no call-out or visit fee. Solar panel cleaning is
+          $14.50 per panel. Any price shown on this site is an
           estimate until we’ve confirmed access, area and site conditions
           with you directly — we’ll always tell you the final figure before
           the work starts, not after.
