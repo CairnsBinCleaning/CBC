@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Crumbs from "../../../components/Crumbs";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -7,6 +8,8 @@ import { services } from "../../../lib/services";
 import { getSuburbPage, suburbPages, suburbSlug } from "../../../lib/suburbs";
 import SiteHeader from "../../../components/SiteHeader";
 import SiteFooter from "../../../components/SiteFooter";
+import TrustBar from "../../../components/TrustBar";
+import ReviewQuotes from "../../../components/ReviewQuotes";
 
 /* One page per suburb where we have real job photos. See lib/suburbs.ts for
    why suburbs without a photo don't get a page. */
@@ -24,10 +27,10 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const page = getSuburbPage((await params).suburb);
   if (!page) return {};
-  const done = [...new Set(page.jobs.map((j) => j.service.name.toLowerCase()))].join(", ");
+  const done = [...new Set(page.jobs.map((j) => (j.service.slug === "commercial-cleaning" ? "commercial cleaning" : j.service.name.toLowerCase())))].join(", ");
   return {
-    title: `${page.name} Pressure Cleaning, Bin Cleaning & More | Cairns Bin Cleaning`,
-    description: `Exterior cleaning in ${page.name}, Cairns: see real ${done} jobs we've done there. Instant prices online, no call-out fee. Call 0434 052 755.`,
+    title: `${page.name} Pressure & Bin Cleaning | Cairns Bin Cleaning`,
+    description: `Exterior cleaning in ${page.name}, Cairns: see real ${done} jobs we've done there. Instant prices online, no call-out fee.`,
     alternates: { canonical: `/service-areas/${page.slug}` },
     openGraph: {
       title: `Exterior cleaning in ${page.name} — Cairns Bin Cleaning`,
@@ -46,10 +49,38 @@ export default async function SuburbPage({
   if (!page) notFound();
 
   const withPages = new Set(suburbPages.map((p) => p.name));
+  const done = [...new Set(page.jobs.map((j) => (j.service.slug === "commercial-cleaning" ? "commercial cleaning" : j.service.name.toLowerCase())))];
+  const doneText = done.length > 1 ? `${done.slice(0, -1).join(", ")} and ${done[done.length - 1]}` : done[0];
+  /* Plain answers, all true everywhere we work, with the suburb's own jobs
+     in the first one. Shown on the page and sent as FAQPage schema. */
+  const faq = [
+    {
+      q: `What have you cleaned in ${page.name}?`,
+      a: `Recent ${page.name} jobs include ${doneText}. The photos on this page are those jobs, taken by us.`,
+    },
+    {
+      q: `Do you charge more to come to ${page.name}?`,
+      a: `No. One price anywhere we cover, from Palm Cove to Gordonvale, with no call-out fee. The price shown for your ${page.name} address is the price you pay, and you pay after the job.`,
+    },
+    {
+      q: `How do I get a price in ${page.name}?`,
+      a: `Type your ${page.name} address into the instant quote, tap the corners of the driveway, roof or patio on the aerial map, and the price appears. Bin and solar panel cleaning book online on their own pages. Or call 0434 052 755.`,
+    },
+    {
+      q: `Do you do commercial and strata work in ${page.name}?`,
+      a: `Yes: car parks, bin rooms, shopfronts, roofs, commercial kitchens and strata common areas. We carry $20 million public liability insurance and a safe work method statement for site work.`,
+    },
+  ];
+  const faqLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faq.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
+  };
 
   return (
     <main className="legalPage">
       <SiteHeader />
+      <Crumbs trail={[["Service areas", "/service-areas"], [page.name, `/service-areas/${page.slug}`]]} />
 
       <section className="areasHead">
         <h1>
@@ -62,6 +93,7 @@ export default async function SuburbPage({
           your address into the instant quote and the price you see is the
           price for your place.
         </p>
+        <TrustBar />
       </section>
 
       <section className="suburbJobs">
@@ -122,6 +154,23 @@ export default async function SuburbPage({
             We confirm the price before anything is booked in.
           </p>
         </div>
+      </section>
+
+      <ReviewQuotes slug="home" />
+
+      <section className="legalBody suburbFaq">
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd).replace(/</g, "\\u003c") }} />
+        <h2>{page.name} questions, answered.</h2>
+        {faq.map((f) => (
+          <div key={f.q}>
+            <h3>{f.q}</h3>
+            <p>{f.a}</p>
+          </div>
+        ))}
+        <p>
+          Business or strata property in {page.name}? See{" "}
+          <Link href="/commercial">commercial &amp; industrial cleaning</Link>.
+        </p>
       </section>
 
       {page.neighbours.length > 0 && (
