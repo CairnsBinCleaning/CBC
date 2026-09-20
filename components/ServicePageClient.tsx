@@ -27,6 +27,8 @@ import {
 import { windowQuote, WINDOW_RATES, type WindowType } from "../lib/quote";
 import QuoteMeasure from "./QuoteMeasure";
 import ServiceGallery from "./ServiceGallery";
+import SiteHeader from "./SiteHeader";
+import SiteFooter from "./SiteFooter";
 import ComplianceDocs from "./ComplianceDocs";
 import ReviewQuotes from "./ReviewQuotes";
 import { useLeadEvent } from "./Analytics";
@@ -63,56 +65,24 @@ export default function ServicePageClient({
     <main
       className={`service-page service-page-${service.slug}`}
     >
-      <header className="main-header">
-        <Link href="/" className="brand">
-          {/* Commercial buyers see the property-maintenance lockup; the legal
-              name stays in the footer and the ABN card. */}
-          {service.slug === "commercial-cleaning" ? (
-            <>
-              <strong>CBC</strong>
-              <span>EXTERIOR &amp; PROPERTY MAINTENANCE</span>
-            </>
-          ) : (
-            <>
-              <strong>CAIRNS</strong>
-              <span>BIN CLEANING</span>
-            </>
-          )}
-        </Link>
-
-        <nav>
-          <Link href="/">
-            SERVICES
-          </Link>
-
-          <Link href="/prices">
-            PRICES
-          </Link>
-
-          <a href="tel:+61434052755">
-            0434 052 755
-          </a>
-
-          <a
-            href={
-              service.slug === "bin-cleaning"
-                ? "#bin-booking"
-                : service.slug === "solar-panel-cleaning"
-                  ? "#solar-booking"
-                  : MEASURABLE_SERVICES[service.slug]
-                    ? "#instant-quote"
-                    : "#quote-request"
-            }
-            className="nav-book-btn"
-          >
-            {MEASURABLE_SERVICES[service.slug]
-              ? "INSTANT QUOTE"
-              : service.slug === "bin-cleaning" || service.slug === "solar-panel-cleaning"
-                ? "BOOK NOW"
-                : "GET A PRICE"}
-          </a>
-        </nav>
-      </header>
+      <SiteHeader
+        commercial={service.slug === "commercial-cleaning"}
+        cta={{
+          href:
+            service.slug === "bin-cleaning"
+              ? "#bin-booking"
+              : service.slug === "solar-panel-cleaning"
+                ? "#solar-booking"
+                : MEASURABLE_SERVICES[service.slug]
+                  ? "#instant-quote"
+                  : "#quote-request",
+          label: MEASURABLE_SERVICES[service.slug]
+            ? "Instant quote"
+            : service.slug === "bin-cleaning" || service.slug === "solar-panel-cleaning"
+              ? "Book now"
+              : "Get a price",
+        }}
+      />
 
       <section className="service-hero">
         <div className="service-hero-copy">
@@ -211,22 +181,7 @@ export default function ServicePageClient({
         )}
       </nav>
 
-      <footer className="service-footer">
-        <span>
-          {service.slug === "commercial-cleaning"
-            ? "CBC EXTERIOR & PROPERTY MAINTENANCE · CAIRNS BIN CLEANING"
-            : "CAIRNS BIN CLEANING"}
-        </span>
-        <nav>
-          <Link href="/service-areas">Areas</Link>
-          <Link href="/faq">FAQ</Link>
-          <Link href="/about">About</Link>
-          <Link href="/prices">Prices</Link>
-          <Link href="/privacy">Privacy</Link>
-          <Link href="/terms">Terms</Link>
-        </nav>
-        <small className="madeBy">Created by <a href="/faq#siezar-dewaal">Siezar DeWaal</a></small>
-      </footer>
+      <SiteFooter commercial={service.slug === "commercial-cleaning"} />
     </main>
   );
 }
