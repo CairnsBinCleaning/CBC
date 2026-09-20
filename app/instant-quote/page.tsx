@@ -9,7 +9,7 @@ const siteUrl =
   process.env.NEXT_PUBLIC_SITE_URL || "https://www.cairnsbincleaning.com.au";
 
 export const metadata: Metadata = {
-  title: "Instant Quote — Measure Your Driveway or Roof | Cairns Bin Cleaning",
+  title: "Instant Cleaning Quote Cairns | Measure It on the Map",
   description:
     "Measure your own driveway, roof, patio or car park on satellite imagery and get a Cairns pressure cleaning price on the spot. No call-back, no site visit to get started.",
   alternates: { canonical: "/instant-quote" },
