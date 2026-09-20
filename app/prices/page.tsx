@@ -3,6 +3,8 @@ import Link from "next/link";
 import { services } from "../../lib/services";
 import { SUBURB_NOTE } from "../../lib/pricing";
 import { QUOTE_CONFIG } from "../../lib/quote";
+import SiteHeader from "../../components/SiteHeader";
+import SiteFooter from "../../components/SiteFooter";
 
 export const metadata: Metadata = {
   title: "Prices | Cairns Bin Cleaning",
@@ -14,16 +16,7 @@ export const metadata: Metadata = {
 export default function Prices() {
   return (
     <main className="pricesPage">
-      <header className="nav navLight">
-        <Link href="/" className="brand">
-          <span>CAIRNS</span>
-          <small>BIN CLEANING</small>
-        </Link>
-        <nav>
-          <Link href="/">Home</Link>
-          <a href="tel:+61434052755">0434 052 755</a>
-        </nav>
-      </header>
+      <SiteHeader />
       <section className="pricesHead">
         <p className="eyebrow dark">SKIP THE FLUFF</p>
         <h1>Prices.</h1>
@@ -104,16 +97,7 @@ export default function Prices() {
         get a site visit before a price is locked in.
       </p>
 
-      <footer className="service-footer">
-        <span>CAIRNS BIN CLEANING</span>
-        <nav>
-          <Link href="/service-areas">Areas</Link>
-          <Link href="/faq">FAQ</Link>
-          <Link href="/about">About</Link>
-          <Link href="/privacy">Privacy</Link>
-          <Link href="/terms">Terms</Link>
-        </nav>
-      <small className="madeBy">Created by <a href="/faq#siezar-dewaal">Siezar DeWaal</a></small></footer>
+      <SiteFooter />
     </main>
   );
 }
