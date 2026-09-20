@@ -3,6 +3,8 @@ import Link from "next/link";
 import { calloutZones, SUBURB_NOTE } from "../../lib/pricing";
 import { services } from "../../lib/services";
 import { suburbPages, suburbSlug } from "../../lib/suburbs";
+import SiteHeader from "../../components/SiteHeader";
+import SiteFooter from "../../components/SiteFooter";
 
 export const metadata: Metadata = {
   title: "Service Areas | Cairns Bin Cleaning",
@@ -14,16 +16,7 @@ export const metadata: Metadata = {
 export default function ServiceAreas() {
   return (
     <main className="legalPage">
-      <header className="nav navLight">
-        <Link href="/" className="brand">
-          <span>CAIRNS</span>
-          <small>BIN CLEANING</small>
-        </Link>
-        <nav>
-          <Link href="/">Home</Link>
-          <a href="tel:+61434052755">0434 052 755</a>
-        </nav>
-      </header>
+      <SiteHeader />
 
       <section className="areasHead">
         <p className="eyebrow dark">WHERE WE WORK</p>
@@ -100,14 +93,7 @@ export default function ServiceAreas() {
         </div>
       </section>
 
-      <footer className="legalFooter">
-        <span>CAIRNS BIN CLEANING</span>
-        <nav>
-          <Link href="/">Home</Link>
-          <Link href="/prices">Prices</Link>
-          <Link href="/faq">FAQ</Link>
-        </nav>
-      <small className="madeBy">Created by <a href="/faq#siezar-dewaal">Siezar DeWaal</a></small></footer>
+      <SiteFooter />
     </main>
   );
 }
