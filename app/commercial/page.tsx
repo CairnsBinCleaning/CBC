@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Crumbs from "../../components/Crumbs";
 import Image from "next/image";
 import Link from "next/link";
 import ComplianceDocs from "../../components/ComplianceDocs";
@@ -6,11 +7,12 @@ import WalkthroughForm from "../../components/WalkthroughForm";
 import { commercialPages } from "../../lib/commercial";
 import SiteHeader from "../../components/SiteHeader";
 import SiteFooter from "../../components/SiteFooter";
+import TrustBar from "../../components/TrustBar";
 
 export const metadata: Metadata = {
-  title: "Commercial & Industrial Cleaning Cairns | CBC Exterior & Property Maintenance",
+  title: "Commercial & Industrial Cleaning Cairns | CBC",
   description:
-    "Commercial and industrial cleaning in Cairns: car parks, bin rooms, shopfronts, building and roof washes, graffiti, commercial kitchens and equipment, deep cleans and industrial sites. Insured, scheduled around trading hours.",
+    "Commercial and industrial cleaning in Cairns: car parks, bin rooms, kitchens and equipment, roofs, deep cleans and industrial sites. $20M insured, SWMS ready.",
   alternates: { canonical: "/commercial" },
 };
 
@@ -18,6 +20,7 @@ export default function Commercial() {
   return (
     <main className="legalPage">
       <SiteHeader commercial />
+      <Crumbs trail={[["Commercial", "/commercial"]]} />
 
       <section className="segmentHero">
         <h1>
@@ -31,6 +34,7 @@ export default function Commercial() {
           commercial kitchens and equipment, deep cleans and industrial sites. Walked first, priced in writing,
           scheduled around your trading hours.
         </p>
+        <TrustBar />
       </section>
 
       <section className="commercial-photos" aria-label="Our commercial work">
