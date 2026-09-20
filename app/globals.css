@@ -500,3 +500,15 @@ a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid #4f7d
  .heroActions{display:grid;grid-template-columns:1fr;gap:10px}
  .scrollCue{display:none}
 }
+
+/* Service pages (20 Sept): search copy folded into a closed panel, related
+   services as one line of links instead of a card grid. */
+.seo-story{padding:28px 5vw;background:#f4f2eb;border-top:1px solid #d9d5c6}
+.seo-story summary{cursor:pointer;font-weight:700;font-size:15px;color:#3d4a4e;list-style:none}
+.seo-story summary::-webkit-details-marker{display:none}
+.seo-story summary::after{content:" +";color:#4f7d18}
+.seo-story details[open] summary::after{content:" −"}
+.seo-story h2{font-size:clamp(26px,3vw,36px);margin:20px 0 16px}
+.related-links{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;padding:24px 5vw 40px;background:#f4f2eb;font-size:15px}
+.related-links span{color:#666}
+.related-links a{font-weight:700;color:#376400;text-decoration:underline;text-underline-offset:3px;min-height:44px;display:inline-flex;align-items:center}
