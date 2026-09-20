@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { services } from "../../lib/services";
 import ComplianceDocs from "../../components/ComplianceDocs";
+import WalkthroughForm from "../../components/WalkthroughForm";
 
 export const metadata: Metadata = {
   title: "Strata & Body Corporate Cleaning Cairns | CBC Exterior & Property Maintenance",
@@ -87,6 +88,8 @@ export default function Strata() {
           ))}
         </div>
       </section>
+
+      <WalkthroughForm audience="Strata" />
 
       <section className="legalBody">
         <h2>Getting a strata site scheduled</h2>
