@@ -73,7 +73,7 @@ function serviceJsonLd(service: Service) {
       "@type": "Offer",
       priceCurrency: "AUD",
       price: "14.50",
-      description: "Per solar panel, plus a small suburb loading (none on your bin-clean day)",
+      description: "Per solar panel, same price in every suburb",
     };
   }
 
