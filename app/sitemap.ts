@@ -4,7 +4,7 @@ import { suburbPages } from "../lib/suburbs";
 import { commercialPages } from "../lib/commercial";
 
 const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://www.zacsbinandpressurecleaning.com.au";
+  process.env.NEXT_PUBLIC_SITE_URL || "https://www.cairnsbincleaning.com.au";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const staticRoutes: MetadataRoute.Sitemap = [
@@ -38,6 +38,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     url: `${siteUrl}/commercial/${p.slug}`,
     changeFrequency: "monthly",
     priority: 0.8,
+    /* Our own job photos, so Google Images can show them for local searches. */
+    images: p.photos.map((ph) => `${siteUrl}${ph.src}`),
   }));
 
   return [...staticRoutes, ...serviceRoutes, ...commercialRoutes, ...suburbRoutes];
