@@ -56,9 +56,9 @@ export type RoofMaterial = "metal" | "tile" | "unsure";
 export const ROOF_MATERIALS: { id: RoofMaterial; label: string; rate: number; min: number; desc: string }[] = [
   { id: "metal", label: "Metal", rate: 3.95, min: 590, desc: "Colorbond, zincalume, tin" },
   { id: "tile", label: "Tile", rate: 4.95, min: 690, desc: "Concrete or terracotta tiles" },
-  /* Fibro sheeting on pre-1990 houses can be asbestos cement. High pressure
-     releases fibres, so we look at it first rather than quoting blind. */
-  { id: "unsure", label: "Not sure", rate: 4.95, min: 690, desc: "Or fibro / older sheeting: we check it first" },
+  /* We don't clean asbestos or fibro roofs (Siezar, 20 Sept). "Not sure"
+     becomes a site visit so we can check the roof is metal or tile first. */
+  { id: "unsure", label: "Not sure", rate: 4.95, min: 690, desc: "We check it first. No asbestos or fibro roofs" },
 ];
 
 /* Windows: per pane, every job from $179 (QUOTE_CONFIG.minTotal). */
@@ -103,14 +103,17 @@ export const QUOTE_CONFIG = {
   /* Above either of these, stop quoting a bookable number and ask for a site
      visit. Handing a stranger an instant $4,000 price on work nobody has
      looked at is how you end up doing $4,000 of work for $2,000 of value. */
-  autoQuoteCeiling: { total: 2500, singleAreaM2: 1200 },
+  autoQuoteCeiling: { total: 2000, singleAreaM2: 1200 },
 
-  /* PLACEHOLDER discounts. The suburb travel loading is worked out on the
-     price after the discount. */
+  /* Rebooking offer (Siezar, 20 Sept): nothing is paid up front, you pay
+     after the job. Book your next clean before this one happens, or before
+     we leave the site, and the NEXT clean is 15% off. Today's price never
+     changes, so `discount` (off this job) stays 0 and `nextDiscount` is
+     the promise carried into Jobber for the next visit. */
+  rebookDiscount: 0.15,
   plans: [
-    { id: "once", label: "One-off", discount: 0, blurb: "this time" },
-    { id: "6m", label: "6-monthly", discount: 0.1, blurb: "save 10%" },
-    { id: "12m", label: "Yearly", discount: 0.15, blurb: "save 15%" },
+    { id: "once", label: "Just this clean", discount: 0, nextDiscount: 0, blurb: "pay after the job" },
+    { id: "rebook", label: "Book the next one too", discount: 0, nextDiscount: 0.15, blurb: "15% off the next clean" },
   ],
 
   /* Roof multiplier is 1/cos(pitch) — real geometry. A satellite only sees
@@ -547,7 +550,7 @@ export function quoteTotals(
   const siteVisitReason = !needsSiteVisit
     ? null
     : roofUnsure
-      ? "we check what the roof is made of before quoting it (older fibro sheeting can contain asbestos)"
+      ? "we check what the roof is made of before quoting it (we don't clean asbestos or fibro roofs)"
       : bigArea
       ? `${bigArea.label} is ${bigArea.billable} m² — worth walking before anyone commits`
       : lines.some((l) => (l.storeys || 1) >= 3)
