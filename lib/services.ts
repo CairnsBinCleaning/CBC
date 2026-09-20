@@ -136,7 +136,7 @@ export const services: Service[] = [
       `Driveway cleaning, concrete cleaning, paths, patios and pool surrounds: whether you call it pressure washing, high-pressure cleaning or jet washing, it’s the same job. We work across Cairns central, the Northern Beaches from Machans Beach to Ellis Beach, and the southside through to Gordonvale. Same price in every suburb, with no call-out fee.`,
     ],
     related: ["house-washing", "roof-cleaning", "commercial-cleaning"],
-    seoTitle: "Pressure Washing Cairns | Pressure Cleaning for Driveways & Concrete",
+    seoTitle: "Pressure Cleaning Cairns | Driveways from $2.95/m²",
     seoDescription:
       "Pressure washing and pressure cleaning in Cairns for driveways, concrete, paths and exterior hard surfaces. Local crew, transparent pricing.",
   },
@@ -222,9 +222,9 @@ export const services: Service[] = [
       `Roof cleaning, roof mould removal and roof soft washing across Cairns: from Palm Cove and Trinity Beach through Edge Hill and Whitfield and out to Gordonvale. The price is built on the roof itself. Same price in every suburb, with no call-out fee.`,
     ],
     related: ["solar-panel-cleaning", "gutter-cleaning", "house-washing"],
-    seoTitle: "Roof Cleaning Cairns | Tropical Roof Maintenance",
+    seoTitle: "Roof Cleaning Cairns | Soft Wash from $3.95/m²",
     seoDescription:
-      "Roof cleaning in Cairns for homes and properties affected by tropical mould, algae and grime.",
+      "Roof soft washing in Cairns for mould, lichen and tropical build-up. Metal $3.95/m², tile $4.95/m². Measure your roof online for an instant price.",
   },
   {
     slug: "bin-cleaning",
@@ -311,9 +311,9 @@ export const services: Service[] = [
       "Searching for bin cleaning near me or wheelie bin cleaning in Cairns? We clean household 240L bins fortnightly, every four weeks or as a one-off, across Cairns central, the Northern Beaches and the southside through to Gordonvale. Bin cleaning has nothing added for your suburb, wherever you are.",
     ],
     related: ["pressure-cleaning", "commercial-cleaning"],
-    seoTitle: "Bin Cleaning Cairns | Residential & Commercial Bins",
+    seoTitle: "Bin Cleaning Cairns | Wheelie Bins from $35.95",
     seoDescription:
-      "Residential and commercial bin cleaning in Cairns with recurring and one-off options.",
+      "Wheelie bin cleaning in Cairns: $35.95 fortnightly, $39.95 every four weeks or $74.95 one-off. Water filtered and recycled. Book online in a minute.",
   },
   {
     slug: "window-cleaning",
@@ -345,8 +345,9 @@ export const services: Service[] = [
       `Window washing and glass cleaning for Cairns homes and businesses, from Palm Cove to Gordonvale. The price is built on how many windows, how high they are and how easy they are to reach. Same price in every suburb, with no call-out fee.`,
     ],
     related: ["house-washing", "solar-panel-cleaning"],
-    seoTitle: "Window Cleaning Cairns | Residential & Commercial Glass",
-    seoDescription: "Window cleaning in Cairns for homes and commercial properties.",
+    seoTitle: "Window Cleaning Cairns | From $9.95 a Pane",
+    seoDescription:
+      "Window cleaning in Cairns from $9.95 a pane outside or $14.95 inside and out. Count your panes online for an instant price. No call-out fee.",
   },
   {
     slug: "solar-panel-cleaning",
@@ -354,16 +355,16 @@ export const services: Service[] = [
     tone: "solar",
     media: "/media/solar-clean-harnessed-on-roof-brinsmead.jpg",
     cue: "Panels looking dusty?",
-    short: "Simple per-panel pricing with your suburb added.",
+    short: "Flat $14.50 a panel, any roof, any suburb.",
     price: "From $14.50 per panel",
     eyebrow: "SOLAR PANEL CLEANING",
     keyword: "Solar Panel Cleaning Cairns", // leads the page H1: what people type into Google
     heading: "Count the panels. We’ll do the rest.",
     intro:
-      "$14.50 per panel. Enter your suburb and panel count below and your price is there, and it costs less on your bin-clean day.",
+      "$14.50 per panel, the same in every suburb. Enter your suburb and panel count below and your price is there. Already a bin customer? We can do it on your bin-clean day.",
     priceModel: "$14.50 a panel, simple as that",
     priceDetail:
-      "$14.50 per panel, no matter the roof shape, jobs from $179. Enter your suburb for your exact price; booked on your bin-clean day it costs less.",
+      "$14.50 per panel, no matter the roof shape or the suburb, jobs from $179. No call-out fee.",
     mediaCaption: "Harnessed up, soft brush, nobody standing on the panels.",
     gallery: [
       {
@@ -473,8 +474,9 @@ export const services: Service[] = [
       `Exterior house washing, soft washing and mould removal for render, cladding and weatherboard homes across Cairns central, the Northern Beaches and the southside through to Gordonvale. Same price in every suburb, with no call-out fee.`,
     ],
     related: ["window-cleaning", "roof-cleaning", "pressure-cleaning"],
-    seoTitle: "House Washing Cairns | Exterior House Cleaning",
-    seoDescription: "Exterior house washing in Cairns for tropical grime, mould and buildup.",
+    seoTitle: "House Washing Cairns | Soft Wash from $429",
+    seoDescription:
+      "House washing in Cairns: a soft wash for mould and tropical grime, priced on wall area from $429. Measure your house online for an instant price.",
   },
   {
     slug: "gutter-cleaning",
@@ -506,8 +508,9 @@ export const services: Service[] = [
       `We clear gutters with a gutter vacuum system, so the leaf litter and muck come out through the hose and into the machine. Gutter cleaning is available across Cairns central, the Northern Beaches and the southside through to Gordonvale. Same price in every suburb, with no call-out fee.`,
     ],
     related: ["roof-cleaning", "solar-panel-cleaning", "house-washing"],
-    seoTitle: "Gutter Cleaning Cairns | Residential & Commercial",
-    seoDescription: "Gutter cleaning in Cairns for homes and commercial properties.",
+    seoTitle: "Gutter Cleaning Cairns | From $199, Downpipes Flushed",
+    seoDescription:
+      "Gutter cleaning in Cairns: $199 single storey or $299 double for the first 45 m, downpipes flushed. Instant price online and no call-out fee.",
   },
   {
     slug: "commercial-cleaning",
@@ -591,9 +594,9 @@ export const services: Service[] = [
       "Commercial pressure washing, building washing and exterior cleaning for strata, retail, hospitality and government sites across Cairns and Far North Queensland: car parks, walkways, bin enclosures, building facades and hard surfaces.",
     ],
     related: ["pressure-cleaning", "bin-cleaning", "roof-cleaning"],
-    seoTitle: "Commercial Pressure Cleaning Cairns | Strata & Facilities",
+    seoTitle: "Commercial Pressure Cleaning Cairns | Strata & Sites",
     seoDescription:
-      "Commercial exterior cleaning in Cairns for strata, facilities, hospitality, car parks and businesses.",
+      "Commercial pressure cleaning in Cairns for car parks, bin rooms, shopfronts and strata. $20M insured, SWMS supplied, site walkthrough and written quote.",
   },
 ];
 
