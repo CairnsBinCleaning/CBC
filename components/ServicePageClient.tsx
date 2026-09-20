@@ -124,8 +124,18 @@ export default function ServicePageClient({
                 quality={60}
               />
             ) : (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={service.media} alt={service.mediaCaption} fetchPriority="high" />
+              /* Not in the gallery (window page's IMG_2935 was a 440 KB raw
+                 JPEG on phones). fill = sized by .service-media, still
+                 resized and converted to AVIF/WebP by next/image. */
+              <Image
+                src={service.media}
+                alt={service.mediaCaption}
+                fill
+                sizes="(max-width: 850px) 100vw, 50vw"
+                loading="eager"
+                fetchPriority="high"
+                quality={60}
+              />
             );
           })()}
           <span className="service-media-caption">{service.mediaCaption}</span>
@@ -463,11 +473,9 @@ function SolarExperience() {
         </h2>
 
         <p>
-          $14.50 a panel, flat rate.
-          Add your suburb and we’ll
-          add the loading for your area,
-          or nothing at all on your
-          bin-clean day.
+          $14.50 a panel, flat rate,
+          the same in every suburb.
+          No call-out fee.
         </p>
       </div>
 
@@ -545,7 +553,7 @@ function SolarExperience() {
               onChange={(event) => setOnBinDay(event.target.checked)}
             />
             Do it on my bin-clean day. We&rsquo;re already in your
-            street, so it&rsquo;s cheaper.
+            street.
           </label>
 
           {/* The suburb adjustment is folded into the price, never shown as
