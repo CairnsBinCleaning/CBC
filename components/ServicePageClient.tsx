@@ -187,6 +187,7 @@ export default function ServicePageClient({
           <>
             <Link href="/strata">Strata</Link>
             <Link href="/government">Government</Link>
+            <Link href="/commercial">All commercial &amp; industrial services</Link>
           </>
         )}
       </nav>
