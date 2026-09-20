@@ -534,7 +534,8 @@ export async function bookMeasuredQuote(
 
     if (clientId) {
       const areaWord = lines.length === 1 ? "area" : "areas";
-      await createJobberRequest(clientId, `Measured quote — ${lines.length} ${areaWord}, ${suburb}`);
+      const rebook = totals.plan.nextDiscount > 0 ? ` + BOOKED NEXT CLEAN (${Math.round(totals.plan.nextDiscount * 100)}% off it)` : "";
+      await createJobberRequest(clientId, `Measured quote — ${lines.length} ${areaWord}, ${suburb}${rebook}`);
     }
 
     // Same scope note as every other action in this file: the Client and
@@ -602,9 +603,9 @@ export async function bookMeasuredQuote(
     }
 
     const planLine =
-      totals.saving > 0
-        ? ` On the ${totals.plan.label.toLowerCase()} plan that’s ${money(totals.shownSaving)} off.`
-        : "";
+      totals.plan.nextDiscount > 0
+        ? ` You’re booked for the next one too, and it’s ${Math.round(totals.plan.nextDiscount * 100)}% off. Nothing to pay until after the job.`
+        : " Nothing to pay until after the job.";
 
     const measured = lines
       .map((line) => `${line.label.toLowerCase()} at ${line.billable} ${line.mode === "panels" ? "panels" : "m²"}`)
