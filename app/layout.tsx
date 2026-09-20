@@ -11,7 +11,7 @@ import "./globals.css";
 
 /* Figtree: a warm, rounded sans that stays very readable on phones. Self-
    hosted by next/font at build time, so no request to Google from visitors. */
-const body = Figtree({ subsets: ["latin"], weight: ["400", "500", "600", "700", "800"], display: "swap", variable: "--font-body" });
+const body = Figtree({ subsets: ["latin"], display: "swap", variable: "--font-body" }); // variable font: one file covers every weight
 
 // TODO: once the new domain is chosen, set NEXT_PUBLIC_SITE_URL in .env.local
 // and swap the fallback below. Using the current live legacy domain as a
