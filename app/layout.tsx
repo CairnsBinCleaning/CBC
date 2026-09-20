@@ -6,7 +6,12 @@ import Assistant from "../components/Assistant";
 import { ASSISTANT_ENABLED } from "../lib/assistant";
 import { QUOTE_CONFIG } from "../lib/quote";
 import { GOOGLE_REVIEWS } from "../lib/stats";
+import { Figtree } from "next/font/google";
 import "./globals.css";
+
+/* Figtree: a warm, rounded sans that stays very readable on phones. Self-
+   hosted by next/font at build time, so no request to Google from visitors. */
+const body = Figtree({ subsets: ["latin"], weight: ["400", "500", "600", "700", "800"], display: "swap", variable: "--font-body" });
 
 // TODO: once the new domain is chosen, set NEXT_PUBLIC_SITE_URL in .env.local
 // and swap the fallback below. Using the current live legacy domain as a
@@ -29,11 +34,11 @@ const adsId = process.env.NEXT_PUBLIC_ADS_ID;
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Cairns Exterior Cleaning | Cairns Bin Cleaning",
+    default: "Bin Cleaning & Pressure Washing Cairns | Cairns Bin Cleaning",
     template: "%s",
   },
   description:
-    "Pressure cleaning, bin cleaning, roof cleaning, solar panel cleaning and exterior maintenance across Cairns and FNQ.",
+    `Cairns bin cleaning, pressure washing, roof and house washing. ${GOOGLE_REVIEWS.rating.toFixed(1)} stars from ${GOOGLE_REVIEWS.count} Google reviews. Instant online prices, no call-out fee, pay after the job.`,
   openGraph: {
     siteName: "Cairns Bin Cleaning",
     locale: "en_AU",
@@ -147,7 +152,7 @@ const localBusinessJsonLd = {
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en-AU" data-scroll-behavior="smooth">
+    <html lang="en-AU" data-scroll-behavior="smooth" className={body.variable}>
       <body>
         <script
           type="application/ld+json"
