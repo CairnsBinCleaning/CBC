@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Crumbs from "../../../components/Crumbs";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -7,6 +8,7 @@ import WalkthroughForm from "../../../components/WalkthroughForm";
 import { commercialPages, getCommercialPage } from "../../../lib/commercial";
 import SiteHeader from "../../../components/SiteHeader";
 import SiteFooter from "../../../components/SiteFooter";
+import TrustBar from "../../../components/TrustBar";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.cairnsbincleaning.com.au";
 
@@ -56,6 +58,7 @@ export default async function CommercialNiche({ params }: { params: Promise<{ sl
     <main className="legalPage">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }} />
       <SiteHeader commercial />
+      <Crumbs trail={[["Commercial", "/commercial"], [page.name, `/commercial/${page.slug}`]]} />
 
       <section className="segmentHero">
         <h1>
@@ -71,6 +74,7 @@ export default async function CommercialNiche({ params }: { params: Promise<{ sl
           </a> or call{" "}
           <a href="tel:+61434052755">0434 052 755</a>
         </p>
+        <TrustBar />
       </section>
 
       {page.photos.length > 0 && (
