@@ -5,6 +5,8 @@ import { notFound } from "next/navigation";
 import ComplianceDocs from "../../../components/ComplianceDocs";
 import WalkthroughForm from "../../../components/WalkthroughForm";
 import { commercialPages, getCommercialPage } from "../../../lib/commercial";
+import SiteHeader from "../../../components/SiteHeader";
+import SiteFooter from "../../../components/SiteFooter";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.cairnsbincleaning.com.au";
 
@@ -53,16 +55,7 @@ export default async function CommercialNiche({ params }: { params: Promise<{ sl
   return (
     <main className="legalPage">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }} />
-      <header className="nav navLight">
-        <Link href="/" className="brand">
-          <span>CBC</span>
-          <small>EXTERIOR &amp; PROPERTY MAINTENANCE</small>
-        </Link>
-        <nav>
-          <Link href="/commercial">Commercial</Link>
-          <a href="tel:+61434052755">0434 052 755</a>
-        </nav>
-      </header>
+      <SiteHeader commercial />
 
       <section className="segmentHero">
         <h1>
@@ -138,17 +131,7 @@ export default async function CommercialNiche({ params }: { params: Promise<{ sl
         </p>
       </section>
 
-      <footer className="legalFooter">
-        <span>CBC EXTERIOR &amp; PROPERTY MAINTENANCE · CAIRNS BIN CLEANING</span>
-        <nav>
-          <Link href="/">Home</Link>
-          <Link href="/commercial">Commercial</Link>
-          <Link href="/faq">FAQ</Link>
-        </nav>
-        <small className="madeBy">
-          Created by <a href="/faq#siezar-dewaal">Siezar DeWaal</a>
-        </small>
-      </footer>
+      <SiteFooter commercial />
     </main>
   );
 }
