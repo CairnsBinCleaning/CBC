@@ -8,7 +8,7 @@ import { GUTTER, ROOF_MATERIALS, WINDOW_RATES } from "../../lib/quote";
 // Same fallback used in layout.tsx / sitemap.ts / robots.ts — one legacy
 // placeholder domain until NEXT_PUBLIC_SITE_URL is set in Vercel.
 const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://www.zacsbinandpressurecleaning.com.au";
+  process.env.NEXT_PUBLIC_SITE_URL || "https://www.cairnsbincleaning.com.au";
 
 // Same areaServed list as the LocalBusiness schema in app/layout.tsx —
 // kept identical on purpose so nothing on the site contradicts itself.
