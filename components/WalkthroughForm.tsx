@@ -25,7 +25,14 @@ function isoDay(offset: number) {
   return d.toISOString().slice(0, 10);
 }
 
-export default function WalkthroughForm({ audience = "Strata" }: { audience?: string }) {
+export default function WalkthroughForm({
+  audience = "Strata",
+  options = NEEDS,
+}: {
+  audience?: string;
+  /* Tick-boxes for what the site needs; each commercial page passes its own. */
+  options?: string[];
+}) {
   const [suburb, setSuburb] = useState("");
   const [day, setDay] = useState("");
   const [time, setTime] = useState("Morning");
@@ -99,7 +106,7 @@ export default function WalkthroughForm({ audience = "Strata" }: { audience?: st
         </div>
 
         <div className="walk-needs" role="group" aria-label="What the site needs">
-          {NEEDS.map((n) => (
+          {options.map((n) => (
             <label key={n} className={needs.includes(n) ? "on" : ""}>
               <input
                 type="checkbox"
