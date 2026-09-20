@@ -1,5 +1,7 @@
 import { GOOGLE_REVIEWS } from "../lib/stats";
 
+/* The insurance chip links to /about#check-us, where the certificates are. */
+
 /* The five reasons people feel safe booking, said once, right where they
    decide. Every item is a confirmed fact (lib/stats.ts, the insurance
    certificate, and Siezar's own terms: pay after the job, no call-out fee,
@@ -13,7 +15,9 @@ export default function TrustBar({ dark = false }: { dark?: boolean }) {
         </a>
       </li>
       <li>Local Cairns business</li>
-      <li>$20M insured</li>
+      <li>
+        <a href="/about#check-us">$20M insured</a>
+      </li>
       <li>No call-out fee</li>
       <li>Pay after the job</li>
     </ul>
