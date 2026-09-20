@@ -8,7 +8,8 @@
    Every service listed here is one Siezar confirmed he does (20 Sept 2026):
    car parks and driveways, bin rooms, refuse chutes and commercial bins,
    shopfronts and footpaths, building and roof washes, windows inside and
-   out, commercial kitchens (stainless revitalising, exhaust fans), timber
+   out, commercial kitchens (deep cleans, canopies, exhaust fans; grease traps via a
+   licensed contractor, confirmed 20 Sept), timber
    revitalising and graffiti removal. Photos are real jobs only; pages with
    no real photo simply show none. No prices beyond the site-wide $179
    minimum: commercial work is walked and quoted in writing. */
@@ -239,31 +240,43 @@ export const commercialPages: CommercialPage[] = [
   },
   {
     slug: "commercial-kitchen-cleaning",
-    name: "Commercial kitchens & exhaust fans",
+    name: "Commercial kitchens & exhaust canopies",
     keyword: "Commercial Kitchen Cleaning Cairns",
-    heading: "Kitchens, stainless and exhaust fans, back to clean.",
+    heading: "Kitchen deep cleans, done by an ex-chef.",
     intro:
-      "Grease builds up fast in a busy kitchen. We clean commercial kitchens, revitalise stainless steel, and clean exhaust fans, plus the bin area out the back.",
-    who: "Restaurants, cafés, takeaways, clubs, pubs and food production sites.",
+      "Siezar spent 13 years as a chef before he started cleaning, so he knows where the grease hides and what an inspector looks at. We deep clean the whole kitchen: canopies and filters, exhaust fans, fryers, grills, ovens, cool rooms, walls, floors and drains, plus the bin area out the back. Done after close or before you open.",
+    who: "Restaurants, cafés, takeaways, clubs, pubs, hotels, school and aged care kitchens, and food production sites.",
     covers: [
-      "Commercial kitchen cleaning",
-      "Stainless steel revitalising",
-      "Exhaust fan cleaning",
-      "Kitchen floors and walls",
-      "Bin areas and grease-stained concrete out the back",
+      "Exhaust canopies, hoods and filters",
+      "Exhaust fans and ductwork",
+      "Fryers, grills, salamanders, ovens and combi ovens",
+      "Stainless steel benches and splashbacks, revitalised",
+      "Cool rooms, freezers and door seals",
+      "Walls, ceilings, floors and floor drains, degreased",
+      "Pre-inspection deep cleans before a food licence inspection",
+      "Bin areas, loading docks and grease-stained concrete out the back",
+      "Grease trap pump-outs, arranged through a licensed waste contractor",
     ],
     searches:
-      "Also searched as restaurant kitchen cleaning, stainless steel cleaning, exhaust fan cleaning, kitchen deep clean and café kitchen cleaning in Cairns.",
+      "Also searched as restaurant kitchen cleaning, kitchen deep clean, exhaust canopy cleaning, rangehood cleaning, kitchen exhaust cleaning, stainless steel cleaning, cool room cleaning, grease trap cleaning and café kitchen cleaning in Cairns.",
     photos: [],
     faq: [
       { q: "Can you clean after close?", a: HOURS },
+      {
+        q: "Do you know how a commercial kitchen works?",
+        a: "Yes. Siezar was a chef for 13 years, so the equipment gets cleaned the way a kitchen needs it: food-safe chemicals, everything back where your team expects it, and ready for service.",
+      },
+      {
+        q: "Do you do grease traps?",
+        a: "Yes, we arrange grease trap pump-outs through a licensed liquid waste contractor, so you have one person to call for the whole kitchen.",
+      },
       { q: "How is it priced?", a: HOW_PRICED },
       { q: "Are you insured?", a: INSURED },
     ],
-    needs: ["Kitchen clean", "Stainless revitalising", "Exhaust fans", "Floors / walls", "Bin area out back"],
-    seoTitle: "Commercial Kitchen Cleaning Cairns | Stainless Steel & Exhaust Fan Cleaning",
+    needs: ["Full kitchen deep clean", "Canopies / filters", "Exhaust fans / ducts", "Fryers / ovens / grills", "Cool rooms", "Floors / walls / drains", "Grease trap", "Bin area out back"],
+    seoTitle: "Commercial Kitchen Cleaning Cairns | Canopy, Exhaust & Deep Cleans",
     seoDescription:
-      "Commercial kitchen cleaning in Cairns: stainless steel revitalising, exhaust fan cleaning, floors, walls and bin areas for restaurants, cafés and clubs.",
+      "Commercial kitchen deep cleaning in Cairns by an ex-chef: exhaust canopies, filters, fans, fryers, ovens, cool rooms, floors and drains. After close. Insured.",
   },
 ];
 
