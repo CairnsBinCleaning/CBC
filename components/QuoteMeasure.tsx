@@ -1172,6 +1172,12 @@ export default function QuoteMeasure({
                   <span>−{money(totals.shownSaving)}</span>
                 </div>
               )}
+              {totals.plan.nextDiscount > 0 && !totals.needsSuburb && totals.grand > 0 && (
+                <div className={`${styles.r} ${styles.save}`}>
+                  <span>Next clean {Math.round(totals.plan.nextDiscount * 100)}% off</span>
+                  <span>−{money(Math.round(totals.grand * totals.plan.nextDiscount))}</span>
+                </div>
+              )}
               {totals.minimumApplied && !totals.needsSuburb && (
                 <div className={styles.r}>
                   <span>Jobs start from {money(QUOTE_CONFIG.minTotal)}</span>
