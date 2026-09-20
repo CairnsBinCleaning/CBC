@@ -108,9 +108,9 @@ const localBusinessJsonLd = {
      the same business. */
   sameAs: [
     GOOGLE_REVIEWS.url,
-    // The same social profiles listed on the Google Business Profile.
-    "https://www.facebook.com/profile.php?id=61563802126667",
-    "https://www.instagram.com/zacsbinandpressurecleaning/",
+    // The business's own social profiles (current pages, 20 Sept).
+    "https://www.facebook.com/CairnsBinCleaning/",
+    "https://www.instagram.com/cairnsbincleaning/",
     "https://www.youtube.com/@zacsbinandpressurecleaning",
   ],
   founder: { "@type": "Person", "@id": `${siteUrl}/faq#siezar-dewaal`, name: "Siezar DeWaal" },
