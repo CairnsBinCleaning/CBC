@@ -7,7 +7,7 @@ import SiteFooter from "../../components/SiteFooter";
 export const metadata: Metadata = {
   title: "FAQ | Cairns Bin Cleaning",
   description:
-    "Cairns prices for driveways, roofs, house washing, gutters, windows, solar and bins, plus suburb loadings, areas, cancellations and insurance, answered plainly.",
+    "Cairns prices for driveways, roofs, house washing, gutters, windows, solar and bins, one price in every suburb, areas, cancellations and insurance, answered plainly.",
   alternates: { canonical: "/faq" },
 };
 
@@ -23,7 +23,7 @@ const faqs: { q: string; text: string; link?: { href: string; label: string }; i
   },
   {
     q: "Is there an extra fee for my suburb?",
-    text: "No call-out fee. Prices are adjusted a little for how far your suburb is from our base: a few percent, least on the southside and most on the Northern Beaches. The instant quote and calculators include it, so the price you see for your address is the price you pay. Bins cost the same everywhere, and solar costs less when it's booked on your bin-clean day.",
+    text: "No. There's no call-out fee and no suburb charge: the same price from Palm Cove to Gordonvale. The price you see for your address is the price you pay.",
     link: { href: "/terms", label: "Full detail in our terms" },
   },
   {
@@ -71,7 +71,7 @@ const faqs: { q: string; text: string; link?: { href: string; label: string }; i
   },
   {
     q: "How much does solar panel cleaning cost?",
-    text: "$14.50 per panel, jobs from $179. Enter your suburb for your exact price; it costs less when it's booked on your bin-clean day.",
+    text: "$14.50 per panel, jobs from $179. Count your panels on the solar page for your exact total.",
     link: { href: "/solar-panel-cleaning", label: "Enter your panel count" },
   },
   {
