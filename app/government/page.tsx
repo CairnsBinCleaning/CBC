@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Crumbs from "../../components/Crumbs";
 import Link from "next/link";
 import { services } from "../../lib/services";
 import ComplianceDocs from "../../components/ComplianceDocs";
@@ -7,7 +8,7 @@ import SiteHeader from "../../components/SiteHeader";
 import SiteFooter from "../../components/SiteFooter";
 
 export const metadata: Metadata = {
-  title: "Government & Procurement Cleaning Cairns | CBC Exterior & Property Maintenance",
+  title: "Government & Council Cleaning Contractor Cairns | CBC",
   description:
     "Exterior cleaning capability for government, council and procurement panels in Cairns and Far North Queensland — ABN-verified, documented scope, scheduled site work.",
   alternates: { canonical: "/government" },
@@ -27,6 +28,7 @@ export default function Government() {
   return (
     <main className="legalPage">
       <SiteHeader commercial />
+      <Crumbs trail={[["Commercial", "/commercial"], ["Government & procurement", "/government"]]} />
 
       <section className="segmentHero">
         <p className="eyebrow dark">GOVERNMENT &amp; PROCUREMENT</p>
