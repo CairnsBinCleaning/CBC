@@ -26,10 +26,11 @@ import {
 } from "../lib/jobber/actions";
 
 import { windowQuote, WINDOW_RATES, type WindowType } from "../lib/quote";
-import QuoteMeasure from "./QuoteMeasure";
+import LazyQuote from "./LazyQuote";
 import ServiceGallery from "./ServiceGallery";
 import SiteHeader from "./SiteHeader";
 import TrustBar from "./TrustBar";
+import FormPromise from "./FormPromise";
 import ComplianceDocs from "./ComplianceDocs";
 import ReviewQuotes from "./ReviewQuotes";
 import { useLeadEvent } from "./Analytics";
@@ -230,7 +231,7 @@ function ServiceInteraction({
       {signature}
 
       {quoteService && (
-        <QuoteMeasure
+        <LazyQuote
           defaultService={quoteService}
           heading={QUOTE_HEADINGS[slug]?.heading ?? "Measure it yourself. Get the price now."}
           intro={
@@ -433,6 +434,7 @@ function BinBookingForm() {
           ? "SENDING…"
           : "LOCK IN MY BIN CLEAN →"}
       </button>
+      <FormPromise />
 
       {result && (
         <p
@@ -620,6 +622,7 @@ function SolarExperience() {
             ? "SENDING…"
             : "LOCK IN MY SOLAR CLEAN →"}
         </button>
+        <FormPromise />
 
         {result && (
           <p
@@ -838,6 +841,7 @@ function QuoteRequestForm({ slug }: { slug: string }) {
         <button type="submit" disabled={pending}>
           {pending ? "SENDING…" : "SEND MY QUOTE REQUEST →"}
         </button>
+        <FormPromise />
 
         {result && (
           <p className={result.ok ? "bin-booking-status bin-booking-ok" : "bin-booking-status bin-booking-error"}>
