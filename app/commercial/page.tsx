@@ -3,6 +3,8 @@ import Link from "next/link";
 import ComplianceDocs from "../../components/ComplianceDocs";
 import WalkthroughForm from "../../components/WalkthroughForm";
 import { commercialPages } from "../../lib/commercial";
+import SiteHeader from "../../components/SiteHeader";
+import SiteFooter from "../../components/SiteFooter";
 
 export const metadata: Metadata = {
   title: "Commercial Exterior Cleaning Cairns | CBC Exterior & Property Maintenance",
@@ -14,16 +16,7 @@ export const metadata: Metadata = {
 export default function Commercial() {
   return (
     <main className="legalPage">
-      <header className="nav navLight">
-        <Link href="/" className="brand">
-          <span>CBC</span>
-          <small>EXTERIOR &amp; PROPERTY MAINTENANCE</small>
-        </Link>
-        <nav>
-          <Link href="/">Home</Link>
-          <a href="tel:+61434052755">0434 052 755</a>
-        </nav>
-      </header>
+      <SiteHeader commercial />
 
       <section className="segmentHero">
         <h1>
@@ -61,17 +54,7 @@ export default function Commercial() {
         options={["Car park", "Bin room / refuse chute", "Shopfront / footpath", "Building / roof wash", "Graffiti", "Kitchen / exhaust fans", "Windows"]}
       />
 
-      <footer className="legalFooter">
-        <span>CBC EXTERIOR &amp; PROPERTY MAINTENANCE · CAIRNS BIN CLEANING</span>
-        <nav>
-          <Link href="/">Home</Link>
-          <Link href="/strata">Strata</Link>
-          <Link href="/faq">FAQ</Link>
-        </nav>
-        <small className="madeBy">
-          Created by <a href="/faq#siezar-dewaal">Siezar DeWaal</a>
-        </small>
-      </footer>
+      <SiteFooter commercial />
     </main>
   );
 }
