@@ -489,10 +489,10 @@ a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid #4f7d
    banners still show). */
 @media(max-width:850px){
  .seasonal-banner[data-banner=default]{display:none}
- .heroScene .nav nav a.nav-call{display:inline-flex;align-items:center;padding:10px 16px;border-radius:999px;background:#79c51d;color:#0d1410;font-weight:900;letter-spacing:.08em;font-size:11px}
+ .heroScene .nav nav a.nav-call{display:inline-flex;align-items:center;padding:10px 16px;border-radius:999px;background:#79c51d;color:#0d1410;font-weight:900;letter-spacing:.06em;font-size:13px}
  .heroScene .nav nav .nav-book-btn{display:none}
  .heroCopy{bottom:9vh}
- .heroCopy .eyebrow{font-size:10px;letter-spacing:.16em;margin-bottom:14px}
+ .heroCopy .eyebrow{font-size:12px;letter-spacing:.12em;margin-bottom:14px}
  .heroCopy h1{font-size:58px}
  .heroCopy .leadHook{display:none}
  .heroCopy .lead{margin:20px 0 26px}
@@ -512,3 +512,28 @@ a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid #4f7d
 .related-links{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;padding:24px 5vw 40px;background:#f4f2eb;font-size:15px}
 .related-links span{color:#666}
 .related-links a{font-weight:700;color:#376400;text-decoration:underline;text-underline-offset:3px;min-height:44px;display:inline-flex;align-items:center}
+
+/* Shared header/footer (20 Sept). Phones keep brand, phone and one button. */
+.main-header nav a{min-height:44px;display:inline-flex;align-items:center}
+.service-footer .footer-phone{font-weight:800;letter-spacing:.04em;color:#fff}
+.service-footer nav a{min-height:44px;display:inline-flex;align-items:center}
+@media(max-width:850px){
+ .main-header .nav-extra{display:none}
+ .main-header nav a[href^="tel:"]{font-size:12px}
+}
+
+/* Type floor (20 Sept): readable text never below 12px, buttons 13px and at
+   least 44px tall. Keeps the look (caps, letter-spacing), fixes the size. */
+.eyebrow,.h1-kicker,.back-home,.service-media-caption,.gallery-role,.gallery-figure figcaption strong,
+.bin-plan-badge,.bin-plan-option strong,.serviceList a span,.previewCopy em,.quoteSteps b,
+.madeBy,.madeBy a,.service-footer>span,.legalFooter>span,.trust-money small,
+.document-grid article>span,.document-grid article>small,.abn-verify-link,.zone-card>span{font-size:12px}
+.brand small,.main-header .brand span{font-size:9px}
+.primary,.ghost,.nav-book-btn,.nav-call,form.bin-booking>button,.quoteActions .primary{font-size:13px;min-height:44px}
+.pane-type button,.walk-times button{min-height:44px}
+.abn-verify-link,.back-home,.quoteAlt,.service-footer .footer-phone{min-height:44px;display:inline-flex;align-items:center}
+.service-hero-copy .back-home{font-size:12px}
+.prototype-interaction form.bin-booking>button,.bin-interaction form.bin-booking>button{font-size:13px}
+/* One heading voice: same weight as the homepage and service pages. */
+.pricesHead h1,.legalHead h1,.areasHead h1,.segmentHero h1{font-weight:500;letter-spacing:-.05em}
+@media(max-width:850px){.pricesHead h1,.legalHead h1,.areasHead h1,.segmentHero h1{font-size:46px;line-height:.95}}
