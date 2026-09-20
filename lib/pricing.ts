@@ -109,8 +109,9 @@ export function zoneFromAddress(label: string): ZoneMatch | null {
 }
 
 /* Solar price, shared by the calculator and the booking action so they can
-   never disagree. Booked on the customer's bin-clean day, we're already in
-   the street, so the suburb loading comes off. */
+   never disagree. The bin-clean-day option took the suburb loading off;
+   with every loading at 0 (20 Sept) it no longer changes the price and is
+   kept only so the booking says which day suits. */
 export function solarQuote(panels: number, suburb: string, onBinDay: boolean) {
   /* Every job from $179 (lib/quote.ts QUOTE_CONFIG.minTotal). */
   const subtotal = Math.max(Math.round(panels * SOLAR_RATE * 100) / 100, SOLAR_MIN);
