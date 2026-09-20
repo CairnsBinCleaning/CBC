@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { services } from "../../lib/services";
 import ComplianceDocs from "../../components/ComplianceDocs";
+import WalkthroughForm from "../../components/WalkthroughForm";
 
 export const metadata: Metadata = {
   title: "Government & Procurement Cleaning Cairns | CBC Exterior & Property Maintenance",
@@ -58,6 +59,8 @@ export default function Government() {
           ))}
         </div>
       </section>
+
+      <WalkthroughForm audience="Government / council" />
 
       <section className="legalBody">
         <h2>Procurement enquiries</h2>
