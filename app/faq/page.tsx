@@ -25,6 +25,15 @@ const faqs: { q: string; text: string; link?: { href: string; label: string }; i
     link: { href: "/terms", label: "Full detail in our terms" },
   },
   {
+    q: "Do I pay up front?",
+    text: `No. You pay after the job's done. Book your next clean before this one, or before we leave the site, and the next one is ${Math.round(QUOTE_CONFIG.rebookDiscount * 100)}% off.`,
+  },
+  {
+    q: "Do you clean asbestos or fibro roofs?",
+    text: "No. We soft wash metal and tile roofs only. If you're not sure what your roof is, pick “Not sure” in the instant quote and we'll check it before quoting.",
+    link: { href: "/roof-cleaning", label: "Roof cleaning" },
+  },
+  {
     q: "Is there a minimum charge?",
     text: `Every job starts from $${QUOTE_CONFIG.minTotal}, GST included. Bin cleaning has its own prices and isn't affected.`,
   },
@@ -40,7 +49,7 @@ const faqs: { q: string; text: string; link?: { href: string; label: string }; i
   },
   {
     q: "How much does roof cleaning cost?",
-    text: `We soft wash roofs. Metal is $${METAL.rate.toFixed(2)}/m² (from $${METAL.min}), tile $${TILE.rate.toFixed(2)}/m² (from $${TILE.min}), priced on the real roof area with the slope added. Older fibro roofs get looked at before we quote.`,
+    text: `We soft wash roofs. Metal is $${METAL.rate.toFixed(2)}/m² (from $${METAL.min}), tile $${TILE.rate.toFixed(2)}/m² (from $${TILE.min}), priced on the real roof area with the slope added. We don't clean asbestos or fibro roofs.`,
     link: { href: "/roof-cleaning", label: "Measure your roof" },
   },
   {
