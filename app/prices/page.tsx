@@ -43,8 +43,7 @@ export default function Prices() {
         <div>
           <h3>No call-out fee</h3>
           <p>
-            {SUBURB_NOTE} Bins cost the same everywhere, and solar costs less
-            when it&rsquo;s booked on your bin-clean day.
+            {SUBURB_NOTE}
           </p>
         </div>
         <div>
@@ -89,9 +88,8 @@ export default function Prices() {
         </div>
       </section>
       <p className="priceNote">
-        All prices include GST and vary a little by suburb; the
-        calculators show your exact price. Bins cost the same
-        everywhere. Big or
+        All prices include GST and are the same in every suburb; the
+        calculators show your exact price. Big or
         unusual jobs (over ${QUOTE_CONFIG.autoQuoteCeiling.total.toLocaleString("en-AU")}, over{" "}
         {QUOTE_CONFIG.autoQuoteCeiling.singleAreaM2.toLocaleString("en-AU")} m² or 3+ storeys)
         get a site visit before a price is locked in.
