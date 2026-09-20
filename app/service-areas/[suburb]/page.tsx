@@ -99,9 +99,10 @@ export default async function SuburbPage({
       <section className="suburbJobs">
         <h2>Our work in {page.name}.</h2>
         <div className="suburbJobGrid">
-          {page.jobs.map(({ photo, service }) => (
+          {page.jobs.map(({ photo, service }, i) => (
             <figure key={photo.src}>
               <Image
+                priority={i === 0}
                 src={photo.src}
                 alt={photo.alt}
                 width={photo.width}
