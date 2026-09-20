@@ -1,6 +1,10 @@
 'use client';
-import Image from 'next/image';import Link from 'next/link';import {useEffect,useState} from 'react';import AtmosphereCanvas from './AtmosphereCanvas';import LiveStat from './LiveStat';import {services} from '../lib/services';import {LIFETIME_BIN_CLEANS,GOOGLE_REVIEWS} from '../lib/stats';
-export default function HomeExperience(){const [active,setActive]=useState(0);const s=services[active];return <main className={'site tone-'+s.tone}>
+import Image from 'next/image';import Link from 'next/link';import {useEffect,useState} from 'react';import AtmosphereCanvas from './AtmosphereCanvas';import LiveStat from './LiveStat';import ReviewQuotes from './ReviewQuotes';import {services} from '../lib/services';import {track} from '../lib/analytics';import {LIFETIME_BIN_CLEANS,GOOGLE_REVIEWS} from '../lib/stats';
+export default function HomeExperience(){const [active,setActive]=useState(0);const s=services[active];
+/* Which services people look at (GA4 service_interest), for smarter suggestions later. Skips the default first render. */
+useEffect(()=>{if(active!==0)track('service_interest',{service:services[active].slug,where:'home'})},[active]);
+return HomeBody({active,setActive,s})}
+function HomeBody({active,setActive,s}:{active:number;setActive:(i:number)=>void;s:(typeof services)[number]}){return <main className={'site tone-'+s.tone}>
  <section className="heroScene">
   <Image className="heroVideo" src="/media/IMG_3027.jpg" alt="" fill priority sizes="100vw" quality={60}/><HeroVideo/>
   <div className="heroWash"/><div className="ambientOrb"/><AtmosphereCanvas/>
@@ -16,6 +20,7 @@ export default function HomeExperience(){const [active,setActive]=useState(0);co
   </div>
  </section>
  <section className="proofScene"><div><p className="eyebrow dark">REAL CAIRNS WORK</p><h2>Not stock photos.<br/>Not made-up jobs.</h2><p>Every photo here is our own work around Cairns: homes, commercial sites, bins, concrete and tropical exterior maintenance. Fully insured, and the work is guaranteed.</p><a className="reviewBadge" href={GOOGLE_REVIEWS.url} target="_blank" rel="noopener noreferrer"><b>{GOOGLE_REVIEWS.rating.toFixed(1)} ★</b><span>from {GOOGLE_REVIEWS.count} Google reviews →</span></a>{LIFETIME_BIN_CLEANS!=null&&<LiveStat count={LIFETIME_BIN_CLEANS}/>}</div><div className="proofGrid"><Image src="/media/IMG_3031.jpg" alt="Cleaned concrete in Cairns" width={2000} height={1500} sizes="(max-width: 850px) 60vw, 30vw" quality={65}/><Image src="/media/IMG_2935.jpg" alt="Clean commercial walkway" width={1500} height={2000} sizes="(max-width: 850px) 40vw, 20vw" quality={65}/><Image src="/media/IMG_2902.jpg" alt="Real Cairns job site" width={1500} height={2000} sizes="(max-width: 850px) 40vw, 20vw" quality={65}/></div></section>
+ <ReviewQuotes slug="home"/>
  <section className="quoteScene"><p className="eyebrow">NO MYSTERY QUOTE</p><h2>Draw it. Price it.<br/>Book it.</h2><p>Type your address, tap the corners of your driveway, roof, patio or car park on the satellite photo, and the price works itself out as you go. Accept it and the job is booked.</p>
   <ol className="quoteSteps"><li><b>1</b><span>Find your place</span><small>Type the address, the map lands on your roof</small></li><li><b>2</b><span>Tap the corners</span><small>Square metres and price appear as you draw</small></li><li><b>3</b><span>Accept the price</span><small>We text you to lock in the day</small></li></ol>
   <div className="quoteActions"><Link href="/instant-quote" className="primary light">Measure it now →</Link><Link href="/prices" className="quoteAlt">Or just show me the price list</Link></div>
