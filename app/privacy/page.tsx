@@ -36,12 +36,19 @@ export default function Privacy() {
           quote and book the job.
         </p>
 
-        <h2>What we don’t collect (yet)</h2>
+        <h2>Website statistics and ads</h2>
         <p>
-          This site does not currently run analytics tracking. If that
-          changes, this page will say so, and it will only ever be
-          aggregate, anonymous traffic data — not anything tied to your
-          booking details.
+          This site uses Google Analytics to count which pages people visit,
+          and Google Ads conversion tracking to count how many bookings and
+          quote requests came from our ads. These use cookies and collect
+          general usage information such as the pages viewed, the type of
+          device and a rough location. We don&rsquo;t send your name, phone
+          number, email or address to Google. You can block these cookies in
+          your browser settings or with Google&rsquo;s{" "}
+          <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener noreferrer">
+            Analytics opt-out add-on
+          </a>
+          , and the site still works the same.
         </p>
 
         <h2>How we use it</h2>
@@ -57,7 +64,7 @@ export default function Privacy() {
         <p>
           Jobber Technologies Inc. processes your booking details on our
           behalf as our scheduling and invoicing platform. We don’t hand
-          your details to any other third party. If a future integration
+          your booking details to any other third party. If a future integration
           changes that, this page will be updated to say exactly who and
           why before it happens.
         </p>
