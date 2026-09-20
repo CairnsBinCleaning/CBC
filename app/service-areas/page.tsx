@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Crumbs from "../../components/Crumbs";
 import Link from "next/link";
 import { calloutZones, SUBURB_NOTE } from "../../lib/pricing";
 import { services } from "../../lib/services";
@@ -7,7 +8,7 @@ import SiteHeader from "../../components/SiteHeader";
 import SiteFooter from "../../components/SiteFooter";
 
 export const metadata: Metadata = {
-  title: "Service Areas | Cairns Bin Cleaning",
+  title: "Service Areas: Gordonvale to Palm Cove | Cairns Bin Cleaning",
   description:
     "Cairns Bin Cleaning services Cairns City, the Northern Beaches and the southside suburbs through to Gordonvale — bin cleaning, pressure cleaning, window cleaning and more.",
   alternates: { canonical: "/service-areas" },
@@ -17,6 +18,7 @@ export default function ServiceAreas() {
   return (
     <main className="legalPage">
       <SiteHeader />
+      <Crumbs trail={[["Service areas", "/service-areas"]]} />
 
       <section className="areasHead">
         <p className="eyebrow dark">WHERE WE WORK</p>
