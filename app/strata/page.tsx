@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Crumbs from "../../components/Crumbs";
 import Link from "next/link";
 import { services } from "../../lib/services";
 import ComplianceDocs from "../../components/ComplianceDocs";
@@ -7,7 +8,7 @@ import SiteHeader from "../../components/SiteHeader";
 import SiteFooter from "../../components/SiteFooter";
 
 export const metadata: Metadata = {
-  title: "Strata & Body Corporate Cleaning Cairns | CBC Exterior & Property Maintenance",
+  title: "Strata & Body Corporate Cleaning Cairns | CBC",
   description:
     "Recurring exterior maintenance for strata and body corporate properties in Cairns — pressure cleaning, window and gutter cleaning, refuse rooms and bins, scheduled around occupancy.",
   alternates: { canonical: "/strata" },
@@ -29,6 +30,7 @@ export default function Strata() {
   return (
     <main className="legalPage">
       <SiteHeader commercial />
+      <Crumbs trail={[["Commercial", "/commercial"], ["Strata & body corporate", "/strata"]]} />
 
       <section className="segmentHero">
         <p className="eyebrow dark">STRATA &amp; BODY CORPORATE</p>
