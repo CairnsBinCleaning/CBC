@@ -2,11 +2,19 @@
 // current figure — the same discipline as calloutZones in pricing.ts,
 // which never invents a call-out fee it doesn't actually have yet.
 //
-// Set LIFETIME_BIN_CLEANS to the real count before this ships. Leave it
-// null to keep the homepage stat hidden rather than show a guessed number
-// — components/LiveStat.tsx only renders when this is a real number.
+// Lifetime bins cleaned: Siezar's count, 42,756 on 20 Sept 2026, growing
+// by about 500 a week (his figure). The shown number adds 500 for every
+// full week since then. Re-base `count` and `asOf` whenever he gives a
+// fresh real count, so the estimate never drifts far from the truth.
+export const BIN_CLEANS = { count: 42756, asOf: "2026-09-20", perWeek: 500 };
 
-export const LIFETIME_BIN_CLEANS: number | null = null;
+export function lifetimeBinCleans(now: Date = new Date()): number {
+  const weeks = Math.floor((now.getTime() - Date.parse(BIN_CLEANS.asOf)) / (7 * 24 * 3600 * 1000));
+  return BIN_CLEANS.count + Math.max(0, weeks) * BIN_CLEANS.perWeek;
+}
+
+/* Value at build time; LiveStat refreshes it in the browser. */
+export const LIFETIME_BIN_CLEANS: number | null = lifetimeBinCleans();
 
 // Google Business Profile rating, read off the live listing 20 Sept 2026.
 // Update both numbers when they change; the service pages read them from here.
