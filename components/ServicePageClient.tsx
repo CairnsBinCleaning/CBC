@@ -8,10 +8,6 @@ import {
   useState,
 } from "react";
 
-import type {
-  PointerEvent,
-} from "react";
-
 import {
   getService,
   type Service,
@@ -35,7 +31,6 @@ import ComplianceDocs from "./ComplianceDocs";
 import ReviewQuotes from "./ReviewQuotes";
 import { useLeadEvent } from "./Analytics";
 import { serviceFaq } from "../lib/serviceFaq";
-import { GOOGLE_REVIEWS } from "../lib/stats";
 
 /* Which service pages get the satellite measure-and-quote tool, and which
    quote service it opens on.
@@ -56,9 +51,6 @@ export default function ServicePageClient({
 }: {
   service: Service;
 }) {
-  const [audience, setAudience] =
-    useState("HOMEOWNER");
-
   const related = useMemo(
     () =>
       service.related
@@ -174,181 +166,12 @@ export default function ServicePageClient({
         slug={service.slug}
       />
 
-      <section className="who-section">
-        <span className="eyebrow">
-          NEXT STEP
-        </span>
-
-        <h2>
-          Who are we
-          <br />
-          looking after?
-        </h2>
-
-        <p>
-          You chose the service first.
-          Now we make the booking path
-          fit the property.
-        </p>
-
-        <div className="audience-buttons">
-          {[
-            "HOMEOWNER",
-            "STRATA",
-            "BUSINESS",
-            "PROPERTY MANAGER",
-            "GOVERNMENT",
-          ].map((option) => (
-            <button
-              key={option}
-              className={
-                audience === option
-                  ? "selected"
-                  : ""
-              }
-              onClick={() =>
-                setAudience(option)
-              }
-            >
-              {option}
-            </button>
-          ))}
-        </div>
-
-        <div className="audience-result">
-          <span>
-            SELECTED · {audience}
-          </span>
-
-          <strong>
-            {audience === "HOMEOWNER" &&
-              "Give us the property details and move toward a straightforward estimate or booking."}
-
-            {audience === "STRATA" &&
-              "Tell us what you manage. We can build the work into a sensible recurring maintenance schedule."}
-
-            {audience === "BUSINESS" &&
-              "Give us the site, service and operating requirements. Larger work can move directly to an inspection."}
-
-            {audience ===
-              "PROPERTY MANAGER" &&
-              "One property or a portfolio. We want the scope, schedule and communication to be easy to manage."}
-
-            {audience ===
-              "GOVERNMENT" &&
-              "Move toward capability information, verified documents, scope and procurement contact."}
-          </strong>
-
-          <div className="audience-actions">
-            <a
-              href="tel:+61434052755"
-              className="primary-action"
-            >
-              CALL 0434 052 755
-            </a>
-
-            {service.slug === "bin-cleaning" && (
-              <a href="#bin-booking" className="secondary-action">
-                CONTINUE ONLINE →
-              </a>
-            )}
-
-            {audience === "STRATA" && (
-              <Link href="/strata" className="secondary-action">
-                STRATA &amp; BODY CORPORATE →
-              </Link>
-            )}
-
-            {audience === "GOVERNMENT" && (
-              <Link href="/government" className="secondary-action">
-                GOVERNMENT &amp; PROCUREMENT →
-              </Link>
-            )}
-          </div>
-        </div>
-      </section>
+      {/* 20 Sept: one of each. Real photos first, then reviews once, then the
+          questions. The longer search copy sits in a closed panel under the FAQ
+          so Google still reads it without it filling the phone screen. */}
+      <ServiceGallery service={service} />
 
       <ReviewQuotes slug={service.slug} />
-
-      <section className="trust-money">
-        <div>
-          <small>
-            TRUST
-          </small>
-
-          <strong>
-            {GOOGLE_REVIEWS.rating.toFixed(1)} stars from{" "}
-            {GOOGLE_REVIEWS.count} Google reviews.
-          </strong>
-
-          <p>
-            Fully insured and our work is
-            guaranteed. Most jobs are booked
-            in the same week.{" "}
-            <a href={GOOGLE_REVIEWS.url} target="_blank" rel="noopener noreferrer">
-              Read the reviews →
-            </a>
-          </p>
-        </div>
-
-        <div>
-          <small>
-            TRANSPARENCY
-          </small>
-
-          <strong>
-            Know what you’re
-            paying for.
-          </strong>
-
-          <p>
-            Measured service,
-            clear inclusions,
-            access requirements
-            and GST treatment before
-            work starts.
-          </p>
-        </div>
-
-        <div>
-          <small>
-            LONG TERM
-          </small>
-
-          <strong>
-            We’d rather be
-            your next call too.
-          </strong>
-
-          <p>
-            The goal isn’t one clean.
-            It’s becoming the company
-            you trust to look after
-            the boring stuff.
-          </p>
-        </div>
-      </section>
-
-      <section className="seo-story">
-        <span className="eyebrow">
-          CAIRNS PROPERTY CARE
-        </span>
-
-        <h2>
-          {service.seoHeading}
-        </h2>
-
-        {service.seoParagraphs.map(
-          (paragraph) => (
-            <p key={paragraph}>
-              {paragraph}
-            </p>
-          )
-        )}
-      </section>
-
-
-      <ServiceGallery service={service} />
 
       <section className="service-faq" aria-labelledby="service-faq-title">
         <span className="eyebrow">COMMON QUESTIONS</span>
@@ -363,36 +186,30 @@ export default function ServicePageClient({
         </dl>
       </section>
 
-      <section className="related-section">
-        <span className="eyebrow">
-          OFTEN MAKES SENSE TOGETHER
-        </span>
-
-        <h2>
-          While we’re there…
-        </h2>
-
-        <div className="related-grid">
-          {related.map((item) => (
-            <Link
-              key={item.slug}
-              href={`/${item.slug}`}
-            >
-              <small>
-                RELATED SERVICE
-              </small>
-
-              <strong>
-                {item.name}
-              </strong>
-
-              <span>
-                EXPLORE →
-              </span>
-            </Link>
+      <section className="seo-story">
+        <details>
+          <summary>More about {service.name.toLowerCase()} in Cairns</summary>
+          <h2>{service.seoHeading}</h2>
+          {service.seoParagraphs.map((paragraph) => (
+            <p key={paragraph}>{paragraph}</p>
           ))}
-        </div>
+        </details>
       </section>
+
+      <nav className="related-links" aria-label="Related services">
+        <span>While we&rsquo;re there:</span>
+        {related.map((item) => (
+          <Link key={item.slug} href={`/${item.slug}`}>
+            {item.name}
+          </Link>
+        ))}
+        {service.slug === "commercial-cleaning" && (
+          <>
+            <Link href="/strata">Strata</Link>
+            <Link href="/government">Government</Link>
+          </>
+        )}
+      </nav>
 
       <footer className="service-footer">
         <span>
@@ -424,8 +241,6 @@ function ServiceInteraction({
   const signature =
     slug === "bin-cleaning" ? (
       <BinExperience />
-    ) : slug === "pressure-cleaning" ? (
-      <PressureExperience />
     ) : slug === "solar-panel-cleaning" ? (
       <SolarExperience />
     ) : slug === "commercial-cleaning" ? (
@@ -484,100 +299,6 @@ const QUOTE_HEADINGS: Record<string, { heading: string; intro: string }> = {
       "Trace the car park, loading bays or hardstand on satellite imagery for an indicative figure you can put in front of a budget holder. Larger sites still get a proper site visit — this gets the conversation started with a real number.",
   },
 };
-
-/* PRESSURE */
-
-function PressureExperience() {
-  const [position, setPosition] =
-    useState(30);
-
-  function updatePosition(
-    event: PointerEvent<HTMLDivElement>
-  ) {
-    const rect =
-      event.currentTarget.getBoundingClientRect();
-
-    const x =
-      ((event.clientX - rect.left) /
-        rect.width) *
-      100;
-
-    setPosition(
-      Math.max(
-        2,
-        Math.min(98, x)
-      )
-    );
-  }
-
-  return (
-    <section className="prototype-interaction">
-      <div className="interaction-heading">
-        <span className="eyebrow">
-          BEFORE / AFTER
-        </span>
-
-        <h2>
-          You do one pass.
-        </h2>
-
-        <p>
-          Drag the surface cleaner.
-          We’ll do the actual driveway.
-        </p>
-      </div>
-
-      <div
-        className="pressure-demo"
-        onPointerDown={
-          updatePosition
-        }
-        onPointerMove={(event) => {
-          if (
-            event.buttons === 1
-          ) {
-            updatePosition(event);
-          }
-        }}
-      >
-        <div className="clean-concrete" />
-
-        <div
-          className="dirty-concrete"
-          style={{
-            clipPath: `inset(0 0 0 ${position}%)`,
-          }}
-        />
-
-        <div
-          className="surface-cleaner-tool"
-          style={{
-            left: `${position}%`,
-          }}
-        >
-          <span>
-            ◎
-          </span>
-        </div>
-
-        <div
-          className="clean-line"
-          style={{
-            left: `${position}%`,
-          }}
-        />
-      </div>
-
-      <p className="interaction-caption">
-        Satisfying, isn’t it?
-        Even better when you didn’t
-        have to do it.
-      </p>
-    </section>
-  );
-}
-
-/* BIN */
 
 function BinExperience() {
   /* The tap-to-clean bin animation was removed 19 Sept at Siezar's call.
