@@ -13,6 +13,7 @@ export default function SiteFooter({ commercial = false }: { commercial?: boolea
         <Link href="/#services">Services</Link>
         <Link href="/prices">Prices</Link>
         <Link href="/commercial">Commercial</Link>
+        <Link href="/local-work">Local work</Link>
         <Link href="/service-areas">Areas</Link>
         <Link href="/faq">FAQ</Link>
         <Link href="/about">About</Link>
