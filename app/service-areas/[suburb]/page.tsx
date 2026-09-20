@@ -5,6 +5,8 @@ import { notFound } from "next/navigation";
 
 import { services } from "../../../lib/services";
 import { getSuburbPage, suburbPages, suburbSlug } from "../../../lib/suburbs";
+import SiteHeader from "../../../components/SiteHeader";
+import SiteFooter from "../../../components/SiteFooter";
 
 /* One page per suburb where we have real job photos. See lib/suburbs.ts for
    why suburbs without a photo don't get a page. */
@@ -47,16 +49,7 @@ export default async function SuburbPage({
 
   return (
     <main className="legalPage">
-      <header className="nav navLight">
-        <Link href="/" className="brand">
-          <span>CAIRNS</span>
-          <small>BIN CLEANING</small>
-        </Link>
-        <nav>
-          <Link href="/service-areas">Areas</Link>
-          <a href="tel:+61434052755">0434 052 755</a>
-        </nav>
-      </header>
+      <SiteHeader />
 
       <section className="areasHead">
         <h1>
@@ -150,16 +143,7 @@ export default async function SuburbPage({
       </section>
       )}
 
-      <footer className="legalFooter">
-        <span>CAIRNS BIN CLEANING</span>
-        <nav>
-          <Link href="/">Home</Link>
-          <Link href="/service-areas">Areas</Link>
-          <Link href="/prices">Prices</Link>
-          <Link href="/faq">FAQ</Link>
-        </nav>
-        <small className="madeBy">Created by <a href="/faq#siezar-dewaal">Siezar DeWaal</a></small>
-      </footer>
+      <SiteFooter />
     </main>
   );
 }
