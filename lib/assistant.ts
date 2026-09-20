@@ -10,7 +10,7 @@
  * with ASSISTANT_MODEL (default: the fast, cheap Haiku model).
  */
 
-import { calloutZones, loadingSummary } from "./pricing";
+import { calloutZones } from "./pricing";
 import { GUTTER, QUOTE_CONFIG, QUOTE_SERVICES, ROOF_MATERIALS, WINDOW_RATES } from "./quote";
 import { serviceFaq } from "./serviceFaq";
 import { services } from "./services";
@@ -56,7 +56,7 @@ BUSINESS FACTS
 - Fully insured ($20 million public liability), WorkCover and SWMS on file. Work is guaranteed. Most jobs booked in the same week.
 - ${GOOGLE_REVIEWS.rating.toFixed(1)} stars from ${GOOGLE_REVIEWS.count} Google reviews.
 - All prices include GST. Every job starts from $${QUOTE_CONFIG.minTotal} (bins have their own prices).
-- There is no call-out fee. Prices are adjusted a little by suburb (${loadingSummary()}); the calculators and instant quote include it automatically. Don't volunteer the percentages: say prices vary a little by suburb and the calculator shows the exact price for their address. If asked directly, you may give them. Bins cost the same everywhere; solar booked on the customer's bin-clean day has nothing added.
+- There is no call-out fee and no suburb charge: every service is the same price in every suburb we cover. Bins are a set price per visit.
 - Roof soft wash: ${ROOF_MATERIALS.filter((m) => m.id !== "unsure").map((m) => `${m.label.toLowerCase()} $${m.rate.toFixed(2)}/m² (from $${m.min})`).join(", ")}.
 - Gutters: $${GUTTER.base[1]} single storey, $${GUTTER.base[2]} double, first ${GUTTER.includedM} m, then $${GUTTER.perExtraM}/m. Downpipes flushed included.
 - Windows: $${WINDOW_RATES.outside.toFixed(2)} a pane outside only, $${WINDOW_RATES.both.toFixed(2)} inside and out.
