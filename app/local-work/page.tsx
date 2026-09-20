@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Crumbs from "../../components/Crumbs";
 import Image from "next/image";
 import Link from "next/link";
 import SiteHeader from "../../components/SiteHeader";
@@ -16,6 +17,7 @@ export default function LocalWork() {
   return (
     <main className="legalPage">
       <SiteHeader />
+      <Crumbs trail={[["Local work", "/local-work"]]} />
 
       <section className="segmentHero">
         <h1>
