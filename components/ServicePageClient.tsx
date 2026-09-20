@@ -6,6 +6,7 @@ import {
   useActionState,
   useMemo,
   useState,
+  type ReactNode,
 } from "react";
 
 import {
@@ -28,7 +29,7 @@ import { windowQuote, WINDOW_RATES, type WindowType } from "../lib/quote";
 import QuoteMeasure from "./QuoteMeasure";
 import ServiceGallery from "./ServiceGallery";
 import SiteHeader from "./SiteHeader";
-import SiteFooter from "./SiteFooter";
+import TrustBar from "./TrustBar";
 import ComplianceDocs from "./ComplianceDocs";
 import ReviewQuotes from "./ReviewQuotes";
 import { useLeadEvent } from "./Analytics";
@@ -50,8 +51,12 @@ const MEASURABLE_SERVICES: Record<string, string> = {
 
 export default function ServicePageClient({
   service,
+  footer,
 }: {
   service: Service;
+  /* Rendered on the server (app/[slug]/page.tsx) so the footer's link
+     lists don't ship in this page's JavaScript. */
+  footer?: ReactNode;
 }) {
   const related = useMemo(
     () =>
@@ -105,6 +110,8 @@ export default function ServicePageClient({
           <p>
             {service.intro}
           </p>
+
+          <TrustBar />
         </div>
 
         <div className="service-media">
@@ -192,7 +199,7 @@ export default function ServicePageClient({
         )}
       </nav>
 
-      <SiteFooter commercial={service.slug === "commercial-cleaning"} />
+      {footer}
     </main>
   );
 }
