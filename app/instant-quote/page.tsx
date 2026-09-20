@@ -6,7 +6,7 @@ import SiteHeader from "../../components/SiteHeader";
 import SiteFooter from "../../components/SiteFooter";
 
 const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://www.zacsbinandpressurecleaning.com.au";
+  process.env.NEXT_PUBLIC_SITE_URL || "https://www.cairnsbincleaning.com.au";
 
 export const metadata: Metadata = {
   title: "Instant Quote — Measure Your Driveway or Roof | Cairns Bin Cleaning",
