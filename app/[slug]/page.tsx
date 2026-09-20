@@ -49,6 +49,7 @@ function serviceJsonLd(service: Service) {
     areaServed,
     provider: {
       "@type": "LocalBusiness",
+      "@id": `${siteUrl}/#business`,
       name: "Cairns Bin Cleaning",
       telephone: "+61434052755",
       taxID: "36 318 413 406",
