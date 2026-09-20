@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { services } from "../../lib/services";
 import { SUBURB_NOTE } from "../../lib/pricing";
+import { QUOTE_CONFIG } from "../../lib/quote";
 
 export const metadata: Metadata = {
   title: "Prices | Cairns Bin Cleaning",
@@ -98,7 +99,8 @@ export default function Prices() {
         All prices include GST and vary a little by suburb; the
         calculators show your exact price. Bins cost the same
         everywhere. Big or
-        unusual jobs (over $2,500, over 1,200 m² or 3+ storeys)
+        unusual jobs (over ${QUOTE_CONFIG.autoQuoteCeiling.total.toLocaleString("en-AU")}, over{" "}
+        {QUOTE_CONFIG.autoQuoteCeiling.singleAreaM2.toLocaleString("en-AU")} m² or 3+ storeys)
         get a site visit before a price is locked in.
       </p>
 
