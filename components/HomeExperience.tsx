@@ -1,17 +1,19 @@
 'use client';
-import Image from 'next/image';import Link from 'next/link';import {useEffect,useState} from 'react';import AtmosphereCanvas from './AtmosphereCanvas';import LiveStat from './LiveStat';import ReviewQuotes from './ReviewQuotes';import {services} from '../lib/services';import {track} from '../lib/analytics';import {LIFETIME_BIN_CLEANS,GOOGLE_REVIEWS} from '../lib/stats';
-export default function HomeExperience(){const [active,setActive]=useState(0);const s=services[active];
+import Image from 'next/image';import Link from 'next/link';import {useEffect,useState,type ReactNode} from 'react';import AtmosphereCanvas from './AtmosphereCanvas';import LiveStat from './LiveStat';import ReviewQuotes from './ReviewQuotes';import {services} from '../lib/services';import {track} from '../lib/analytics';import {LIFETIME_BIN_CLEANS,GOOGLE_REVIEWS} from '../lib/stats';
+/* trust, owner and business are rendered on the server (app/page.tsx) and slotted in, so their data stays out of this file's JavaScript. */
+export default function HomeExperience({trust,owner,business}:{trust?:ReactNode;owner?:ReactNode;business?:ReactNode}){const [active,setActive]=useState(0);const s=services[active];
 /* Which services people look at (GA4 service_interest), for smarter suggestions later. Skips the default first render. */
 useEffect(()=>{if(active!==0)track('service_interest',{service:services[active].slug,where:'home'})},[active]);
-return HomeBody({active,setActive,s})}
-function HomeBody({active,setActive,s}:{active:number;setActive:(i:number)=>void;s:(typeof services)[number]}){return <main className={'site tone-'+s.tone}>
+return HomeBody({active,setActive,s,trust,owner,business})}
+function HomeBody({active,setActive,s,trust,owner,business}:{active:number;setActive:(i:number)=>void;s:(typeof services)[number];trust?:ReactNode;owner?:ReactNode;business?:ReactNode}){return <main className={'site tone-'+s.tone}>
  <section className="heroScene">
   <Image className="heroVideo" src="/media/IMG_3027.jpg" alt="" fill priority sizes="100vw" quality={60}/><HeroVideo/>
   <div className="heroWash"/><div className="ambientOrb"/><AtmosphereCanvas/>
   <header className="nav"><Link href="/" className="brand"><span>CAIRNS</span><small>BIN CLEANING</small></Link><nav><Link href="#services">Services</Link><Link href="/prices">Prices</Link><Link href="/commercial">Commercial</Link><a href="tel:+61434052755" className="nav-call">0434 052 755</a><Link href="/instant-quote" className="nav-book-btn">Instant quote</Link></nav></header>
-  <div className="heroCopy"><p className="eyebrow">CAIRNS · HOMES · BUSINESSES · STRATA</p><h1>What needs<br/>cleaning?</h1><p className="lead"><span className="leadHook">Driveway gone black? Roof getting green? Bins starting to smell? </span>Measure it yourself on the satellite map and the price appears — no waiting on a call-back.</p><div className="heroActions"><Link href="/instant-quote" className="primary">Get my price now</Link><Link href="/bin-cleaning#bin-booking" className="ghost">Book a bin clean</Link><a href="tel:+61434052755" className="ghost heroCall">Call 0434 052 755</a><a href="#services" className="ghost heroJump">Choose the job</a></div></div>
+  <div className="heroCopy"><h1><span className="eyebrow h1-kicker">Bin cleaning &amp; pressure washing · Cairns</span>What needs<br/>cleaning?</h1><p className="lead"><span className="leadHook">Driveway gone black? Roof getting green? Bins starting to smell? </span>Measure it yourself on the satellite map and the price appears — no waiting on a call-back.</p><div className="heroActions"><Link href="/instant-quote" className="primary">Get my price now</Link><Link href="/bin-cleaning#bin-booking" className="ghost">Book a bin clean</Link><a href="tel:+61434052755" className="ghost heroCall">Call 0434 052 755</a><a href="#services" className="ghost heroJump">Choose the job</a></div><p className="heroReassure">No sign-up · No call-out fee · Pay after the job</p></div>
   <div className="weatherNote"><span className="pulse"/> BUILT FOR CAIRNS CONDITIONS</div><div className="scrollCue">SCROLL <i/></div>
  </section>
+ {trust}
  <section id="services" className="serviceStage">
   <div className="stageIntro"><p className="eyebrow dark">START WITH THE PROBLEM</p><h2>Simple on purpose.</h2><p>No giant form. No hunting through menus. Choose what you need and we’ll take it from there.</p></div>
   <div className="serviceExplorer">
@@ -19,13 +21,14 @@ function HomeBody({active,setActive,s}:{active:number;setActive:(i:number)=>void
    <Link href={'/'+s.slug} className="servicePreview"><Image src={s.media} alt={s.name+' — '+s.short} fill sizes="(max-width: 850px) 100vw, 55vw" quality={75}/><div className="previewShade"/><div className="previewCopy"><small>{s.cue}</small><h3>{s.name}</h3><p>{s.short}</p><strong>{s.price}</strong><em>See service →</em></div></Link>
   </div>
  </section>
+ {business}
  <section className="proofScene"><div><p className="eyebrow dark">REAL CAIRNS WORK</p><h2>Not stock photos.<br/>Not made-up jobs.</h2><p>Every photo here is our own work around Cairns: homes, commercial sites, bins, concrete and tropical exterior maintenance. Fully insured, and the work is guaranteed.</p><a className="reviewBadge" href={GOOGLE_REVIEWS.url} target="_blank" rel="noopener noreferrer"><b>{GOOGLE_REVIEWS.rating.toFixed(1)} ★</b><span>from {GOOGLE_REVIEWS.count} Google reviews →</span></a>{LIFETIME_BIN_CLEANS!=null&&<LiveStat count={LIFETIME_BIN_CLEANS}/>}</div><div className="proofGrid"><Image src="/media/IMG_3031.jpg" alt="Cleaned concrete in Cairns" width={2000} height={1500} sizes="(max-width: 850px) 60vw, 30vw" quality={65}/><Image src="/media/IMG_2935.jpg" alt="Clean commercial walkway" width={1500} height={2000} sizes="(max-width: 850px) 40vw, 20vw" quality={65}/><Image src="/media/IMG_2902.jpg" alt="Real Cairns job site" width={1500} height={2000} sizes="(max-width: 850px) 40vw, 20vw" quality={65}/></div></section>
  <ReviewQuotes slug="home"/>
+ {owner}
  <section className="quoteScene"><p className="eyebrow">NO MYSTERY QUOTE</p><h2>Draw it. Price it.<br/>Book it.</h2><p>Type your address, tap the corners of your driveway, roof, patio or car park on the satellite photo, and the price works itself out as you go. Accept it and the job is booked.</p>
   <ol className="quoteSteps"><li><b>1</b><span>Find your place</span><small>Type the address, the map lands on your roof</small></li><li><b>2</b><span>Tap the corners</span><small>Square metres and price appear as you draw</small></li><li><b>3</b><span>Accept the price</span><small>We text you to lock in the day</small></li></ol>
   <div className="quoteActions"><Link href="/instant-quote" className="primary light">Measure it now →</Link><Link href="/prices" className="quoteAlt">Or just show me the price list</Link></div>
   <p className="quoteFine">Prices include GST. Big or unusual jobs come back as a site visit instead of a number — we&rsquo;d rather look first than guess.</p></section>
- <footer><span>CAIRNS BIN CLEANING</span><a href="tel:+61434052755">0434 052 755</a><nav><Link href="/service-areas">Areas</Link><Link href="/faq">FAQ</Link><Link href="/about">About</Link><Link href="/prices">Prices</Link><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link></nav><small>For a greener, cleaner FNQ.</small><small className="madeBy">Created by <a href="/faq#siezar-dewaal">Siezar DeWaal</a></small></footer>
  </main>}
 
 /* The 3.9 MB hero video only loads on bigger screens with motion allowed and
