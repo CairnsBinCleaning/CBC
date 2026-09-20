@@ -6,6 +6,7 @@
    every other quote form uses. */
 
 import { useActionState, useMemo, useState } from "react";
+import FormPromise from "./FormPromise";
 import { requestServiceQuote, type RequestServiceQuoteResult } from "../lib/jobber/actions";
 import { findCallout } from "../lib/pricing";
 import { useLeadEvent } from "./Analytics";
@@ -131,6 +132,7 @@ export default function WalkthroughForm({
         <button type="submit" disabled={pending}>
           {pending ? "SENDING…" : "REQUEST THE WALKTHROUGH →"}
         </button>
+        <FormPromise />
 
         {result && (
           <p className={result.ok ? "bin-booking-status bin-booking-ok" : "bin-booking-status bin-booking-error"}>
