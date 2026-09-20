@@ -1,16 +1,22 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { lifetimeBinCleans } from "../lib/stats";
 
-// The homepage trust stat: a real, fixed number (see lib/stats.ts) that
-// plays a one-time count-up reveal when it scrolls into view. The
-// animation is decoration on a true figure — it does not tick upward on
-// its own afterwards, because nothing here actually tracks cleans in
-// real time yet. Making the number appear to move live without a real
-// feed behind it would be a false claim, not a nice detail.
+// The homepage trust stat: Siezar's real lifetime count plus his stated
+// ~500 a week since it was taken (lib/stats.ts). Recomputed in the browser
+// so a page built last week still shows this week's figure, then plays a
+// one-time count-up when it scrolls into view.
 
-export default function LiveStat({ count }: { count: number }) {
-  const [display, setDisplay] = useState(count);
+export default function LiveStat({ count: built }: { count: number }) {
+  const [count, setCount] = useState(built);
+  const [display, setDisplay] = useState(built);
+
+  useEffect(() => {
+    const now = lifetimeBinCleans();
+    setCount(now);
+    setDisplay(now);
+  }, []);
   const iconRef = useRef<HTMLDivElement>(null);
   const hasRun = useRef(false);
 
