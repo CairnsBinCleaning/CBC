@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import SiteHeader from "../../components/SiteHeader";
+import SiteFooter from "../../components/SiteFooter";
 
 export const metadata: Metadata = {
   title: "Privacy Policy | Cairns Bin Cleaning",
@@ -11,16 +13,7 @@ export const metadata: Metadata = {
 export default function Privacy() {
   return (
     <main className="legalPage">
-      <header className="nav navLight">
-        <Link href="/" className="brand">
-          <span>CAIRNS</span>
-          <small>BIN CLEANING</small>
-        </Link>
-        <nav>
-          <Link href="/">Home</Link>
-          <a href="tel:+61434052755">0434 052 755</a>
-        </nav>
-      </header>
+      <SiteHeader />
 
       <section className="legalHead">
         <p className="eyebrow dark">PLAIN ENGLISH, NOT LEGALESE</p>
@@ -100,17 +93,7 @@ export default function Privacy() {
         </p>
       </section>
 
-      <footer className="legalFooter">
-        <span>CAIRNS BIN CLEANING</span>
-        <nav>
-          <Link href="/">Home</Link>
-          <Link href="/service-areas">Areas</Link>
-          <Link href="/faq">FAQ</Link>
-          <Link href="/about">About</Link>
-          <Link href="/prices">Prices</Link>
-          <Link href="/terms">Terms &amp; Cancellation</Link>
-        </nav>
-      <small className="madeBy">Created by <a href="/faq#siezar-dewaal">Siezar DeWaal</a></small></footer>
+      <SiteFooter />
     </main>
   );
 }
