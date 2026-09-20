@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import SiteHeader from "../../components/SiteHeader";
+import SiteFooter from "../../components/SiteFooter";
 
 export const metadata: Metadata = {
   title: "About | Cairns Bin Cleaning",
@@ -11,16 +13,7 @@ export const metadata: Metadata = {
 export default function About() {
   return (
     <main className="legalPage">
-      <header className="nav navLight">
-        <Link href="/" className="brand">
-          <span>CAIRNS</span>
-          <small>BIN CLEANING</small>
-        </Link>
-        <nav>
-          <Link href="/">Home</Link>
-          <a href="tel:+61434052755">0434 052 755</a>
-        </nav>
-      </header>
+      <SiteHeader />
 
       <section className="legalHead">
         <p className="eyebrow dark">WHO’S ACTUALLY DOING THE WORK</p>
@@ -78,14 +71,7 @@ export default function About() {
         </p>
       </section>
 
-      <footer className="legalFooter">
-        <span>CAIRNS BIN CLEANING</span>
-        <nav>
-          <Link href="/">Home</Link>
-          <Link href="/prices">Prices</Link>
-          <Link href="/faq">FAQ</Link>
-        </nav>
-      <small className="madeBy">Created by <a href="/faq#siezar-dewaal">Siezar DeWaal</a></small></footer>
+      <SiteFooter />
     </main>
   );
 }
