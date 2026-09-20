@@ -32,6 +32,7 @@ import { windowQuote, WINDOW_RATES, type WindowType } from "../lib/quote";
 import QuoteMeasure from "./QuoteMeasure";
 import ServiceGallery from "./ServiceGallery";
 import ComplianceDocs from "./ComplianceDocs";
+import ReviewQuotes from "./ReviewQuotes";
 import { useLeadEvent } from "./Analytics";
 import { serviceFaq } from "../lib/serviceFaq";
 import { GOOGLE_REVIEWS } from "../lib/stats";
@@ -266,6 +267,8 @@ export default function ServicePageClient({
           </div>
         </div>
       </section>
+
+      <ReviewQuotes slug={service.slug} />
 
       <section className="trust-money">
         <div>
@@ -1074,7 +1077,7 @@ function QuoteRequestForm({ slug }: { slug: string }) {
         </label>
 
         {suburb.trim() !== "" && (
-          <p className="quote-request-fee">
+          <p className={`quote-request-fee${match ? " is-ok" : ""}`}>
             {match
               ? `We cover ${match.suburb}.${isWindows ? "" : " The job is priced when we reply."}`
               : "Not on our loaded list yet. Send it anyway and we’ll check."}
