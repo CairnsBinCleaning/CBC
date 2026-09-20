@@ -1,8 +1,10 @@
 export const SOLAR_RATE = 14.5;
 export const SOLAR_MIN = 179;
 
-/* Suburb travel loading (set by Siezar 19 Sept 2026, replacing the flat $50
-   visit fee). The job price goes up by a percentage that grows with the drive
+/* Suburb travel loading: SWITCHED OFF 20 Sept 2026 (Siezar: one price
+   anywhere in Cairns, no visit fees ever). Every loading below is 0. The zone
+   lists stay because the address search and service-area pages use them.
+   History: set 19 Sept 2026, replacing the flat $50 visit fee. The job price goes up by a percentage that grows with the drive
    from base in Mount Sheridan: Southside +3%, Cairns central +8%, Northern
    Beaches +15%. No minimum.
 
@@ -18,7 +20,7 @@ export const calloutZones = [
       "Parramatta Park","Earlville","Manoora","Manunda","Aeroglen",
       "Freshwater","Stratford","Edge Hill","Whitfield","Brinsmead"
     ],
-    loading: 0.08,
+    loading: 0,
   },
   {
     name: "Northern Beaches",
@@ -27,14 +29,14 @@ export const calloutZones = [
       "Kamerunga","Smithfield","Trinity Park","Trinity Beach",
       "Kewarra Beach","Clifton Beach","Palm Cove","Ellis Beach"
     ],
-    loading: 0.15,
+    loading: 0,
   },
   {
     /* Set by Siezar 19 Sept: its own sector, between central and the
        Northern Beaches. */
     name: "Redlynch",
     suburbs: ["Redlynch"],
-    loading: 0.1,
+    loading: 0,
   },
   {
     name: "Southside",
@@ -42,7 +44,7 @@ export const calloutZones = [
       "Bayview Heights","Mooroobool","Kanimbla","Woree","White Rock",
       "Mount Sheridan","Bentley Park","Edmonton","Gordonvale"
     ],
-    loading: 0.03,
+    loading: 0,
   },
 ];
 
@@ -122,4 +124,4 @@ export function solarQuote(panels: number, suburb: string, onBinDay: boolean) {
    behind the scenes (Siezar, 19 Sept); the calculators fold them into the
    price once the suburb or address is known. /terms keeps the full detail. */
 export const SUBURB_NOTE =
-  "Prices vary a little by suburb to cover the drive. There’s no call-out fee, and the price shown for your address is the price you pay.";
+  "One price anywhere we cover, from Palm Cove to Gordonvale. No call-out fee, and the price shown for your address is the price you pay.";
