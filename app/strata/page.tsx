@@ -10,7 +10,7 @@ import SiteFooter from "../../components/SiteFooter";
 export const metadata: Metadata = {
   title: "Strata & Body Corporate Cleaning Cairns | CBC",
   description:
-    "Recurring exterior maintenance for strata and body corporate properties in Cairns — pressure cleaning, window and gutter cleaning, refuse rooms and bins, scheduled around occupancy.",
+    "Recurring exterior maintenance for Cairns strata and body corporate sites: car parks, refuse rooms, walkways, windows and gutters, scheduled around residents.",
   alternates: { canonical: "/strata" },
 };
 
