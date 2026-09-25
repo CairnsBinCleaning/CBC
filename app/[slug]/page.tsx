@@ -4,6 +4,7 @@ import { services, getService, type Service } from "../../lib/services";
 import ServicePageClient from "../../components/ServicePageClient";
 import SiteFooter from "../../components/SiteFooter";
 import Crumbs from "../../components/Crumbs";
+import SuburbLinks from "../../components/SuburbLinks";
 import { faqJsonLd } from "../../lib/serviceFaq";
 import { GUTTER, ROOF_MATERIALS, WINDOW_RATES } from "../../lib/quote";
 
@@ -220,7 +221,7 @@ export default async function Page({
       ))}
 
       <Crumbs trail={[[service.name, `/${service.slug}`]]} />
-      <ServicePageClient service={service} footer={<SiteFooter commercial={service.slug === "commercial-cleaning"} />} />
+      <ServicePageClient service={service} suburbs={<SuburbLinks service={service.name} />} footer={<SiteFooter commercial={service.slug === "commercial-cleaning"} />} />
     </>
   );
 }
