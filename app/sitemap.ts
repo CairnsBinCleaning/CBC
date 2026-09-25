@@ -2,42 +2,47 @@ import type { MetadataRoute } from "next";
 import { services } from "../lib/services";
 import { suburbPages } from "../lib/suburbs";
 import { commercialPages } from "../lib/commercial";
+import { UPDATED } from "../lib/updated";
 
 const siteUrl =
   process.env.NEXT_PUBLIC_SITE_URL || "https://www.cairnsbincleaning.com.au";
 
+/* lastModified comes from lib/updated.ts: the date a person last checked the
+   facts on that page, not the date of the last deploy. A date that moves on
+   every build tells Google nothing. */
 export default function sitemap(): MetadataRoute.Sitemap {
+  const page = (
+    path: string,
+    priority: number,
+    lastModified: string,
+    changeFrequency: "weekly" | "monthly" | "yearly" = "monthly"
+  ) => ({ url: `${siteUrl}${path}`, changeFrequency, priority, lastModified });
+
   const staticRoutes: MetadataRoute.Sitemap = [
-    { url: siteUrl, changeFrequency: "weekly", priority: 1 },
-    { url: `${siteUrl}/instant-quote`, changeFrequency: "monthly", priority: 0.9 },
-    { url: `${siteUrl}/prices`, changeFrequency: "monthly", priority: 0.8 },
-    { url: `${siteUrl}/service-areas`, changeFrequency: "monthly", priority: 0.8 },
-    { url: `${siteUrl}/faq`, changeFrequency: "monthly", priority: 0.8 },
-    { url: `${siteUrl}/commercial`, changeFrequency: "monthly", priority: 0.8 },
-    { url: `${siteUrl}/local-work`, changeFrequency: "monthly", priority: 0.6 },
-    { url: `${siteUrl}/strata`, changeFrequency: "monthly", priority: 0.7 },
-    { url: `${siteUrl}/government`, changeFrequency: "monthly", priority: 0.7 },
-    { url: `${siteUrl}/about`, changeFrequency: "monthly", priority: 0.6 },
-    { url: `${siteUrl}/privacy`, changeFrequency: "yearly", priority: 0.3 },
-    { url: `${siteUrl}/terms`, changeFrequency: "yearly", priority: 0.3 },
+    page("", 1, UPDATED.services, "weekly"),
+    page("/instant-quote", 0.9, UPDATED.prices),
+    page("/prices", 0.8, UPDATED.prices),
+    page("/service-areas", 0.8, UPDATED.areas),
+    page("/faq", 0.8, UPDATED.faq),
+    page("/commercial", 0.8, UPDATED.commercial),
+    page("/local-work", 0.6, UPDATED.commercial),
+    page("/strata", 0.7, UPDATED.commercial),
+    page("/government", 0.7, UPDATED.commercial),
+    page("/about", 0.6, UPDATED.services),
+    page("/privacy", 0.3, UPDATED.privacy, "yearly"),
+    page("/terms", 0.3, UPDATED.terms, "yearly"),
   ];
 
-  const serviceRoutes: MetadataRoute.Sitemap = services.map((s) => ({
-    url: `${siteUrl}/${s.slug}`,
-    changeFrequency: "monthly",
-    priority: 0.9,
-  }));
+  const serviceRoutes: MetadataRoute.Sitemap = services.map((s) =>
+    page(`/${s.slug}`, 0.9, UPDATED.services)
+  );
 
-  const suburbRoutes: MetadataRoute.Sitemap = suburbPages.map((p) => ({
-    url: `${siteUrl}/service-areas/${p.slug}`,
-    changeFrequency: "monthly",
-    priority: 0.6,
-  }));
+  const suburbRoutes: MetadataRoute.Sitemap = suburbPages.map((p) =>
+    page(`/service-areas/${p.slug}`, 0.6, UPDATED.areas)
+  );
 
   const commercialRoutes: MetadataRoute.Sitemap = commercialPages.map((p) => ({
-    url: `${siteUrl}/commercial/${p.slug}`,
-    changeFrequency: "monthly",
-    priority: 0.8,
+    ...page(`/commercial/${p.slug}`, 0.8, UPDATED.commercial),
     /* Our own job photos, so Google Images can show them for local searches. */
     images: p.photos.map((ph) => `${siteUrl}${ph.src}`),
   }));
