@@ -10,7 +10,7 @@ import SiteFooter from "../../components/SiteFooter";
 export const metadata: Metadata = {
   title: "Government & Council Cleaning Contractor Cairns | CBC",
   description:
-    "Exterior cleaning capability for government, council and procurement panels in Cairns and Far North Queensland — ABN-verified, documented scope, scheduled site work.",
+    "Exterior cleaning for Cairns government, council and school sites: ABN verified, $20M insured, WorkCover and SWMS on file, scope documented before work starts.",
   alternates: { canonical: "/government" },
 };
 
