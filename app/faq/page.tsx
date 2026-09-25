@@ -8,7 +8,7 @@ import SiteFooter from "../../components/SiteFooter";
 export const metadata: Metadata = {
   title: "Cleaning Questions Answered | Cairns Bin Cleaning FAQ",
   description:
-    "Cairns prices for driveways, roofs, house washing, gutters, windows, solar and bins, one price in every suburb, areas, cancellations and insurance, answered plainly.",
+    "Cairns cleaning prices for driveways, roofs, houses, gutters, windows, solar and bins, plus areas, cancellations and insurance, answered plainly.",
   alternates: { canonical: "/faq" },
 };
 
@@ -151,7 +151,9 @@ export default function FAQ() {
 
       <section className="legalHead">
         <p className="eyebrow dark">QUESTIONS, ANSWERED PLAINLY</p>
-        <h1>FAQ.</h1>
+        <h1>
+          <span className="eyebrow h1-kicker">Cairns cleaning questions</span> FAQ.
+        </h1>
         <p>
           The things people actually ask before booking: prices, areas,
           insurance and what happens if the weather doesn’t cooperate.
@@ -159,6 +161,7 @@ export default function FAQ() {
       </section>
 
       <section className="faq-list">
+        <h2 className="faq-list-head">Cleaning questions people ask us in Cairns</h2>
         {faqs.map((item) => (
           <details key={item.q} className="faq-item" id={item.id}>
             <summary>{item.q}</summary>
