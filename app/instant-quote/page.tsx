@@ -4,6 +4,7 @@ import Link from "next/link";
 import QuoteMeasure from "../../components/QuoteMeasure";
 import SiteHeader from "../../components/SiteHeader";
 import SiteFooter from "../../components/SiteFooter";
+import Crumbs from "../../components/Crumbs";
 
 const siteUrl =
   process.env.NEXT_PUBLIC_SITE_URL || "https://www.cairnsbincleaning.com.au";
@@ -11,7 +12,7 @@ const siteUrl =
 export const metadata: Metadata = {
   title: "Instant Cleaning Quote Cairns | Measure It on the Map",
   description:
-    "Measure your own driveway, roof, patio or car park on satellite imagery and get a Cairns pressure cleaning price on the spot. No call-back, no site visit to get started.",
+    "Measure your driveway, roof, patio or car park on satellite imagery and get a Cairns cleaning price on the spot. No call-back, no waiting on a site visit.",
   alternates: { canonical: "/instant-quote" },
   openGraph: {
     title: "Instant satellite quote — Cairns Bin Cleaning",
@@ -63,6 +64,7 @@ export default function InstantQuotePage() {
           notch. In a normal browser tab the inset is 0 and this does nothing. */}
       <main className="service-page" style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}>
         <SiteHeader cta={null} />
+        <Crumbs trail={[["Instant quote", "/instant-quote"]]} />
 
         <QuoteMeasure
           defaultService="driveway"
