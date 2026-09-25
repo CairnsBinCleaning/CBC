@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import SiteHeader from "../../components/SiteHeader";
 import SiteFooter from "../../components/SiteFooter";
+import Crumbs from "../../components/Crumbs";
+import { UPDATED, auDate } from "../../lib/updated";
 
 export const metadata: Metadata = {
   title: "Terms & Cancellation Policy | Cairns Bin Cleaning",
@@ -14,10 +16,12 @@ export default function Terms() {
   return (
     <main className="legalPage">
       <SiteHeader />
+      <Crumbs trail={[["Terms", "/terms"]]} />
 
       <section className="legalHead">
         <p className="eyebrow dark">WHAT YOU’RE AGREEING TO</p>
         <h1>Terms &amp; Cancellation.</h1>
+        <p className="page-updated">Last checked {auDate(UPDATED.terms)}.</p>
         <p>
           Booking a service with Cairns Bin Cleaning (ABN 36 318 413 406)
           means agreeing to the terms below. Written so you’d actually
