@@ -10,7 +10,7 @@ import SiteFooter from "../../components/SiteFooter";
 export const metadata: Metadata = {
   title: "Service Areas: Gordonvale to Palm Cove | Cairns Bin Cleaning",
   description:
-    "Cairns Bin Cleaning services Cairns City, the Northern Beaches and the southside suburbs through to Gordonvale — bin cleaning, pressure cleaning, window cleaning and more.",
+    "Bin cleaning, pressure cleaning, roofs, windows and solar across Cairns: the Northern Beaches, central suburbs, Redlynch and the southside to Gordonvale.",
   alternates: { canonical: "/service-areas" },
 };
 
