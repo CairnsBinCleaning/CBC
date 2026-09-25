@@ -128,7 +128,7 @@ export const commercialPages: CommercialPage[] = [
     needs: ["Refuse chute", "Bin room / bin bay", "Commercial wheelie bins", "Bulk bins", "Recurring schedule"],
     seoTitle: "Bin Room & Refuse Chute Cleaning Cairns",
     seoDescription:
-      "Refuse chute, bin room, bin bay and commercial bin cleaning in Cairns for strata complexes, restaurants, shopping centres and offices. Insured, recurring schedules.",
+      "Refuse chute, bin room, bin bay and bulk bin cleaning in Cairns for strata, restaurants, shopping centres and offices. Insured, recurring schedules available.",
   },
   {
     slug: "shopfront-footpath-cleaning",
@@ -333,7 +333,7 @@ export const commercialPages: CommercialPage[] = [
     needs: ["Floors", "Walls / doors", "Kitchen / staff room", "Windows", "Bin area / back-of-house", "Outside areas"],
     seoTitle: "Commercial Deep Cleaning Cairns | End of Lease & Fit-Out",
     seoDescription:
-      "Commercial and industrial deep cleaning in Cairns: floors, walls, kitchens, windows, bin areas and outside areas. End of lease, pre-inspection and post fit-out. Insured.",
+      "Commercial deep cleaning in Cairns: floors, walls, kitchens, windows and bin areas. End of lease, pre-inspection and post fit-out. Insured, quoted in writing.",
   },
   {
     slug: "industrial-cleaning",
@@ -370,7 +370,7 @@ export const commercialPages: CommercialPage[] = [
     needs: ["Hardstand / yard", "Warehouse floor", "Oil stains", "Bulk bins / bin bay", "Building / roof", "Gutters / windows"],
     seoTitle: "Industrial Cleaning Cairns | Warehouses, Workshops, Yards",
     seoDescription:
-      "Industrial pressure cleaning and deep cleaning in Cairns: warehouses, workshops, hardstands, loading docks, bulk bins and building exteriors. Insured, SWMS on file.",
+      "Industrial cleaning in Cairns: warehouses, workshops, hardstands, loading docks, bulk bins and building exteriors. Insured, SWMS on file, worked around shifts.",
   },
   {
     slug: "commercial-roof-cleaning",
@@ -407,7 +407,7 @@ export const commercialPages: CommercialPage[] = [
     needs: ["Metal roof", "Tile roof", "Roof with solar", "Gutters", "Walls / exterior"],
     seoTitle: "Commercial & School Roof Cleaning Cairns | Soft Wash",
     seoDescription:
-      "Commercial roof soft washing in Cairns for schools, warehouses, offices and strata: metal and tile roofs, gutters on the same visit. No asbestos. Insured, SWMS on file.",
+      "School, warehouse and strata roof soft washing in Cairns: metal and tile roofs, gutters on the same visit, no asbestos. Insured, SWMS, worked around your hours.",
   },
   {
     slug: "commercial-window-cleaning",
