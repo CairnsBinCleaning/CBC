@@ -11,14 +11,25 @@ import SiteFooter from "../../../components/SiteFooter";
 import TrustBar from "../../../components/TrustBar";
 import ReviewQuotes from "../../../components/ReviewQuotes";
 
-/* One page per suburb where we have real job photos. See lib/suburbs.ts for
-   why suburbs without a photo don't get a page. */
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.cairnsbincleaning.com.au";
+
+/* One page per suburb we cover. Each one carries its own real facts —
+   postcode, distance from base, the jobs photographed there or the nearest
+   ones we have, labelled honestly. See lib/suburbs.ts. */
 
 export function generateStaticParams() {
   return suburbPages.map((p) => ({ suburb: p.slug }));
 }
 
 export const dynamicParams = false;
+
+const serviceList = (page: NonNullable<ReturnType<typeof getSuburbPage>>) => [
+  ...new Set(
+    page.jobs.map((j) =>
+      j.service.slug === "commercial-cleaning" ? "commercial cleaning" : j.service.name.toLowerCase()
+    )
+  ),
+];
 
 export async function generateMetadata({
   params,
@@ -27,15 +38,26 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const page = getSuburbPage((await params).suburb);
   if (!page) return {};
-  const done = [...new Set(page.jobs.map((j) => (j.service.slug === "commercial-cleaning" ? "commercial cleaning" : j.service.name.toLowerCase())))].join(", ");
+  const done = serviceList(page).join(", ");
+  const hero = page.jobs[0]?.photo ?? page.nearby[0]?.photo;
+  /* Long suburb names would push the title past what Google shows. */
+  const title =
+    `${page.name} Pressure & Bin Cleaning | Cairns Bin Cleaning`.length <= 60
+      ? `${page.name} Pressure & Bin Cleaning | Cairns Bin Cleaning`
+      : `${page.name} Pressure & Bin Cleaning | Cairns`;
+  const description = page.jobs.length
+    ? `Exterior cleaning in ${page.name} ${page.geo.postcode ?? "Cairns"}: real ${done} jobs we've done there, instant prices online and no call-out fee.`
+    : `Pressure cleaning, bin cleaning, roofs, windows and solar in ${page.name} ${page.geo.postcode ?? "Cairns"}. One price anywhere we cover, no call-out fee, instant prices online.`;
   return {
-    title: `${page.name} Pressure & Bin Cleaning | Cairns Bin Cleaning`,
-    description: `Exterior cleaning in ${page.name}, Cairns: see real ${done} jobs we've done there. Instant prices online, no call-out fee.`,
+    title,
+    description: description.slice(0, 160),
     alternates: { canonical: `/service-areas/${page.slug}` },
     openGraph: {
       title: `Exterior cleaning in ${page.name} — Cairns Bin Cleaning`,
       url: `/service-areas/${page.slug}`,
-      images: [{ url: page.jobs[0].photo.src, alt: page.jobs[0].photo.alt }],
+      /* Every page gets a share image; a locality with no nearby job photo
+         falls back to the site default. */
+      images: hero ? [{ url: hero.src, alt: hero.alt }] : [{ url: "/media/IMG_3027.jpg" }],
     },
   };
 }
@@ -48,19 +70,26 @@ export default async function SuburbPage({
   const page = getSuburbPage((await params).suburb);
   if (!page) notFound();
 
-  const withPages = new Set(suburbPages.map((p) => p.name));
-  const done = [...new Set(page.jobs.map((j) => (j.service.slug === "commercial-cleaning" ? "commercial cleaning" : j.service.name.toLowerCase())))];
+  const done = serviceList(page);
   const doneText = done.length > 1 ? `${done.slice(0, -1).join(", ")} and ${done[done.length - 1]}` : done[0];
-  /* Plain answers, all true everywhere we work, with the suburb's own jobs
-     in the first one. Shown on the page and sent as FAQPage schema. */
+  const nearestName = page.nearby[0]?.photo.suburb;
+  const nearestKm = page.nearby[0]?.km;
+
+  /* Plain answers, true everywhere we work, with this suburb's own facts in
+     them. Shown on the page and sent to Google as FAQPage data. */
   const faq = [
-    {
-      q: `What have you cleaned in ${page.name}?`,
-      a: `Recent ${page.name} jobs include ${doneText}. The photos on this page are those jobs, taken by us.`,
-    },
+    page.jobs.length
+      ? {
+          q: `What have you cleaned in ${page.name}?`,
+          a: `Recent ${page.name} jobs include ${doneText}. The photos on this page are those jobs, taken by us.`,
+        }
+      : {
+          q: `Have you worked in ${page.name}?`,
+          a: `${page.name} is inside our normal run and every service on this site is available there. We haven't photographed a job in ${page.name} yet, so this page shows the nearest jobs we have${nearestName ? `, in ${nearestName}${nearestKm ? `, about ${nearestKm} km away` : ""}` : ""} — labelled with the suburb they were actually taken in.`,
+        },
     {
       q: `Do you charge more to come to ${page.name}?`,
-      a: `No. One price anywhere we cover, from Palm Cove to Gordonvale, with no call-out fee. The price shown for your ${page.name} address is the price you pay, and you pay after the job.`,
+      a: `No. ${page.name} is about ${page.geo.kmFromBase ?? "—"} km from our base, and the price is the same as a job around the corner. One price anywhere we cover, from Palm Cove to Gordonvale, no call-out fee, and you pay after the job.`,
     },
     {
       q: `How do I get a price in ${page.name}?`,
@@ -71,53 +100,119 @@ export default async function SuburbPage({
       a: `Yes: car parks, bin rooms, shopfronts, roofs, commercial kitchens and strata common areas. We carry $20 million public liability insurance and a safe work method statement for site work.`,
     },
   ];
-  const faqLd = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: faq.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
-  };
+
+  const jsonLd = [
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: faq.map((f) => ({
+        "@type": "Question",
+        name: f.q,
+        acceptedAnswer: { "@type": "Answer", text: f.a },
+      })),
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "Service",
+      name: `Exterior cleaning in ${page.name}`,
+      serviceType: "Pressure cleaning, bin cleaning, roof, house, window, gutter and solar panel cleaning",
+      url: `${siteUrl}/service-areas/${page.slug}`,
+      provider: { "@type": "LocalBusiness", "@id": `${siteUrl}/#business`, name: "Cairns Bin Cleaning" },
+      areaServed: {
+        "@type": "Place",
+        name: `${page.name}, Queensland`,
+        ...(page.geo.postcode ? { address: { "@type": "PostalAddress", addressLocality: page.name, postalCode: page.geo.postcode, addressRegion: "QLD", addressCountry: "AU" } } : {}),
+        ...(page.geo.lat != null && page.geo.lon != null
+          ? { geo: { "@type": "GeoCoordinates", latitude: page.geo.lat, longitude: page.geo.lon } }
+          : {}),
+      },
+    },
+  ];
 
   return (
     <main className="legalPage">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
+      />
       <SiteHeader />
       <Crumbs trail={[["Service areas", "/service-areas"], [page.name, `/service-areas/${page.slug}`]]} />
 
       <section className="areasHead">
         <h1>
-          <span className="eyebrow h1-kicker">Exterior cleaning in</span>{" "}
-          {page.name}.
+          <span className="eyebrow h1-kicker">Exterior cleaning in</span> {page.name}.
         </h1>
         <p>
-          We work right across {page.name}, with no call-out fee. Below is work
-          we&rsquo;ve done in {page.name}, and everything we can do there. Put
-          your address into the instant quote and the price you see is the
-          price for your place.
+          We work right across {page.name}
+          {page.geo.postcode ? ` ${page.geo.postcode}` : ""}
+          {page.geo.kmFromBase != null
+            ? `, about ${page.geo.kmFromBase} km from our base in Mount Sheridan`
+            : ""}
+          . The drive costs you nothing: one price anywhere we cover, no
+          call-out fee, and you pay after the job. Put your address into the
+          instant quote and the price you see is the price for your place.
         </p>
         <TrustBar />
       </section>
 
-      <section className="suburbJobs">
-        <h2>Our work in {page.name}.</h2>
-        <div className="suburbJobGrid">
-          {page.jobs.map(({ photo, service }, i) => (
-            <figure key={photo.src}>
-              <Image
-                priority={i === 0}
-                src={photo.src}
-                alt={photo.alt}
-                width={photo.width}
-                height={photo.height}
-                sizes="(max-width: 850px) 100vw, 33vw"
-                quality={70}
-              />
-              <figcaption>
-                <Link href={`/${service.slug}`}>{service.name}</Link>
-                <span>{photo.caption}</span>
-              </figcaption>
-            </figure>
-          ))}
-        </div>
-      </section>
+      {page.jobs.length > 0 && (
+        <section className="suburbJobs">
+          <h2>Our work in {page.name}.</h2>
+          <div className="suburbJobGrid">
+            {page.jobs.map(({ photo, service }, i) => (
+              <figure key={photo.src}>
+                <Image
+                  priority={i === 0}
+                  src={photo.src}
+                  alt={photo.alt}
+                  width={photo.width}
+                  height={photo.height}
+                  sizes="(max-width: 850px) 100vw, 33vw"
+                  quality={70}
+                />
+                <figcaption>
+                  <Link href={`/${service.slug}`}>{service.name}</Link>
+                  <span>{photo.caption}</span>
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {page.jobs.length === 0 && page.nearby.length > 0 && (
+        <section className="suburbJobs">
+          <h2>Our closest work to {page.name}.</h2>
+          <p className="suburbNearbyNote">
+            We haven&rsquo;t photographed a job in {page.name} yet. These are
+            the nearest ones we have, and each is labelled with the suburb it
+            was actually taken in — we don&rsquo;t move photos around.
+          </p>
+          <div className="suburbJobGrid">
+            {page.nearby.map(({ photo, service, km }, i) => (
+              <figure key={photo.src}>
+                <Image
+                  priority={i === 0}
+                  src={photo.src}
+                  alt={photo.alt}
+                  width={photo.width}
+                  height={photo.height}
+                  sizes="(max-width: 850px) 100vw, 33vw"
+                  quality={70}
+                />
+                <figcaption>
+                  <Link href={`/${service.slug}`}>{service.name}</Link>
+                  <span>
+                    {photo.caption} Taken in{" "}
+                    <Link href={`/service-areas/${suburbSlug(photo.suburb ?? "")}`}>{photo.suburb}</Link>
+                    {km != null ? `, about ${km} km from ${page.name}.` : "."}
+                  </span>
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+        </section>
+      )}
 
       <section className="areas-services">
         <h2>What we do in {page.name}.</h2>
@@ -160,7 +255,6 @@ export default async function SuburbPage({
       <ReviewQuotes slug="home" />
 
       <section className="legalBody suburbFaq">
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd).replace(/</g, "\\u003c") }} />
         <h2>{page.name} questions, answered.</h2>
         {faq.map((f) => (
           <div key={f.q}>
@@ -175,22 +269,18 @@ export default async function SuburbPage({
       </section>
 
       {page.neighbours.length > 0 && (
-      <section className="areasBody suburbNearby">
-        <div className="zone-card">
-          <span>ALSO IN THE {page.zone.toUpperCase()} ZONE</span>
-          <div className="suburb-chips">
-            {page.neighbours.map((n) =>
-              withPages.has(n) ? (
+        <section className="areasBody suburbNearby">
+          <div className="zone-card">
+            <span>NEAREST SUBURBS WE ALSO COVER</span>
+            <div className="suburb-chips">
+              {page.neighbours.map((n) => (
                 <Link key={n} href={`/service-areas/${suburbSlug(n)}`}>
                   {n}
                 </Link>
-              ) : (
-                <span key={n}>{n}</span>
-              )
-            )}
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
       )}
 
       <SiteFooter />
