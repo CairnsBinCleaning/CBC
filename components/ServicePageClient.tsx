@@ -52,9 +52,12 @@ const MEASURABLE_SERVICES: Record<string, string> = {
 
 export default function ServicePageClient({
   service,
+  suburbs,
   footer,
 }: {
   service: Service;
+  /* Server-rendered suburb links (app/[slug]/page.tsx). */
+  suburbs?: ReactNode;
   /* Rendered on the server (app/[slug]/page.tsx) so the footer's link
      lists don't ship in this page's JavaScript. */
   footer?: ReactNode;
@@ -200,6 +203,7 @@ export default function ServicePageClient({
         )}
       </nav>
 
+      {suburbs}
       {footer}
     </main>
   );
