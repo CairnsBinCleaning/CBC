@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import SiteHeader from "../../components/SiteHeader";
 import SiteFooter from "../../components/SiteFooter";
+import Crumbs from "../../components/Crumbs";
+import { UPDATED, auDate } from "../../lib/updated";
 
 export const metadata: Metadata = {
   title: "Privacy Policy | Cairns Bin Cleaning",
@@ -14,10 +16,12 @@ export default function Privacy() {
   return (
     <main className="legalPage">
       <SiteHeader />
+      <Crumbs trail={[["Privacy", "/privacy"]]} />
 
       <section className="legalHead">
         <p className="eyebrow dark">PLAIN ENGLISH, NOT LEGALESE</p>
         <h1>Privacy Policy.</h1>
+        <p className="page-updated">Last checked {auDate(UPDATED.privacy)}.</p>
         <p>
           Cairns Bin Cleaning (ABN 36 318 413 406) respects that your name,
           phone number and address are yours, not ours. This page explains
