@@ -21,7 +21,9 @@ export default function Prices() {
       <Crumbs trail={[["Prices", "/prices"]]} />
       <section className="pricesHead">
         <p className="eyebrow dark">SKIP THE FLUFF</p>
-        <h1>Prices.</h1>
+        <h1>
+          <span className="eyebrow h1-kicker">Cairns cleaning prices</span> Prices.
+        </h1>
         <p>
           Real numbers, GST included. Every job starts from $179, and the
           instant quote shows you the exact figure for your place.
